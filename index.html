@@ -41,6 +41,20 @@
             background-color: #F5F2E8;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232D5F3F' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            z-index: 50;
+            max-height: 400px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -109,17 +123,32 @@
 
         // Componente Principal
         function App() {
-            const [currentUser, setCurrentUser] = useState({
-                name: 'María González',
-                role: 'Líder de Sostenibilidad',
-                department: 'Innovación',
-                avatar: 'https://i.pravatar.cc/150?img=48'
-            });
-            
             const [activeSection, setActiveSection] = useState('home');
             const [notifications, setNotifications] = useState(3);
+            const [showNotifications, setShowNotifications] = useState(false);
             const [selectedRoom, setSelectedRoom] = useState(null);
             const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+            const [reservations, setReservations] = useState([
+                {
+                    id: 1,
+                    roomId: 'la-palma',
+                    date: new Date().toISOString().split('T')[0],
+                    time: '09:00',
+                    duration: '2',
+                    purpose: 'Reunión de estrategia',
+                    attendees: 6
+                },
+                {
+                    id: 2,
+                    roomId: 'el-tucan',
+                    date: new Date().toISOString().split('T')[0],
+                    time: '14:00',
+                    duration: '1',
+                    purpose: 'Presentación de resultados',
+                    attendees: 8
+                }
+            ]);
+            
             const [purposes, setPurposes] = useState([
                 { id: 1, author: 'Carlos Mendoza', text: 'Crear un impacto positivo en nuestra comunidad', date: '2024-01-15' },
                 { id: 2, author: 'Ana López', text: 'Inspirar a otros a vivir de manera sostenible', date: '2024-01-14' },
@@ -151,11 +180,54 @@
                 }
             ]);
 
+            const notificationRef = useRef(null);
+
+            useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+                        setShowNotifications(false);
+                    }
+                };
+
+                document.addEventListener('mousedown', handleClickOutside);
+                return () => {
+                    document.removeEventListener('mousedown', handleClickOutside);
+                };
+            }, []);
+
             const getGreeting = () => {
                 const hour = new Date().getHours();
                 if (hour < 12) return '¡Buenos días';
                 if (hour < 18) return '¡Buenas tardes';
                 return '¡Buenas noches';
+            };
+
+            const isRoomAvailable = (roomId, date, time) => {
+                return !reservations.some(reservation => 
+                    reservation.roomId === roomId && 
+                    reservation.date === date && 
+                    reservation.time === time
+                );
+            };
+
+            const getAvailableTimeSlots = (roomId, date) => {
+                const timeSlots = [
+                    { value: "08:00", label: "08:00 AM" },
+                    { value: "09:00", label: "09:00 AM" },
+                    { value: "10:00", label: "10:00 AM" },
+                    { value: "11:00", label: "11:00 AM" },
+                    { value: "12:00", label: "12:00 PM" },
+                    { value: "14:00", label: "02:00 PM" },
+                    { value: "15:00", label: "03:00 PM" },
+                    { value: "16:00", label: "04:00 PM" },
+                    { value: "17:00", label: "05:00 PM" }
+                ];
+
+                return timeSlots.map(slot => ({
+                    ...slot,
+                    available: isRoomAvailable(roomId, date, slot.value),
+                    label: slot.available ? slot.label : `${slot.label} (Ocupado)`
+                }));
             };
 
             // Pantalla de Bienvenida
@@ -166,7 +238,7 @@
                         <div className="flex flex-col md:flex-row items-center justify-between">
                             <div>
                                 <h1 className="text-4xl font-bold mb-2">
-                                    {getGreeting()}, {currentUser.name.split(' ')[0]}! 🌱
+                                    {getGreeting()}, equipo Green Hub! 🌱
                                 </h1>
                                 <p className="text-green-100 text-lg">
                                     Construyamos juntos un futuro más sostenible
@@ -180,29 +252,17 @@
                                     </span>
                                 </div>
                             </div>
-                            <div className="bg-white/10 backdrop-blur rounded-xl p-6 mt-6 md:mt-0">
-                                <div className="text-center">
-                                    <div className="text-4xl mb-2">⚡</div>
-                                    <p className="text-3xl font-bold">92%</p>
-                                    <p className="text-sm text-green-100">Score Sostenibilidad</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
                     {/* Menú Principal */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <button
                             onClick={() => setActiveSection('news')}
-                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100 relative"
+                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100"
                         >
-                            {notifications > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                                    {notifications} nuevas
-                                </span>
-                            )}
                             <div className="bg-gradient-to-br from-emerald-500 to-teal-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                                🔔
+                                📰
                             </div>
                             <h3 className="font-semibold text-gray-900 mb-1">Noticias y Actualizaciones</h3>
                             <p className="text-sm text-gray-500">Lo último del Green Hub</p>
@@ -239,6 +299,23 @@
                             </div>
                             <h3 className="font-semibold text-gray-900 mb-1">Recursos</h3>
                             <p className="text-sm text-gray-500">Documentos y guías</p>
+                        </button>
+                    </div>
+
+                    {/* Acceso rápido a disponibilidad */}
+                    <div className="bg-white rounded-xl p-6 shadow-md border border-green-100">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Acceso Rápido</h3>
+                        <button
+                            onClick={() => setActiveSection('availability')}
+                            className="w-full bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg p-4 text-left transition-colors"
+                        >
+                            <div className="flex items-center space-x-3">
+                                <span className="text-2xl">👁️</span>
+                                <div>
+                                    <h4 className="font-medium text-gray-900">Ver Disponibilidad de Salas</h4>
+                                    <p className="text-sm text-gray-600">Consulta qué salas están disponibles hoy</p>
+                                </div>
+                            </div>
                         </button>
                     </div>
                 </div>
@@ -292,7 +369,7 @@
                         setPurposes([
                             {
                                 id: Date.now(),
-                                author: currentUser.name,
+                                author: 'Empleado Green Hub',
                                 text: newPurpose,
                                 date: new Date().toISOString().split('T')[0]
                             },
@@ -353,11 +430,12 @@
 
             // Sistema de Reserva de Salas
             const RoomBooking = () => {
-                const [bookingStep, setBookingStep] = useState('select'); // select, details, confirm
+                const [bookingStep, setBookingStep] = useState('select');
                 const [bookingData, setBookingData] = useState({
                     time: '',
                     duration: '1',
-                    purpose: ''
+                    purpose: '',
+                    attendees: ''
                 });
 
                 const handleRoomSelect = (room) => {
@@ -366,14 +444,27 @@
                 };
 
                 const handleBookingSubmit = () => {
+                    const newReservation = {
+                        id: Date.now(),
+                        roomId: selectedRoom.id,
+                        date: selectedDate,
+                        time: bookingData.time,
+                        duration: bookingData.duration,
+                        purpose: bookingData.purpose,
+                        attendees: parseInt(bookingData.attendees)
+                    };
+
+                    setReservations([...reservations, newReservation]);
                     setBookingStep('confirm');
+                    
                     setTimeout(() => {
-                        alert(`¡Sala ${selectedRoom.name} reservada exitosamente!`);
                         setBookingStep('select');
                         setSelectedRoom(null);
-                        setBookingData({ time: '', duration: '1', purpose: '' });
-                    }, 2000);
+                        setBookingData({ time: '', duration: '1', purpose: '', attendees: '' });
+                    }, 3000);
                 };
+
+                const today = new Date().toISOString().split('T')[0];
 
                 return (
                     <div className="animate-fadeIn">
@@ -398,6 +489,7 @@
                                     <input
                                         type="date"
                                         value={selectedDate}
+                                        min={today}
                                         onChange={(e) => setSelectedDate(e.target.value)}
                                         className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                                     />
@@ -405,43 +497,52 @@
 
                                 {/* Grid de Salas */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {rooms.map(room => (
-                                        <div
-                                            key={room.id}
-                                            onClick={() => handleRoomSelect(room)}
-                                            className="room-card bg-white rounded-xl overflow-hidden shadow-md border border-green-100 cursor-pointer"
-                                        >
-                                            <div className="h-48 relative">
-                                                <img 
-                                                    src={room.image} 
-                                                    alt={room.name}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                <div className={`absolute inset-0 bg-gradient-to-t ${room.color} opacity-60`}></div>
-                                                <div className="absolute bottom-4 left-4 text-white">
-                                                    <h3 className="text-xl font-bold">{room.name}</h3>
-                                                    <p className="text-sm opacity-90">{room.floor}</p>
+                                    {rooms.map(room => {
+                                        const roomReservations = reservations.filter(r => r.roomId === room.id && r.date === selectedDate);
+                                        const isAvailable = roomReservations.length === 0;
+                                        
+                                        return (
+                                            <div
+                                                key={room.id}
+                                                onClick={() => handleRoomSelect(room)}
+                                                className="room-card bg-white rounded-xl overflow-hidden shadow-md border border-green-100 cursor-pointer"
+                                            >
+                                                <div className="h-48 relative">
+                                                    <img 
+                                                        src={room.image} 
+                                                        alt={room.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <div className={`absolute inset-0 bg-gradient-to-t ${room.color} opacity-60`}></div>
+                                                    <div className="absolute bottom-4 left-4 text-white">
+                                                        <h3 className="text-xl font-bold">{room.name}</h3>
+                                                        <p className="text-sm opacity-90">{room.floor}</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="p-4">
-                                                <div className="flex items-center justify-between mb-3">
-                                                    <span className="text-sm text-gray-600">
-                                                        👥 Capacidad: {room.capacity}
-                                                    </span>
-                                                    <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
-                                                        Disponible
-                                                    </span>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    {room.features.slice(0, 2).map((feature, idx) => (
-                                                        <span key={idx} className="text-xs text-gray-500 block">
-                                                            ✓ {feature}
+                                                <div className="p-4">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <span className="text-sm text-gray-600">
+                                                            👥 Capacidad: {room.capacity}
                                                         </span>
-                                                    ))}
+                                                        <span className={`text-xs px-2 py-1 rounded-full ${
+                                                            isAvailable 
+                                                                ? 'bg-green-100 text-green-700' 
+                                                                : 'bg-red-100 text-red-700'
+                                                        }`}>
+                                                            {isAvailable ? 'Disponible' : `${roomReservations.length} reserva(s)`}
+                                                        </span>
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        {room.features.slice(0, 2).map((feature, idx) => (
+                                                            <span key={idx} className="text-xs text-gray-500 block">
+                                                                ✓ {feature}
+                                                            </span>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </>
                         )}
@@ -452,6 +553,9 @@
                                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
                                         Reservar {selectedRoom.name}
                                     </h3>
+                                    <p className="text-sm text-gray-600 mb-4">
+                                        Fecha seleccionada: {selectedDate}
+                                    </p>
                                     
                                     <div className="space-y-4">
                                         <div>
@@ -464,15 +568,15 @@
                                                 onChange={(e) => setBookingData({...bookingData, time: e.target.value})}
                                             >
                                                 <option value="">Selecciona hora</option>
-                                                <option value="08:00">08:00 AM</option>
-                                                <option value="09:00">09:00 AM</option>
-                                                <option value="10:00">10:00 AM</option>
-                                                <option value="11:00">11:00 AM</option>
-                                                <option value="12:00">12:00 PM</option>
-                                                <option value="14:00">02:00 PM</option>
-                                                <option value="15:00">03:00 PM</option>
-                                                <option value="16:00">04:00 PM</option>
-                                                <option value="17:00">05:00 PM</option>
+                                                {getAvailableTimeSlots(selectedRoom.id, selectedDate).map(slot => (
+                                                    <option 
+                                                        key={slot.value} 
+                                                        value={slot.value}
+                                                        disabled={!slot.available}
+                                                    >
+                                                        {slot.label}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
 
@@ -516,6 +620,8 @@
                                                 max={selectedRoom.capacity}
                                                 placeholder="Número de personas"
                                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                value={bookingData.attendees}
+                                                onChange={(e) => setBookingData({...bookingData, attendees: e.target.value})}
                                             />
                                         </div>
                                     </div>
@@ -532,7 +638,8 @@
                                         </button>
                                         <button
                                             onClick={handleBookingSubmit}
-                                            className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                            disabled={!bookingData.time || !bookingData.purpose || !bookingData.attendees}
+                                            className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                                         >
                                             Confirmar Reserva
                                         </button>
@@ -550,7 +657,7 @@
                                         {selectedRoom?.name} ha sido reservada exitosamente
                                     </p>
                                     <p className="text-sm text-gray-500 mt-2">
-                                        Recibirás un correo de confirmación
+                                        Fecha: {selectedDate} a las {bookingData.time}
                                     </p>
                                 </div>
                             </div>
@@ -558,6 +665,83 @@
                     </div>
                 );
             };
+
+            // Sección de Disponibilidad
+            const AvailabilitySection = () => (
+                <div className="animate-fadeIn">
+                    <div className="mb-6">
+                        <button 
+                            onClick={() => setActiveSection('home')}
+                            className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
+                        >
+                            ← Volver al inicio
+                        </button>
+                        <h2 className="text-3xl font-bold text-gray-900">Disponibilidad de Salas</h2>
+                        <p className="text-gray-600 mt-2">Consulta las reservas existentes</p>
+                    </div>
+
+                    {/* Selector de fecha */}
+                    <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 mb-6">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Consultar fecha
+                        </label>
+                        <input
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                        />
+                    </div>
+
+                    {/* Lista de salas y sus reservas */}
+                    <div className="space-y-4">
+                        {rooms.map(room => {
+                            const roomReservations = reservations.filter(r => r.roomId === room.id && r.date === selectedDate);
+                            
+                            return (
+                                <div key={room.id} className="bg-white rounded-xl p-6 shadow-md border border-green-100">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div>
+                                            <h3 className="text-xl font-semibold text-gray-900">{room.name}</h3>
+                                            <p className="text-sm text-gray-600">{room.floor} • Capacidad: {room.capacity} personas</p>
+                                        </div>
+                                        <span className={`px-3 py-1 rounded-full text-sm ${
+                                            roomReservations.length === 0 
+                                                ? 'bg-green-100 text-green-700' 
+                                                : 'bg-orange-100 text-orange-700'
+                                        }`}>
+                                            {roomReservations.length === 0 ? 'Disponible' : `${roomReservations.length} reserva(s)`}
+                                        </span>
+                                    </div>
+
+                                    {roomReservations.length > 0 ? (
+                                        <div className="space-y-2">
+                                            <h4 className="font-medium text-gray-700">Reservas para {selectedDate}:</h4>
+                                            {roomReservations.map(reservation => (
+                                                <div key={reservation.id} className="bg-gray-50 rounded-lg p-3">
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <p className="font-medium text-gray-900">
+                                                                {reservation.time} - {reservation.duration}h
+                                                            </p>
+                                                            <p className="text-sm text-gray-600">{reservation.purpose}</p>
+                                                            <p className="text-xs text-gray-500">
+                                                                👥 {reservation.attendees} asistentes
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-gray-500 italic">No hay reservas para esta fecha</p>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
 
             // Sección de Recursos
             const ResourcesSection = () => (
@@ -660,25 +844,71 @@
                                 </div>
                                 
                                 <div className="flex items-center space-x-4">
-                                    <div className="relative cursor-pointer">
-                                        <span className="text-xl">🔔</span>
-                                        {notifications > 0 && (
-                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                                {notifications}
-                                            </span>
+                                    <div className="relative" ref={notificationRef}>
+                                        <button
+                                            onClick={() => setShowNotifications(!showNotifications)}
+                                            className="relative cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <span className="text-xl">🔔</span>
+                                            {notifications > 0 && (
+                                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                                    {notifications}
+                                                </span>
+                                            )}
+                                        </button>
+
+                                        {showNotifications && (
+                                            <div className="notification-dropdown">
+                                                <div className="p-4 border-b border-gray-200">
+                                                    <h3 className="font-semibold text-gray-900">Notificaciones</h3>
+                                                </div>
+                                                <div className="max-h-80 overflow-y-auto">
+                                                    {news.slice(0, 3).map(item => (
+                                                        <div key={item.id} className="p-4 border-b border-gray-100 hover:bg-gray-50">
+                                                            <div className="flex items-start space-x-3">
+                                                                <div className="flex-shrink-0">
+                                                                    {item.important ? (
+                                                                        <span className="text-red-500">⭐</span>
+                                                                    ) : (
+                                                                        <span className="text-blue-500">📰</span>
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <p className="text-sm font-medium text-gray-900 truncate">
+                                                                        {item.title}
+                                                                    </p>
+                                                                    <p className="text-xs text-gray-500 mt-1">
+                                                                        {item.date}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="p-3 border-t border-gray-200">
+                                                    <button
+                                                        onClick={() => {
+                                                            setActiveSection('news');
+                                                            setShowNotifications(false);
+                                                            setNotifications(0);
+                                                        }}
+                                                        className="w-full text-center text-sm text-green-600 hover:text-green-700 font-medium"
+                                                    >
+                                                        Ver todas las noticias
+                                                    </button>
+                                                </div>
+                                            </div>
                                         )}
                                     </div>
                                     
                                     <div className="flex items-center space-x-3">
                                         <div className="text-right hidden md:block">
-                                            <p className="text-sm font-medium text-gray-900">{currentUser.name}</p>
-                                            <p className="text-xs text-gray-500">{currentUser.role}</p>
+                                            <p className="text-sm font-medium text-gray-900">Empleado Green Hub</p>
+                                            <p className="text-xs text-gray-500">Portal de Empleados</p>
                                         </div>
-                                        <img
-                                            src={currentUser.avatar}
-                                            alt={currentUser.name}
-                                            className="h-10 w-10 rounded-full border-2 border-green-200"
-                                        />
+                                        <div className="h-10 w-10 rounded-full border-2 border-green-200 bg-green-100 flex items-center justify-center">
+                                            <span className="text-green-600 font-semibold">🌱</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -691,6 +921,7 @@
                         {activeSection === 'news' && <NewsSection />}
                         {activeSection === 'purpose' && <PurposeWall />}
                         {activeSection === 'booking' && <RoomBooking />}
+                        {activeSection === 'availability' && <AvailabilitySection />}
                         {activeSection === 'resources' && <ResourcesSection />}
                     </main>
 
