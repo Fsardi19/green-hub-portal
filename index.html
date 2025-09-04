@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Green Hub - Portal de Empleados</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .room-card {
+            transition: all 0.3s ease;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        
+        .gradient-green {
+            background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 100%);
+        }
+        
+        .pattern-bg {
+            background-color: #F5F2E8;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232D5F3F' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        
+        // Datos de las salas
+        const rooms = [
+            {
+                id: 'la-palma',
+                name: 'La Palma',
+                capacity: 8,
+                floor: 'Piso 3',
+                features: ['TV 65"', 'Pizarra Digital', 'Video Conferencia', 'Aire Acondicionado'],
+                image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400',
+                color: 'from-green-500 to-emerald-600'
+            },
+            {
+                id: 'el-tucan',
+                name: 'El Tucán',
+                capacity: 12,
+                floor: 'Piso 3',
+                features: ['Proyector 4K', 'Sistema de Sonido', 'Pizarra', 'Mesa Modular'],
+                image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400',
+                color: 'from-orange-500 to-red-600'
+            },
+            {
+                id: 'equation-coffee',
+                name: 'Equation Coffee',
+                capacity: 6,
+                floor: 'Piso 2',
+                features: ['TV 55"', 'Cafetera Premium', 'Sofás', 'Vista al Jardín'],
+                image: 'https://images.unsplash.com/photo-1462826303086-329426d1aef5?w=400',
+                color: 'from-amber-600 to-yellow-600'
+            },
+            {
+                id: 'delagua-coffee',
+                name: 'Delagua Coffee',
+                capacity: 4,
+                floor: 'Piso 2',
+                features: ['Mesa Alta', 'Pizarra', 'Café Ilimitado', 'Luz Natural'],
+                image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=400',
+                color: 'from-blue-500 to-cyan-600'
+            },
+            {
+                id: 'el-colibri',
+                name: 'El Colibrí',
+                capacity: 10,
+                floor: 'Piso 4',
+                features: ['Pantalla Táctil', 'Terraza', 'Sistema Híbrido', 'Plantas Naturales'],
+                image: 'https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=400',
+                color: 'from-purple-500 to-pink-600'
+            },
+            {
+                id: 'la-ceiba',
+                name: 'La Ceiba',
+                capacity: 20,
+                floor: 'Piso 1',
+                features: ['Auditorio', 'Proyector Láser', 'Streaming', 'Acceso Directo'],
+                image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400',
+                color: 'from-indigo-500 to-purple-600'
+            }
+        ];
+
+        // Componente Principal
+        function App() {
+            const [currentUser, setCurrentUser] = useState({
+                name: 'María González',
+                role: 'Líder de Sostenibilidad',
+                department: 'Innovación',
+                avatar: 'https://i.pravatar.cc/150?img=48'
+            });
+            
+            const [activeSection, setActiveSection] = useState('home');
+            const [notifications, setNotifications] = useState(3);
+            const [selectedRoom, setSelectedRoom] = useState(null);
+            const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+            const [purposes, setPurposes] = useState([
+                { id: 1, author: 'Carlos Mendoza', text: 'Crear un impacto positivo en nuestra comunidad', date: '2024-01-15' },
+                { id: 2, author: 'Ana López', text: 'Inspirar a otros a vivir de manera sostenible', date: '2024-01-14' },
+                { id: 3, author: 'Diego Ramírez', text: 'Dejar un planeta mejor para las próximas generaciones', date: '2024-01-13' }
+            ]);
+            
+            const [news, setNews] = useState([
+                {
+                    id: 1,
+                    title: 'Nueva Certificación B Corp',
+                    content: 'Celebramos nuestra certificación como empresa B. Este logro refleja nuestro compromiso con la sostenibilidad y el impacto social positivo.',
+                    date: '2024-01-15',
+                    category: 'Sostenibilidad',
+                    important: true
+                },
+                {
+                    id: 2,
+                    title: 'Workshop de Innovación',
+                    content: 'Este viernes: Design Thinking para la sostenibilidad. Únete a nosotros en La Ceiba de 2:00 PM a 5:00 PM.',
+                    date: '2024-01-14',
+                    category: 'Eventos'
+                },
+                {
+                    id: 3,
+                    title: 'Nuevo Café del Mes',
+                    content: 'Prueba el café orgánico de Nariño en nuestras salas. Apoyamos a productores locales con prácticas sostenibles.',
+                    date: '2024-01-13',
+                    category: 'Novedades'
+                }
+            ]);
+
+            const getGreeting = () => {
+                const hour = new Date().getHours();
+                if (hour < 12) return '¡Buenos días';
+                if (hour < 18) return '¡Buenas tardes';
+                return '¡Buenas noches';
+            };
+
+            // Pantalla de Bienvenida
+            const WelcomeScreen = () => (
+                <div className="space-y-8 animate-fadeIn">
+                    {/* Hero */}
+                    <div className="gradient-green rounded-2xl p-8 text-white shadow-xl">
+                        <div className="flex flex-col md:flex-row items-center justify-between">
+                            <div>
+                                <h1 className="text-4xl font-bold mb-2">
+                                    {getGreeting()}, {currentUser.name.split(' ')[0]}! 🌱
+                                </h1>
+                                <p className="text-green-100 text-lg">
+                                    Construyamos juntos un futuro más sostenible
+                                </p>
+                                <div className="flex items-center mt-4 space-x-4">
+                                    <span className="bg-white/20 backdrop-blur rounded-lg px-3 py-1 text-sm">
+                                        📍 Calle 98, Bogotá
+                                    </span>
+                                    <span className="bg-white/20 backdrop-blur rounded-lg px-3 py-1 text-sm">
+                                        🌡️ 18°C - ☀️ Soleado
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="bg-white/10 backdrop-blur rounded-xl p-6 mt-6 md:mt-0">
+                                <div className="text-center">
+                                    <div className="text-4xl mb-2">⚡</div>
+                                    <p className="text-3xl font-bold">92%</p>
+                                    <p className="text-sm text-green-100">Score Sostenibilidad</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Menú Principal */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <button
+                            onClick={() => setActiveSection('news')}
+                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100 relative"
+                        >
+                            {notifications > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                                    {notifications} nuevas
+                                </span>
+                            )}
+                            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
+                                🔔
+                            </div>
+                            <h3 className="font-semibold text-gray-900 mb-1">Noticias y Actualizaciones</h3>
+                            <p className="text-sm text-gray-500">Lo último del Green Hub</p>
+                        </button>
+
+                        <button
+                            onClick={() => setActiveSection('purpose')}
+                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100"
+                        >
+                            <div className="bg-gradient-to-br from-amber-500 to-orange-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
+                                ❤️
+                            </div>
+                            <h3 className="font-semibold text-gray-900 mb-1">Muro del Propósito</h3>
+                            <p className="text-sm text-gray-500">Nuestra razón de ser</p>
+                        </button>
+
+                        <button
+                            onClick={() => setActiveSection('booking')}
+                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100"
+                        >
+                            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
+                                📅
+                            </div>
+                            <h3 className="font-semibold text-gray-900 mb-1">Reservar Sala</h3>
+                            <p className="text-sm text-gray-500">Gestiona tus reuniones</p>
+                        </button>
+
+                        <button className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100">
+                            <div className="bg-gradient-to-br from-purple-500 to-pink-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
+                                👥
+                            </div>
+                            <h3 className="font-semibold text-gray-900 mb-1">Equipo</h3>
+                            <p className="text-sm text-gray-500">Conoce al equipo</p>
+                        </button>
+
+                        <button className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100">
+                            <div className="bg-gradient-to-br from-red-500 to-rose-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
+                                📚
+                            </div>
+                            <h3 className="font-semibold text-gray-900 mb-1">Recursos</h3>
+                            <p className="text-sm text-gray-500">Documentos y guías</p>
+                        </button>
+
+                        <button className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100">
+                            <div className="bg-gradient-to-br from-gray-500 to-gray-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
+                                ⚙️
+                            </div>
+                            <h3 className="font-semibold text-gray-900 mb-1">Configuración</h3>
+                            <p className="text-sm text-gray-500">Personaliza tu experiencia</p>
+                        </button>
+                    </div>
+
+                    {/* Stats Rápidos */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-white rounded-lg p-4 border border-green-100">
+                            <p className="text-2xl font-bold text-gray-900">4</p>
+                            <p className="text-sm text-gray-600">Salas disponibles</p>
+                        </div>
+                        <div className="bg-white rounded-lg p-4 border border-green-100">
+                            <p className="text-2xl font-bold text-gray-900">42</p>
+                            <p className="text-sm text-gray-600">Green Heroes</p>
+                        </div>
+                        <div className="bg-white rounded-lg p-4 border border-green-100">
+                            <p className="text-2xl font-bold text-gray-900">-23%</p>
+                            <p className="text-sm text-gray-600">CO2 este mes</p>
+                        </div>
+                        <div className="bg-white rounded-lg p-4 border border-green-100">
+                            <p className="text-2xl font-bold text-gray-900">15</p>
+                            <p className="text-sm text-gray-600">Días sin papel</p>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Sección de Noticias
+            const NewsSection = () => (
+                <div className="animate-fadeIn">
+                    <div className="mb-6">
+                        <button 
+                            onClick={() => setActiveSection('home')}
+                            className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
+                        >
+                            ← Volver al inicio
+                        </button>
+                        <h2 className="text-3xl font-bold text-gray-900">Noticias y Actualizaciones</h2>
+                    </div>
+                    
+                    <div className="space-y-4">
+                        {news.map(item => (
+                            <div key={item.id} className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
+                                <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                        {item.important && (
+                                            <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded-full mb-2">
+                                                ⭐ Importante
+                                            </span>
+                                        )}
+                                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
+                                        <p className="text-gray-600 mb-3">{item.content}</p>
+                                        <div className="flex items-center space-x-4 text-sm text-gray-500">
+                                            <span>📅 {item.date}</span>
+                                            <span className="bg-green-100 text-green-700 px-2 py-1 rounded">
+                                                {item.category}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            // Muro del Propósito
+            const PurposeWall = () => {
+                const [newPurpose, setNewPurpose] = useState('');
+                
+                const addPurpose = () => {
+                    if (newPurpose.trim()) {
+                        setPurposes([
+                            {
+                                id: Date.now(),
+                                author: currentUser.name,
+                                text: newPurpose,
+                                date: new Date().toISOString().split('T')[0]
+                            },
+                            ...purposes
+                        ]);
+                        setNewPurpose('');
+                    }
+                };
+
+                return (
+                    <div className="animate-fadeIn">
+                        <div className="mb-6">
+                            <button 
+                                onClick={() => setActiveSection('home')}
+                                className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
+                            >
+                                ← Volver al inicio
+                            </button>
+                            <h2 className="text-3xl font-bold text-gray-900">Muro del Propósito</h2>
+                            <p className="text-gray-600 mt-2">Compartamos nuestra razón de ser</p>
+                        </div>
+
+                        {/* Agregar nuevo propósito */}
+                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 mb-6">
+                            <h3 className="font-semibold text-gray-900 mb-3">¿Cuál es tu propósito?</h3>
+                            <div className="flex space-x-3">
+                                <input
+                                    type="text"
+                                    value={newPurpose}
+                                    onChange={(e) => setNewPurpose(e.target.value)}
+                                    placeholder="Escribe aquí tu propósito..."
+                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                />
+                                <button
+                                    onClick={addPurpose}
+                                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                >
+                                    Compartir
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Lista de propósitos */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {purposes.map(purpose => (
+                                <div key={purpose.id} className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
+                                    <p className="text-gray-800 italic mb-4">"{purpose.text}"</p>
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="font-medium text-gray-700">{purpose.author}</span>
+                                        <span className="text-gray-500">{purpose.date}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            // Sistema de Reserva de Salas
+            const RoomBooking = () => {
+                const [bookingStep, setBookingStep] = useState('select'); // select, details, confirm
+                const [bookingData, setBookingData] = useState({
+                    time: '',
+                    duration: '1',
+                    purpose: ''
+                });
+
+                const handleRoomSelect = (room) => {
+                    setSelectedRoom(room);
+                    setBookingStep('details');
+                };
+
+                const handleBookingSubmit = () => {
+                    setBookingStep('confirm');
+                    setTimeout(() => {
+                        alert(`¡Sala ${selectedRoom.name} reservada exitosamente!`);
+                        setBookingStep('select');
+                        setSelectedRoom(null);
+                        setBookingData({ time: '', duration: '1', purpose: '' });
+                    }, 2000);
+                };
+
+                return (
+                    <div className="animate-fadeIn">
+                        <div className="mb-6">
+                            <button 
+                                onClick={() => setActiveSection('home')}
+                                className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
+                            >
+                                ← Volver al inicio
+                            </button>
+                            <h2 className="text-3xl font-bold text-gray-900">Reservar Sala de Juntas</h2>
+                            <p className="text-gray-600 mt-2">📍 Calle 98, Bogotá</p>
+                        </div>
+
+                        {bookingStep === 'select' && (
+                            <>
+                                {/* Selector de fecha */}
+                                <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 mb-6">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Selecciona la fecha
+                                    </label>
+                                    <input
+                                        type="date"
+                                        value={selectedDate}
+                                        onChange={(e) => setSelectedDate(e.target.value)}
+                                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                    />
+                                </div>
+
+                                {/* Grid de Salas */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {rooms.map(room => (
+                                        <div
+                                            key={room.id}
+                                            onClick={() => handleRoomSelect(room)}
+                                            className="room-card bg-white rounded-xl overflow-hidden shadow-md border border-green-100 cursor-pointer"
+                                        >
+                                            <div className="h-48 relative">
+                                                <img 
+                                                    src={room.image} 
+                                                    alt={room.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <div className={`absolute inset-0 bg-gradient-to-t ${room.color} opacity-60`}></div>
+                                                <div className="absolute bottom-4 left-4 text-white">
+                                                    <h3 className="text-xl font-bold">{room.name}</h3>
+                                                    <p className="text-sm opacity-90">{room.floor}</p>
+                                                </div>
+                                            </div>
+                                            <div className="p-4">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <span className="text-sm text-gray-600">
+                                                        👥 Capacidad: {room.capacity}
+                                                    </span>
+                                                    <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
+                                                        Disponible
+                                                    </span>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    {room.features.slice(0, 2).map((feature, idx) => (
+                                                        <span key={idx} className="text-xs text-gray-500 block">
+                                                            ✓ {feature}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
+
+                        {bookingStep === 'details' && selectedRoom && (
+                            <div className="max-w-2xl mx-auto">
+                                <div className="bg-white rounded-xl p-6 shadow-md border border-green-100">
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                        Reservar {selectedRoom.name}
+                                    </h3>
+                                    
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Hora de inicio
+                                            </label>
+                                            <select 
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                value={bookingData.time}
+                                                onChange={(e) => setBookingData({...bookingData, time: e.target.value})}
+                                            >
+                                                <option value="">Selecciona hora</option>
+                                                <option value="08:00">08:00 AM</option>
+                                                <option value="09:00">09:00 AM</option>
+                                                <option value="10:00">10:00 AM</option>
+                                                <option value="11:00">11:00 AM</option>
+                                                <option value="12:00">12:00 PM</option>
+                                                <option value="14:00">02:00 PM</option>
+                                                <option value="15:00">03:00 PM</option>
+                                                <option value="16:00">04:00 PM</option>
+                                                <option value="17:00">05:00 PM</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Duración
+                                            </label>
+                                            <select 
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                value={bookingData.duration}
+                                                onChange={(e) => setBookingData({...bookingData, duration: e.target.value})}
+                                            >
+                                                <option value="0.5">30 minutos</option>
+                                                <option value="1">1 hora</option>
+                                                <option value="1.5">1.5 horas</option>
+                                                <option value="2">2 horas</option>
+                                                <option value="3">3 horas</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Propósito de la reunión
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="Ej: Reunión de estrategia sostenible"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                value={bookingData.purpose}
+                                                onChange={(e) => setBookingData({...bookingData, purpose: e.target.value})}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Número de asistentes
+                                            </label>
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                max={selectedRoom.capacity}
+                                                placeholder="Número de personas"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex space-x-3 mt-6">
+                                        <button
+                                            onClick={() => {
+                                                setBookingStep('select');
+                                                setSelectedRoom(null);
+                                            }}
+                                            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            onClick={handleBookingSubmit}
+                                            className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                        >
+                                            Confirmar Reserva
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {bookingStep === 'confirm' && (
+                            <div className="max-w-md mx-auto text-center">
+                                <div className="bg-white rounded-xl p-8 shadow-md border border-green-100">
+                                    <div className="text-6xl mb-4">✅</div>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">¡Reserva Confirmada!</h3>
+                                    <p className="text-gray-600">
+                                        {selectedRoom?.name} ha sido reservada exitosamente
+                                    </p>
+                                    <p className="text-sm text-gray-500 mt-2">
+                                        Recibirás un correo de confirmación
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
+            return (
+                <div className="min-h-screen pattern-bg">
+                    {/* Header */}
+                    <header className="bg-white shadow-sm border-b border-green-100">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex items-center justify-between h-16">
+                                <div className="flex items-center space-x-3">
+                                    <div className="gradient-green p-2 rounded-lg">
+                                        <span className="text-white text-xl">🌿</span>
+                                    </div>
+                                    <div>
+                                        <h1 className="text-xl font-bold text-gray-900">El Green Hub</h1>
+                                        <p className="text-xs text-gray-500">Portal de Empleados</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-center space-x-4">
+                                    <div className="relative cursor-pointer">
+                                        <span className="text-xl">🔔</span>
+                                        {notifications > 0 && (
+                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                                {notifications}
+                                            </span>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="flex items-center space-x-3">
+                                        <div className="text-right hidden md:block">
+                                            <p className="text-sm font-medium text-gray-900">{currentUser.name}</p>
+                                            <p className="text-xs text-gray-500">{currentUser.role}</p>
+                                        </div>
+                                        <img
+                                            src={currentUser.avatar}
+                                            alt={currentUser.name}
+                                            className="h-10 w-10 rounded-full border-2 border-green-200"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        {activeSection === 'home' && <WelcomeScreen />}
+                        {activeSection === 'news' && <NewsSection />}
+                        {activeSection === 'purpose' && <PurposeWall />}
+                        {activeSection === 'booking' && <RoomBooking />}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-white border-t border-green-100 mt-12">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                            <div className="text-center text-sm text-gray-600">
+                                El Green Hub © 2024 - Calle 98, Bogotá - Construyendo un futuro sostenible 🌱
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        // Renderizar la aplicación
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
