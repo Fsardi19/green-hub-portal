@@ -3,942 +3,758 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Green Hub - Portal de Empleados</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Green Hub Portal - Empleados</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
+        .hero-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
-        
-        .animate-fadeIn {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .room-card {
+        .card-hover {
             transition: all 0.3s ease;
         }
-        
-        .room-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        
-        .gradient-green {
-            background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 100%);
-        }
-        
-        .pattern-bg {
-            background-color: #F5F2E8;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232D5F3F' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
         .notification-dropdown {
+            display: none;
             position: absolute;
             top: 100%;
             right: 0;
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            width: 320px;
-            z-index: 50;
-            max-height: 400px;
-            overflow-y: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            min-width: 300px;
+        }
+        .notification-dropdown.show {
+            display: block;
+        }
+        .occupied {
+            background-color: #fee2e2 !important;
+            color: #991b1b !important;
+            cursor: not-allowed !important;
         }
     </style>
 </head>
-<body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-        
-        // Datos de las salas
-        const rooms = [
-            {
-                id: 'la-palma',
-                name: 'La Palma',
-                capacity: 8,
-                floor: 'Piso 3',
-                features: ['TV 65"', 'Pizarra Digital', 'Video Conferencia', 'Aire Acondicionado'],
-                image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400',
-                color: 'from-green-500 to-emerald-600'
-            },
-            {
-                id: 'el-tucan',
-                name: 'El Tucán',
-                capacity: 12,
-                floor: 'Piso 3',
-                features: ['Proyector 4K', 'Sistema de Sonido', 'Pizarra', 'Mesa Modular'],
-                image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400',
-                color: 'from-orange-500 to-red-600'
-            },
-            {
-                id: 'equation-coffee',
-                name: 'Equation Coffee',
-                capacity: 6,
-                floor: 'Piso 2',
-                features: ['TV 55"', 'Cafetera Premium', 'Sofás', 'Vista al Jardín'],
-                image: 'https://images.unsplash.com/photo-1462826303086-329426d1aef5?w=400',
-                color: 'from-amber-600 to-yellow-600'
-            },
-            {
-                id: 'delagua-coffee',
-                name: 'Delagua Coffee',
-                capacity: 4,
-                floor: 'Piso 2',
-                features: ['Mesa Alta', 'Pizarra', 'Café Ilimitado', 'Luz Natural'],
-                image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=400',
-                color: 'from-blue-500 to-cyan-600'
-            },
-            {
-                id: 'el-colibri',
-                name: 'El Colibrí',
-                capacity: 10,
-                floor: 'Piso 4',
-                features: ['Pantalla Táctil', 'Terraza', 'Sistema Híbrido', 'Plantas Naturales'],
-                image: 'https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=400',
-                color: 'from-purple-500 to-pink-600'
-            },
-            {
-                id: 'la-ceiba',
-                name: 'La Ceiba',
-                capacity: 20,
-                floor: 'Piso 1',
-                features: ['Auditorio', 'Proyector Láser', 'Streaming', 'Acceso Directo'],
-                image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=400',
-                color: 'from-indigo-500 to-purple-600'
-            }
-        ];
-
-        // Componente Principal
-        function App() {
-            const [activeSection, setActiveSection] = useState('home');
-            const [notifications, setNotifications] = useState(3);
-            const [showNotifications, setShowNotifications] = useState(false);
-            const [selectedRoom, setSelectedRoom] = useState(null);
-            const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-            const [reservations, setReservations] = useState([
-                {
-                    id: 1,
-                    roomId: 'la-palma',
-                    date: new Date().toISOString().split('T')[0],
-                    time: '09:00',
-                    duration: '2',
-                    purpose: 'Reunión de estrategia',
-                    attendees: 6
-                },
-                {
-                    id: 2,
-                    roomId: 'el-tucan',
-                    date: new Date().toISOString().split('T')[0],
-                    time: '14:00',
-                    duration: '1',
-                    purpose: 'Presentación de resultados',
-                    attendees: 8
-                }
-            ]);
-            
-            const [purposes, setPurposes] = useState([
-                { id: 1, author: 'Carlos Mendoza', text: 'Crear un impacto positivo en nuestra comunidad', date: '2024-01-15' },
-                { id: 2, author: 'Ana López', text: 'Inspirar a otros a vivir de manera sostenible', date: '2024-01-14' },
-                { id: 3, author: 'Diego Ramírez', text: 'Dejar un planeta mejor para las próximas generaciones', date: '2024-01-13' }
-            ]);
-            
-            const [news, setNews] = useState([
-                {
-                    id: 1,
-                    title: 'Nueva Certificación B Corp',
-                    content: 'Celebramos nuestra certificación como empresa B. Este logro refleja nuestro compromiso con la sostenibilidad y el impacto social positivo.',
-                    date: '2024-01-15',
-                    category: 'Sostenibilidad',
-                    important: true
-                },
-                {
-                    id: 2,
-                    title: 'Workshop de Innovación',
-                    content: 'Este viernes: Design Thinking para la sostenibilidad. Únete a nosotros en La Ceiba de 2:00 PM a 5:00 PM.',
-                    date: '2024-01-14',
-                    category: 'Eventos'
-                },
-                {
-                    id: 3,
-                    title: 'Nuevo Café del Mes',
-                    content: 'Prueba el café orgánico de Nariño en nuestras salas. Apoyamos a productores locales con prácticas sostenibles.',
-                    date: '2024-01-13',
-                    category: 'Novedades'
-                }
-            ]);
-
-            const notificationRef = useRef(null);
-
-            useEffect(() => {
-                const handleClickOutside = (event) => {
-                    if (notificationRef.current && !notificationRef.current.contains(event.target)) {
-                        setShowNotifications(false);
-                    }
-                };
-
-                document.addEventListener('mousedown', handleClickOutside);
-                return () => {
-                    document.removeEventListener('mousedown', handleClickOutside);
-                };
-            }, []);
-
-            const getGreeting = () => {
-                const hour = new Date().getHours();
-                if (hour < 12) return '¡Buenos días';
-                if (hour < 18) return '¡Buenas tardes';
-                return '¡Buenas noches';
-            };
-
-            const isRoomAvailable = (roomId, date, time) => {
-                return !reservations.some(reservation => 
-                    reservation.roomId === roomId && 
-                    reservation.date === date && 
-                    reservation.time === time
-                );
-            };
-
-            const getAvailableTimeSlots = (roomId, date) => {
-                const timeSlots = [
-                    { value: "08:00", label: "08:00 AM" },
-                    { value: "09:00", label: "09:00 AM" },
-                    { value: "10:00", label: "10:00 AM" },
-                    { value: "11:00", label: "11:00 AM" },
-                    { value: "12:00", label: "12:00 PM" },
-                    { value: "14:00", label: "02:00 PM" },
-                    { value: "15:00", label: "03:00 PM" },
-                    { value: "16:00", label: "04:00 PM" },
-                    { value: "17:00", label: "05:00 PM" }
-                ];
-
-                return timeSlots.map(slot => ({
-                    ...slot,
-                    available: isRoomAvailable(roomId, date, slot.value),
-                    label: slot.available ? slot.label : `${slot.label} (Ocupado)`
-                }));
-            };
-
-            // Pantalla de Bienvenida
-            const WelcomeScreen = () => (
-                <div className="space-y-8 animate-fadeIn">
-                    {/* Hero */}
-                    <div className="gradient-green rounded-2xl p-8 text-white shadow-xl">
-                        <div className="flex flex-col md:flex-row items-center justify-between">
-                            <div>
-                                <h1 className="text-4xl font-bold mb-2">
-                                    {getGreeting()}, equipo Green Hub! 🌱
-                                </h1>
-                                <p className="text-green-100 text-lg">
-                                    Construyamos juntos un futuro más sostenible
-                                </p>
-                                <div className="flex items-center mt-4 space-x-4">
-                                    <span className="bg-white/20 backdrop-blur rounded-lg px-3 py-1 text-sm">
-                                        📍 Calle 98, Bogotá
-                                    </span>
-                                    <span className="bg-white/20 backdrop-blur rounded-lg px-3 py-1 text-sm">
-                                        🌡️ 18°C - ☀️ Soleado
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Menú Principal */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <button
-                            onClick={() => setActiveSection('news')}
-                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100"
-                        >
-                            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                                📰
-                            </div>
-                            <h3 className="font-semibold text-gray-900 mb-1">Noticias y Actualizaciones</h3>
-                            <p className="text-sm text-gray-500">Lo último del Green Hub</p>
-                        </button>
-
-                        <button
-                            onClick={() => setActiveSection('purpose')}
-                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100"
-                        >
-                            <div className="bg-gradient-to-br from-amber-500 to-orange-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                                ❤️
-                            </div>
-                            <h3 className="font-semibold text-gray-900 mb-1">Muro del Propósito</h3>
-                            <p className="text-sm text-gray-500">Nuestra razón de ser</p>
-                        </button>
-
-                        <button
-                            onClick={() => setActiveSection('booking')}
-                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100"
-                        >
-                            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                                📅
-                            </div>
-                            <h3 className="font-semibold text-gray-900 mb-1">Reservar Sala</h3>
-                            <p className="text-sm text-gray-500">Gestiona tus reuniones</p>
-                        </button>
-
-                        <button
-                            onClick={() => setActiveSection('resources')}
-                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100"
-                        >
-                            <div className="bg-gradient-to-br from-red-500 to-rose-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                                📚
-                            </div>
-                            <h3 className="font-semibold text-gray-900 mb-1">Recursos</h3>
-                            <p className="text-sm text-gray-500">Documentos y guías</p>
-                        </button>
-                    </div>
-
-                    {/* Acceso rápido a disponibilidad */}
-                    <div className="bg-white rounded-xl p-6 shadow-md border border-green-100">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Acceso Rápido</h3>
-                        <button
-                            onClick={() => setActiveSection('availability')}
-                            className="w-full bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg p-4 text-left transition-colors"
-                        >
-                            <div className="flex items-center space-x-3">
-                                <span className="text-2xl">👁️</span>
-                                <div>
-                                    <h4 className="font-medium text-gray-900">Ver Disponibilidad de Salas</h4>
-                                    <p className="text-sm text-gray-600">Consulta qué salas están disponibles hoy</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="hero-section text-white p-6">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">🌱 Green Hub Portal</h1>
+                    <p class="text-green-100 mt-2">¡Buenos días, equipo Green Hub!</p>
                 </div>
-            );
-
-            // Sección de Noticias
-            const NewsSection = () => (
-                <div className="animate-fadeIn">
-                    <div className="mb-6">
-                        <button 
-                            onClick={() => setActiveSection('home')}
-                            className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
-                        >
-                            ← Volver al inicio
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button onclick="toggleNotifications()" class="relative p-2 bg-green-600 rounded-full hover:bg-green-700 transition-colors">
+                            🔔
+                            <span id="notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
                         </button>
-                        <h2 className="text-3xl font-bold text-gray-900">Noticias y Actualizaciones</h2>
-                    </div>
-                    
-                    <div className="space-y-4">
-                        {news.map(item => (
-                            <div key={item.id} className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        {item.important && (
-                                            <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded-full mb-2">
-                                                ⭐ Importante
-                                            </span>
-                                        )}
-                                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
-                                        <p className="text-gray-600 mb-3">{item.content}</p>
-                                        <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                            <span>📅 {item.date}</span>
-                                            <span className="bg-green-100 text-green-700 px-2 py-1 rounded">
-                                                {item.category}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div id="notification-dropdown" class="notification-dropdown">
+                            <div class="p-4 border-b border-gray-200">
+                                <h3 class="font-semibold text-gray-800">Notificaciones Recientes</h3>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            );
-
-            // Muro del Propósito
-            const PurposeWall = () => {
-                const [newPurpose, setNewPurpose] = useState('');
-                
-                const addPurpose = () => {
-                    if (newPurpose.trim()) {
-                        setPurposes([
-                            {
-                                id: Date.now(),
-                                author: 'Empleado Green Hub',
-                                text: newPurpose,
-                                date: new Date().toISOString().split('T')[0]
-                            },
-                            ...purposes
-                        ]);
-                        setNewPurpose('');
-                    }
-                };
-
-                return (
-                    <div className="animate-fadeIn">
-                        <div className="mb-6">
-                            <button 
-                                onClick={() => setActiveSection('home')}
-                                className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
-                            >
-                                ← Volver al inicio
-                            </button>
-                            <h2 className="text-3xl font-bold text-gray-900">Muro del Propósito</h2>
-                            <p className="text-gray-600 mt-2">Compartamos nuestra razón de ser</p>
-                        </div>
-
-                        {/* Agregar nuevo propósito */}
-                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 mb-6">
-                            <h3 className="font-semibold text-gray-900 mb-3">¿Cuál es tu propósito?</h3>
-                            <div className="flex space-x-3">
-                                <input
-                                    type="text"
-                                    value={newPurpose}
-                                    onChange={(e) => setNewPurpose(e.target.value)}
-                                    placeholder="Escribe aquí tu propósito..."
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                />
-                                <button
-                                    onClick={addPurpose}
-                                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                                >
-                                    Compartir
+                            <div id="notification-list" class="max-h-64 overflow-y-auto">
+                                <!-- Las notificaciones se cargarán aquí -->
+                            </div>
+                            <div class="p-3 border-t border-gray-200">
+                                <button onclick="showSection('news')" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                    Ver todas las noticias →
                                 </button>
                             </div>
                         </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold">Empleado Green Hub</p>
+                        <p class="text-green-100 text-sm">Portal de Empleados</p>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-                        {/* Lista de propósitos */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {purposes.map(purpose => (
-                                <div key={purpose.id} className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
-                                    <p className="text-gray-800 italic mb-4">"{purpose.text}"</p>
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span className="font-medium text-gray-700">{purpose.author}</span>
-                                        <span className="text-gray-500">{purpose.date}</span>
-                                    </div>
-                                </div>
-                            ))}
+        <!-- Navigation -->
+        <nav class="bg-white shadow-md">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="flex space-x-8">
+                    <button onclick="showSection('home')" class="nav-btn py-4 px-2 border-b-2 border-green-500 text-green-600 font-medium">
+                        🏠 Inicio
+                    </button>
+                    <button onclick="showSection('news')" class="nav-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+                        📰 Noticias
+                    </button>
+                    <button onclick="showSection('purpose')" class="nav-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+                        🎯 Propósito
+                    </button>
+                    <button onclick="showSection('rooms')" class="nav-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+                        🏢 Reservar Sala
+                    </button>
+                    <button onclick="showSection('resources')" class="nav-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+                        📚 Recursos
+                    </button>
+                    <button onclick="showSection('availability')" class="nav-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+                        👁️ Disponibilidad
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-6xl mx-auto p-6">
+            <!-- Home Section -->
+            <div id="home-section" class="section">
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover cursor-pointer" onclick="showSection('news')">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Noticias</h3>
+                                <p class="text-gray-600 text-sm">Últimas actualizaciones</p>
+                            </div>
+                            <div class="text-3xl">📰</div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">2 nuevas</span>
                         </div>
                     </div>
-                );
-            };
 
-            // Sistema de Reserva de Salas
-            const RoomBooking = () => {
-                const [bookingStep, setBookingStep] = useState('select');
-                const [bookingData, setBookingData] = useState({
-                    time: '',
-                    duration: '1',
-                    purpose: '',
-                    attendees: ''
-                });
-
-                const handleRoomSelect = (room) => {
-                    setSelectedRoom(room);
-                    setBookingStep('details');
-                };
-
-                const handleBookingSubmit = () => {
-                    const newReservation = {
-                        id: Date.now(),
-                        roomId: selectedRoom.id,
-                        date: selectedDate,
-                        time: bookingData.time,
-                        duration: bookingData.duration,
-                        purpose: bookingData.purpose,
-                        attendees: parseInt(bookingData.attendees)
-                    };
-
-                    setReservations([...reservations, newReservation]);
-                    setBookingStep('confirm');
-                    
-                    setTimeout(() => {
-                        setBookingStep('select');
-                        setSelectedRoom(null);
-                        setBookingData({ time: '', duration: '1', purpose: '', attendees: '' });
-                    }, 3000);
-                };
-
-                const today = new Date().toISOString().split('T')[0];
-
-                return (
-                    <div className="animate-fadeIn">
-                        <div className="mb-6">
-                            <button 
-                                onClick={() => setActiveSection('home')}
-                                className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
-                            >
-                                ← Volver al inicio
-                            </button>
-                            <h2 className="text-3xl font-bold text-gray-900">Reservar Sala de Juntas</h2>
-                            <p className="text-gray-600 mt-2">📍 Calle 98, Bogotá</p>
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover cursor-pointer" onclick="showSection('purpose')">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Propósito</h3>
+                                <p class="text-gray-600 text-sm">Comparte tu razón de ser</p>
+                            </div>
+                            <div class="text-3xl">🎯</div>
                         </div>
-
-                        {bookingStep === 'select' && (
-                            <>
-                                {/* Selector de fecha */}
-                                <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 mb-6">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Selecciona la fecha
-                                    </label>
-                                    <input
-                                        type="date"
-                                        value={selectedDate}
-                                        min={today}
-                                        onChange={(e) => setSelectedDate(e.target.value)}
-                                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                                    />
-                                </div>
-
-                                {/* Grid de Salas */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {rooms.map(room => {
-                                        const roomReservations = reservations.filter(r => r.roomId === room.id && r.date === selectedDate);
-                                        const isAvailable = roomReservations.length === 0;
-                                        
-                                        return (
-                                            <div
-                                                key={room.id}
-                                                onClick={() => handleRoomSelect(room)}
-                                                className="room-card bg-white rounded-xl overflow-hidden shadow-md border border-green-100 cursor-pointer"
-                                            >
-                                                <div className="h-48 relative">
-                                                    <img 
-                                                        src={room.image} 
-                                                        alt={room.name}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                    <div className={`absolute inset-0 bg-gradient-to-t ${room.color} opacity-60`}></div>
-                                                    <div className="absolute bottom-4 left-4 text-white">
-                                                        <h3 className="text-xl font-bold">{room.name}</h3>
-                                                        <p className="text-sm opacity-90">{room.floor}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="p-4">
-                                                    <div className="flex items-center justify-between mb-3">
-                                                        <span className="text-sm text-gray-600">
-                                                            👥 Capacidad: {room.capacity}
-                                                        </span>
-                                                        <span className={`text-xs px-2 py-1 rounded-full ${
-                                                            isAvailable 
-                                                                ? 'bg-green-100 text-green-700' 
-                                                                : 'bg-red-100 text-red-700'
-                                                        }`}>
-                                                            {isAvailable ? 'Disponible' : `${roomReservations.length} reserva(s)`}
-                                                        </span>
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        {room.features.slice(0, 2).map((feature, idx) => (
-                                                            <span key={idx} className="text-xs text-gray-500 block">
-                                                                ✓ {feature}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </>
-                        )}
-
-                        {bookingStep === 'details' && selectedRoom && (
-                            <div className="max-w-2xl mx-auto">
-                                <div className="bg-white rounded-xl p-6 shadow-md border border-green-100">
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                                        Reservar {selectedRoom.name}
-                                    </h3>
-                                    <p className="text-sm text-gray-600 mb-4">
-                                        Fecha seleccionada: {selectedDate}
-                                    </p>
-                                    
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Hora de inicio
-                                            </label>
-                                            <select 
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                                                value={bookingData.time}
-                                                onChange={(e) => setBookingData({...bookingData, time: e.target.value})}
-                                            >
-                                                <option value="">Selecciona hora</option>
-                                                {getAvailableTimeSlots(selectedRoom.id, selectedDate).map(slot => (
-                                                    <option 
-                                                        key={slot.value} 
-                                                        value={slot.value}
-                                                        disabled={!slot.available}
-                                                    >
-                                                        {slot.label}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Duración
-                                            </label>
-                                            <select 
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                                                value={bookingData.duration}
-                                                onChange={(e) => setBookingData({...bookingData, duration: e.target.value})}
-                                            >
-                                                <option value="0.5">30 minutos</option>
-                                                <option value="1">1 hora</option>
-                                                <option value="1.5">1.5 horas</option>
-                                                <option value="2">2 horas</option>
-                                                <option value="3">3 horas</option>
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Propósito de la reunión
-                                            </label>
-                                            <input
-                                                type="text"
-                                                placeholder="Ej: Reunión de estrategia sostenible"
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                                                value={bookingData.purpose}
-                                                onChange={(e) => setBookingData({...bookingData, purpose: e.target.value})}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Número de asistentes
-                                            </label>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                max={selectedRoom.capacity}
-                                                placeholder="Número de personas"
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                                                value={bookingData.attendees}
-                                                onChange={(e) => setBookingData({...bookingData, attendees: e.target.value})}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="flex space-x-3 mt-6">
-                                        <button
-                                            onClick={() => {
-                                                setBookingStep('select');
-                                                setSelectedRoom(null);
-                                            }}
-                                            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-                                        >
-                                            Cancelar
-                                        </button>
-                                        <button
-                                            onClick={handleBookingSubmit}
-                                            disabled={!bookingData.time || !bookingData.purpose || !bookingData.attendees}
-                                            className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                                        >
-                                            Confirmar Reserva
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {bookingStep === 'confirm' && (
-                            <div className="max-w-md mx-auto text-center">
-                                <div className="bg-white rounded-xl p-8 shadow-md border border-green-100">
-                                    <div className="text-6xl mb-4">✅</div>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">¡Reserva Confirmada!</h3>
-                                    <p className="text-gray-600">
-                                        {selectedRoom?.name} ha sido reservada exitosamente
-                                    </p>
-                                    <p className="text-sm text-gray-500 mt-2">
-                                        Fecha: {selectedDate} a las {bookingData.time}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
+                        <div class="mt-4">
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">3 propósitos</span>
+                        </div>
                     </div>
-                );
-            };
 
-            // Sección de Disponibilidad
-            const AvailabilitySection = () => (
-                <div className="animate-fadeIn">
-                    <div className="mb-6">
-                        <button 
-                            onClick={() => setActiveSection('home')}
-                            className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
-                        >
-                            ← Volver al inicio
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover cursor-pointer" onclick="showSection('rooms')">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Reservar Sala</h3>
+                                <p class="text-gray-600 text-sm">Espacios disponibles</p>
+                            </div>
+                            <div class="text-3xl">🏢</div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">6 salas</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover cursor-pointer" onclick="showSection('resources')">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Recursos</h3>
+                                <p class="text-gray-600 text-sm">Documentos y guías</p>
+                            </div>
+                            <div class="text-3xl">📚</div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full">6 recursos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Access -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">🚀 Acceso Rápido</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="showSection('availability')" class="bg-green-50 hover:bg-green-100 p-4 rounded-lg text-left transition-colors">
+                            <div class="font-semibold text-green-800">Ver Disponibilidad de Salas</div>
+                            <div class="text-green-600 text-sm">Consulta horarios y reservas</div>
                         </button>
-                        <h2 className="text-3xl font-bold text-gray-900">Disponibilidad de Salas</h2>
-                        <p className="text-gray-600 mt-2">Consulta las reservas existentes</p>
-                    </div>
-
-                    {/* Selector de fecha */}
-                    <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Consultar fecha
-                        </label>
-                        <input
-                            type="date"
-                            value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                        />
-                    </div>
-
-                    {/* Lista de salas y sus reservas */}
-                    <div className="space-y-4">
-                        {rooms.map(room => {
-                            const roomReservations = reservations.filter(r => r.roomId === room.id && r.date === selectedDate);
-                            
-                            return (
-                                <div key={room.id} className="bg-white rounded-xl p-6 shadow-md border border-green-100">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-gray-900">{room.name}</h3>
-                                            <p className="text-sm text-gray-600">{room.floor} • Capacidad: {room.capacity} personas</p>
-                                        </div>
-                                        <span className={`px-3 py-1 rounded-full text-sm ${
-                                            roomReservations.length === 0 
-                                                ? 'bg-green-100 text-green-700' 
-                                                : 'bg-orange-100 text-orange-700'
-                                        }`}>
-                                            {roomReservations.length === 0 ? 'Disponible' : `${roomReservations.length} reserva(s)`}
-                                        </span>
-                                    </div>
-
-                                    {roomReservations.length > 0 ? (
-                                        <div className="space-y-2">
-                                            <h4 className="font-medium text-gray-700">Reservas para {selectedDate}:</h4>
-                                            {roomReservations.map(reservation => (
-                                                <div key={reservation.id} className="bg-gray-50 rounded-lg p-3">
-                                                    <div className="flex items-center justify-between">
-                                                        <div>
-                                                            <p className="font-medium text-gray-900">
-                                                                {reservation.time} - {reservation.duration}h
-                                                            </p>
-                                                            <p className="text-sm text-gray-600">{reservation.purpose}</p>
-                                                            <p className="text-xs text-gray-500">
-                                                                👥 {reservation.attendees} asistentes
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-gray-500 italic">No hay reservas para esta fecha</p>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            );
-
-            // Sección de Recursos
-            const ResourcesSection = () => (
-                <div className="animate-fadeIn">
-                    <div className="mb-6">
-                        <button 
-                            onClick={() => setActiveSection('home')}
-                            className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
-                        >
-                            ← Volver al inicio
+                        <button onclick="showSection('resources')" class="bg-blue-50 hover:bg-blue-100 p-4 rounded-lg text-left transition-colors">
+                            <div class="font-semibold text-blue-800">Manual del Empleado</div>
+                            <div class="text-blue-600 text-sm">Guía completa 2024</div>
                         </button>
-                        <h2 className="text-3xl font-bold text-gray-900">Recursos</h2>
-                        <p className="text-gray-600 mt-2">Documentos y guías para el equipo</p>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
-                            <div className="bg-gradient-to-br from-green-500 to-emerald-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
-                                📋
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Manual del Empleado</h3>
-                            <p className="text-gray-600 text-sm mb-3">Guía completa sobre políticas y procedimientos</p>
-                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
-                                Descargar PDF →
-                            </button>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
-                            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
-                                🌱
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Guía de Sostenibilidad</h3>
-                            <p className="text-gray-600 text-sm mb-3">Mejores prácticas para un trabajo sostenible</p>
-                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
-                                Ver guía →
-                            </button>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
-                            <div className="bg-gradient-to-br from-purple-500 to-pink-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
-                                🎯
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Objetivos 2024</h3>
-                            <p className="text-gray-600 text-sm mb-3">Metas y objetivos del Green Hub</p>
-                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
-                                Ver objetivos →
-                            </button>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
-                            <div className="bg-gradient-to-br from-orange-500 to-red-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
-                                📞
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Directorio</h3>
-                            <p className="text-gray-600 text-sm mb-3">Contactos importantes del equipo</p>
-                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
-                                Ver directorio →
-                            </button>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
-                            <div className="bg-gradient-to-br from-teal-500 to-cyan-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
-                                🔧
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Herramientas</h3>
-                            <p className="text-gray-600 text-sm mb-3">Software y herramientas de trabajo</p>
-                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
-                                Ver herramientas →
-                            </button>
-                        </div>
-
-                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
-                            <div className="bg-gradient-to-br from-yellow-500 to-amber-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
-                                📚
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Biblioteca</h3>
-                            <p className="text-gray-600 text-sm mb-3">Recursos de aprendizaje y desarrollo</p>
-                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
-                                Explorar →
-                            </button>
-                        </div>
+                        <button onclick="showSection('purpose')" class="bg-purple-50 hover:bg-purple-100 p-4 rounded-lg text-left transition-colors">
+                            <div class="font-semibold text-purple-800">Compartir Propósito</div>
+                            <div class="text-purple-600 text-sm">Inspira al equipo</div>
+                        </button>
                     </div>
                 </div>
-            );
+            </div>
 
-            return (
-                <div className="min-h-screen pattern-bg">
-                    {/* Header */}
-                    <header className="bg-white shadow-sm border-b border-green-100">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="flex items-center justify-between h-16">
-                                <div className="flex items-center space-x-3">
-                                    <div className="gradient-green p-2 rounded-lg">
-                                        <span className="text-white text-xl">🌿</span>
-                                    </div>
-                                    <div>
-                                        <h1 className="text-xl font-bold text-gray-900">El Green Hub</h1>
-                                        <p className="text-xs text-gray-500">Portal de Empleados</p>
-                                    </div>
-                                </div>
-                                
-                                <div className="flex items-center space-x-4">
-                                    <div className="relative" ref={notificationRef}>
-                                        <button
-                                            onClick={() => setShowNotifications(!showNotifications)}
-                                            className="relative cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                                        >
-                                            <span className="text-xl">🔔</span>
-                                            {notifications > 0 && (
-                                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                                    {notifications}
-                                                </span>
-                                            )}
-                                        </button>
-
-                                        {showNotifications && (
-                                            <div className="notification-dropdown">
-                                                <div className="p-4 border-b border-gray-200">
-                                                    <h3 className="font-semibold text-gray-900">Notificaciones</h3>
-                                                </div>
-                                                <div className="max-h-80 overflow-y-auto">
-                                                    {news.slice(0, 3).map(item => (
-                                                        <div key={item.id} className="p-4 border-b border-gray-100 hover:bg-gray-50">
-                                                            <div className="flex items-start space-x-3">
-                                                                <div className="flex-shrink-0">
-                                                                    {item.important ? (
-                                                                        <span className="text-red-500">⭐</span>
-                                                                    ) : (
-                                                                        <span className="text-blue-500">📰</span>
-                                                                    )}
-                                                                </div>
-                                                                <div className="flex-1 min-w-0">
-                                                                    <p className="text-sm font-medium text-gray-900 truncate">
-                                                                        {item.title}
-                                                                    </p>
-                                                                    <p className="text-xs text-gray-500 mt-1">
-                                                                        {item.date}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                <div className="p-3 border-t border-gray-200">
-                                                    <button
-                                                        onClick={() => {
-                                                            setActiveSection('news');
-                                                            setShowNotifications(false);
-                                                            setNotifications(0);
-                                                        }}
-                                                        className="w-full text-center text-sm text-green-600 hover:text-green-700 font-medium"
-                                                    >
-                                                        Ver todas las noticias
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                    
-                                    <div className="flex items-center space-x-3">
-                                        <div className="text-right hidden md:block">
-                                            <p className="text-sm font-medium text-gray-900">Empleado Green Hub</p>
-                                            <p className="text-xs text-gray-500">Portal de Empleados</p>
-                                        </div>
-                                        <div className="h-10 w-10 rounded-full border-2 border-green-200 bg-green-100 flex items-center justify-center">
-                                            <span className="text-green-600 font-semibold">🌱</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-
-                    {/* Main Content */}
-                    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                        {activeSection === 'home' && <WelcomeScreen />}
-                        {activeSection === 'news' && <NewsSection />}
-                        {activeSection === 'purpose' && <PurposeWall />}
-                        {activeSection === 'booking' && <RoomBooking />}
-                        {activeSection === 'availability' && <AvailabilitySection />}
-                        {activeSection === 'resources' && <ResourcesSection />}
-                    </main>
-
-                    {/* Footer */}
-                    <footer className="bg-white border-t border-green-100 mt-12">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                            <div className="text-center text-sm text-gray-600">
-                                El Green Hub © 2024 - Calle 98, Bogotá - Construyendo un futuro sostenible 🌱
-                            </div>
-                        </div>
-                    </footer>
+            <!-- News Section -->
+            <div id="news-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">📰 Noticias y Actualizaciones</h2>
+                <div id="news-container" class="space-y-4">
+                    <!-- Las noticias se cargarán aquí dinámicamente -->
                 </div>
-            );
+            </div>
+
+            <!-- Purpose Section -->
+            <div id="purpose-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">🎯 Muro del Propósito</h2>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Comparte tu propósito</h3>
+                    <form id="purpose-form">
+                        <textarea id="purpose-text" placeholder="¿Cuál es tu propósito en Green Hub? Comparte tu razón de ser..." 
+                                  class="w-full p-3 border border-gray-300 rounded-lg resize-none" rows="3"></textarea>
+                        <div class="mt-4 flex justify-between items-center">
+                            <input type="text" id="purpose-author" placeholder="Tu nombre" 
+                                   class="px-3 py-2 border border-gray-300 rounded-lg">
+                            <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                                Compartir Propósito
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="purposes-container" class="space-y-4">
+                    <!-- Los propósitos se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Rooms Section -->
+            <div id="rooms-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">🏢 Reservar Sala</h2>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Nueva Reserva</h3>
+                    <form id="reservation-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha</label>
+                                <input type="date" id="reservation-date" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sala</label>
+                                <select id="reservation-room" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                                    <option value="">Selecciona una sala</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Hora de inicio</label>
+                                <select id="reservation-start" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                                    <option value="">Selecciona hora</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Duración</label>
+                                <select id="reservation-duration" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                                    <option value="1">1 hora</option>
+                                    <option value="2">2 horas</option>
+                                    <option value="3">3 horas</option>
+                                    <option value="4">4 horas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Reservado por</label>
+                                <input type="text" id="reservation-person" placeholder="Tu nombre" 
+                                       class="w-full p-3 border border-gray-300 rounded-lg" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Propósito de la reunión</label>
+                            <textarea id="reservation-purpose" placeholder="Describe brevemente el propósito de la reunión..." 
+                                      class="w-full p-3 border border-gray-300 rounded-lg resize-none" rows="2" required></textarea>
+                        </div>
+                        <button type="submit" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors">
+                            Reservar Sala
+                        </button>
+                    </form>
+                </div>
+
+                <div id="rooms-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Las salas se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Resources Section -->
+            <div id="resources-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">📚 Recursos</h2>
+                <div id="resources-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Los recursos se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Availability Section -->
+            <div id="availability-section" class="section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">👁️ Disponibilidad de Salas</h2>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex items-center space-x-4">
+                        <label class="block text-sm font-medium text-gray-700">Ver disponibilidad para:</label>
+                        <input type="date" id="availability-date" class="p-2 border border-gray-300 rounded-lg" onchange="updateAvailability()">
+                    </div>
+                </div>
+
+                <div id="availability-container" class="space-y-6">
+                    <!-- La disponibilidad se cargará aquí dinámicamente -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Datos de la aplicación
+        const rooms = [
+            { id: 1, name: "La Palma", capacity: 8, equipment: ["Proyector", "Pizarra", "Video conferencia"] },
+            { id: 2, name: "El Tucán", capacity: 12, equipment: ["TV 55\"", "Sistema de audio", "Pizarra digital"] },
+            { id: 3, name: "Equation Coffee", capacity: 6, equipment: ["Cafetera", "Proyector", "Ambiente relajado"] },
+            { id: 4, name: "Sala Verde", capacity: 15, equipment: ["Proyector 4K", "Sistema de sonido", "Plantas naturales"] },
+            { id: 5, name: "Innovación", capacity: 10, equipment: ["Pizarra interactiva", "Cámaras 360°", "Iluminación LED"] },
+            { id: 6, name: "Sostenible", capacity: 20, equipment: ["Auditorio", "Micrófono", "Pantalla gigante"] }
+        ];
+
+        const news = [
+            {
+                id: 1,
+                title: "Nueva política de reciclaje implementada",
+                content: "A partir del próximo lunes, implementaremos contenedores de reciclaje especializados en todas las áreas comunes.",
+                date: "2024-01-15",
+                isNew: true
+            },
+            {
+                id: 2,
+                title: "Taller de sostenibilidad - Viernes 2 PM",
+                content: "Únete a nuestro taller sobre prácticas sostenibles en el hogar. Sala El Tucán.",
+                date: "2024-01-14",
+                isNew: true
+            },
+            {
+                id: 3,
+                title: "Certificación Green Office obtenida",
+                content: "¡Celebramos haber obtenido la certificación Green Office nivel Gold!",
+                date: "2024-01-10",
+                isNew: false
+            }
+        ];
+
+        let reservations = [
+            {
+                id: 1,
+                roomId: 1,
+                roomName: "La Palma",
+                date: "2024-01-16",
+                startTime: "09:00",
+                duration: 2,
+                person: "Ana García",
+                purpose: "Reunión de equipo marketing"
+            },
+            {
+                id: 2,
+                roomId: 2,
+                roomName: "El Tucán",
+                date: "2024-01-16",
+                startTime: "14:00",
+                duration: 1,
+                person: "Carlos López",
+                purpose: "Presentación de resultados"
+            }
+        ];
+
+        let purposes = [
+            {
+                id: 1,
+                author: "Equipo Marketing",
+                purpose: "Reducir el uso de papel en nuestras campañas digitales y promover la comunicación electrónica.",
+                date: "2024-01-15"
+            },
+            {
+                id: 2,
+                author: "Departamento IT",
+                purpose: "Implementar servidores más eficientes energéticamente y reducir el consumo eléctrico en 30%.",
+                date: "2024-01-14"
+            },
+            {
+                id: 3,
+                author: "Recursos Humanos",
+                purpose: "Crear programas de transporte sostenible para empleados, incluyendo bicicletas compartidas.",
+                date: "2024-01-12"
+            }
+        ];
+
+        const resources = [
+            {
+                id: 1,
+                title: "Manual del Empleado 2024",
+                type: "PDF",
+                url: "/documents/manual-empleado-2024.pdf",
+                description: "Guía completa para nuevos empleados"
+            },
+            {
+                id: 2,
+                title: "Guía de Sostenibilidad",
+                type: "PDF",
+                url: "/documents/guia-sostenibilidad.pdf",
+                description: "Prácticas eco-amigables en la oficina"
+            },
+            {
+                id: 3,
+                title: "Objetivos Green Hub 2024",
+                type: "Presentación",
+                url: "/documents/objetivos-2024.pptx",
+                description: "Metas y proyectos para este año"
+            },
+            {
+                id: 4,
+                title: "Directorio de Contactos",
+                type: "Excel",
+                url: "/documents/directorio-contactos.xlsx",
+                description: "Lista completa de empleados y departamentos"
+            },
+            {
+                id: 5,
+                title: "Herramientas Digitales",
+                type: "Web",
+                url: "https://tools.greenhub.com",
+                description: "Acceso a plataformas internas"
+            },
+            {
+                id: 6,
+                title: "Biblioteca Digital",
+                type: "Web",
+                url: "https://library.greenhub.com",
+                description: "Recursos de aprendizaje y desarrollo"
+            }
+        ];
+
+        // Funciones de navegación
+        function showSection(sectionName) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            // Actualizar navegación
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-green-500', 'text-green-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            event.target.classList.remove('border-transparent', 'text-gray-500');
+            event.target.classList.add('border-green-500', 'text-green-600');
+
+            // Cerrar dropdown de notificaciones si está abierto
+            document.getElementById('notification-dropdown').classList.remove('show');
         }
 
-        // Renderizar la aplicación
-        ReactDOM.render(<App />, document.getElementById('root'));
+        // Funciones de notificaciones
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('show');
+            loadNotifications();
+        }
+
+        function loadNotifications() {
+            const notificationList = document.getElementById('notification-list');
+            const recentNews = news.filter(item => item.isNew).slice(0, 3);
+            
+            notificationList.innerHTML = recentNews.map(item => `
+                <div class="p-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer" onclick="showSection('news')">
+                    <div class="font-medium text-gray-800 text-sm">${item.title}</div>
+                    <div class="text-gray-600 text-xs mt-1">${item.date}</div>
+                </div>
+            `).join('');
+
+            // Actualizar contador
+            document.getElementById('notification-count').textContent = recentNews.length;
+        }
+
+        // Cerrar dropdown al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notification-dropdown');
+            const button = event.target.closest('button');
+            
+            if (!button || !button.onclick || button.onclick.toString().indexOf('toggleNotifications') === -1) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Funciones de noticias
+        function loadNews() {
+            const newsContainer = document.getElementById('news-container');
+            newsContainer.innerHTML = news.map(item => `
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-semibold text-gray-800">${item.title}</h3>
+                        ${item.isNew ? '<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Nueva</span>' : ''}
+                    </div>
+                    <p class="text-gray-600 mb-3">${item.content}</p>
+                    <div class="text-sm text-gray-500">${item.date}</div>
+                </div>
+            `).join('');
+        }
+
+        // Funciones de propósitos
+        function loadPurposes() {
+            const purposesContainer = document.getElementById('purposes-container');
+            purposesContainer.innerHTML = purposes.map(item => `
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold text-lg">
+                            ${item.author.charAt(0)}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-semibold text-gray-800">${item.author}</h4>
+                                <span class="text-sm text-gray-500">${item.date}</span>
+                            </div>
+                            <p class="text-gray-600 italic">"${item.purpose}"</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Manejar formulario de propósitos
+        document.getElementById('purpose-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const author = document.getElementById('purpose-author').value;
+            const purposeText = document.getElementById('purpose-text').value;
+            
+            if (author && purposeText) {
+                const newPurpose = {
+                    id: Date.now(),
+                    author: author,
+                    purpose: purposeText,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                
+                purposes.unshift(newPurpose);
+                loadPurposes();
+                
+                // Limpiar formulario
+                document.getElementById('purpose-author').value = '';
+                document.getElementById('purpose-text').value = '';
+                
+                alert('¡Propósito compartido exitosamente!');
+            }
+        });
+
+        // Funciones de salas
+        function loadRooms() {
+            const roomsContainer = document.getElementById('rooms-container');
+            roomsContainer.innerHTML = rooms.map(room => {
+                const todayReservations = reservations.filter(r => 
+                    r.roomId === room.id && r.date === new Date().toISOString().split('T')[0]
+                ).length;
+                
+                return `
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">${room.name}</h3>
+                        <div class="text-gray-600 mb-3">
+                            <p>👥 Capacidad: ${room.capacity} personas</p>
+                            <p>📅 Reservas hoy: ${todayReservations}</p>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="font-medium text-gray-700 mb-2">Equipamiento:</h4>
+                            <div class="flex flex-wrap gap-1">
+                                ${room.equipment.map(eq => `
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">${eq}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Cargar opciones de salas en el formulario
+        function loadRoomOptions() {
+            const roomSelect = document.getElementById('reservation-room');
+            roomSelect.innerHTML = '<option value="">Selecciona una sala</option>' + 
+                rooms.map(room => `<option value="${room.id}">${room.name} (${room.capacity} personas)</option>`).join('');
+        }
+
+        // Cargar opciones de horarios
+        function loadTimeOptions() {
+            const timeSelect = document.getElementById('reservation-start');
+            const times = [];
+            for (let hour = 8; hour <= 18; hour++) {
+                times.push(`${hour.toString().padStart(2, '0')}:00`);
+            }
+            timeSelect.innerHTML = '<option value="">Selecciona hora</option>' + 
+                times.map(time => `<option value="${time}">${time}</option>`).join('');
+        }
+
+        // Verificar disponibilidad y actualizar opciones
+        function updateTimeAvailability() {
+            const date = document.getElementById('reservation-date').value;
+            const roomId = parseInt(document.getElementById('reservation-room').value);
+            const timeSelect = document.getElementById('reservation-start');
+            
+            if (!date || !roomId) return;
+            
+            // Obtener reservas existentes para esta sala y fecha
+            const existingReservations = reservations.filter(r => 
+                r.roomId === roomId && r.date === date
+            );
+            
+            // Actualizar opciones de tiempo
+            Array.from(timeSelect.options).forEach(option => {
+                if (option.value === '') return;
+                
+                const timeHour = parseInt(option.value.split(':')[0]);
+                const isOccupied = existingReservations.some(reservation => {
+                    const startHour = parseInt(reservation.startTime.split(':')[0]);
+                    const endHour = startHour + reservation.duration;
+                    return timeHour >= startHour && timeHour < endHour;
+                });
+                
+                if (isOccupied) {
+                    option.textContent = option.value + ' (Ocupado)';
+                    option.disabled = true;
+                    option.classList.add('occupied');
+                } else {
+                    option.textContent = option.value;
+                    option.disabled = false;
+                    option.classList.remove('occupied');
+                }
+            });
+        }
+
+        // Event listeners para actualizar disponibilidad
+        document.getElementById('reservation-date').addEventListener('change', updateTimeAvailability);
+        document.getElementById('reservation-room').addEventListener('change', updateTimeAvailability);
+
+        // Manejar formulario de reservas
+        document.getElementById('reservation-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('reservation-date').value;
+            const roomId = parseInt(document.getElementById('reservation-room').value);
+            const startTime = document.getElementById('reservation-start').value;
+            const duration = parseInt(document.getElementById('reservation-duration').value);
+            const person = document.getElementById('reservation-person').value;
+            const purpose = document.getElementById('reservation-purpose').value;
+            
+            if (date && roomId && startTime && duration && person && purpose) {
+                const room = rooms.find(r => r.id === roomId);
+                
+                const newReservation = {
+                    id: Date.now(),
+                    roomId: roomId,
+                    roomName: room.name,
+                    date: date,
+                    startTime: startTime,
+                    duration: duration,
+                    person: person,
+                    purpose: purpose
+                };
+                
+                reservations.push(newReservation);
+                
+                // Limpiar formulario
+                this.reset();
+                
+                // Actualizar disponibilidad
+                updateTimeAvailability();
+                loadRooms();
+                
+                alert(`¡Sala ${room.name} reservada exitosamente para el ${date} de ${startTime} por ${duration} hora(s)!`);
+            }
+        });
+
+        // Funciones de recursos
+        function loadResources() {
+            const resourcesContainer = document.getElementById('resources-container');
+            resourcesContainer.innerHTML = resources.map(resource => {
+                const typeColors = {
+                    'PDF': 'bg-red-100 text-red-800',
+                    'Excel': 'bg-green-100 text-green-800',
+                    'Presentación': 'bg-orange-100 text-orange-800',
+                    'Web': 'bg-blue-100 text-blue-800',
+                    'Documento': 'bg-gray-100 text-gray-800'
+                };
+                
+                return `
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-lg font-semibold text-gray-800">${resource.title}</h3>
+                            <span class="text-xs px-2 py-1 rounded-full ${typeColors[resource.type] || 'bg-gray-100 text-gray-800'}">${resource.type}</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">${resource.description}</p>
+                        <a href="${resource.url}" target="_blank" 
+                           class="inline-flex items-center text-green-600 hover:text-green-700 font-medium">
+                            Abrir recurso
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                        </a>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Funciones de disponibilidad
+        function updateAvailability() {
+            const date = document.getElementById('availability-date').value;
+            if (!date) return;
+            
+            const availabilityContainer = document.getElementById('availability-container');
+            
+            availabilityContainer.innerHTML = rooms.map(room => {
+                const roomReservations = reservations.filter(r => r.roomId === room.id && r.date === date);
+                
+                return `
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">${room.name}</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Información de la sala:</h4>
+                                <p class="text-gray-600">👥 Capacidad: ${room.capacity} personas</p>
+                                <p class="text-gray-600">📅 Reservas: ${roomReservations.length}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Reservas para ${date}:</h4>
+                                ${roomReservations.length > 0 ? 
+                                    roomReservations.map(reservation => `
+                                        <div class="bg-red-50 border border-red-200 rounded p-2 mb-2">
+                                            <div class="text-sm font-medium text-red-800">
+                                                ${reservation.startTime} - ${getEndTime(reservation.startTime, reservation.duration)}
+                                            </div>
+                                            <div class="text-xs text-red-600">
+                                                ${reservation.person} - ${reservation.purpose}
+                                            </div>
+                                        </div>
+                                    `).join('') 
+                                    : '<p class="text-green-600 text-sm">✅ Disponible todo el día</p>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Función auxiliar para calcular hora de fin
+        function getEndTime(startTime, duration) {
+            const [hours, minutes] = startTime.split(':').map(Number);
+            const endHour = hours + duration;
+            return `${endHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer fecha mínima para reservas (hoy)
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reservation-date').min = today;
+            document.getElementById('availability-date').value = today;
+            
+            // Cargar datos iniciales
+            loadNews();
+            loadPurposes();
+            loadRooms();
+            loadRoomOptions();
+            loadTimeOptions();
+            loadResources();
+            loadNotifications();
+            updateAvailability();
+        });
     </script>
 </body>
 </html>
