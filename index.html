@@ -230,49 +230,16 @@
                             <p className="text-sm text-gray-500">Gestiona tus reuniones</p>
                         </button>
 
-                        <button className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100">
-                            <div className="bg-gradient-to-br from-purple-500 to-pink-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                                👥
-                            </div>
-                            <h3 className="font-semibold text-gray-900 mb-1">Equipo</h3>
-                            <p className="text-sm text-gray-500">Conoce al equipo</p>
-                        </button>
-
-                        <button className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100">
+                        <button
+                            onClick={() => setActiveSection('resources')}
+                            className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100"
+                        >
                             <div className="bg-gradient-to-br from-red-500 to-rose-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
                                 📚
                             </div>
                             <h3 className="font-semibold text-gray-900 mb-1">Recursos</h3>
                             <p className="text-sm text-gray-500">Documentos y guías</p>
                         </button>
-
-                        <button className="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all border border-green-100">
-                            <div className="bg-gradient-to-br from-gray-500 to-gray-600 w-14 h-14 rounded-lg flex items-center justify-center mb-4 text-2xl">
-                                ⚙️
-                            </div>
-                            <h3 className="font-semibold text-gray-900 mb-1">Configuración</h3>
-                            <p className="text-sm text-gray-500">Personaliza tu experiencia</p>
-                        </button>
-                    </div>
-
-                    {/* Stats Rápidos */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="bg-white rounded-lg p-4 border border-green-100">
-                            <p className="text-2xl font-bold text-gray-900">4</p>
-                            <p className="text-sm text-gray-600">Salas disponibles</p>
-                        </div>
-                        <div className="bg-white rounded-lg p-4 border border-green-100">
-                            <p className="text-2xl font-bold text-gray-900">42</p>
-                            <p className="text-sm text-gray-600">Green Heroes</p>
-                        </div>
-                        <div className="bg-white rounded-lg p-4 border border-green-100">
-                            <p className="text-2xl font-bold text-gray-900">-23%</p>
-                            <p className="text-sm text-gray-600">CO2 este mes</p>
-                        </div>
-                        <div className="bg-white rounded-lg p-4 border border-green-100">
-                            <p className="text-2xl font-bold text-gray-900">15</p>
-                            <p className="text-sm text-gray-600">Días sin papel</p>
-                        </div>
                     </div>
                 </div>
             );
@@ -592,6 +559,90 @@
                 );
             };
 
+            // Sección de Recursos
+            const ResourcesSection = () => (
+                <div className="animate-fadeIn">
+                    <div className="mb-6">
+                        <button 
+                            onClick={() => setActiveSection('home')}
+                            className="text-green-600 hover:text-green-700 flex items-center mb-4 text-sm font-medium"
+                        >
+                            ← Volver al inicio
+                        </button>
+                        <h2 className="text-3xl font-bold text-gray-900">Recursos</h2>
+                        <p className="text-gray-600 mt-2">Documentos y guías para el equipo</p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
+                            <div className="bg-gradient-to-br from-green-500 to-emerald-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
+                                📋
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Manual del Empleado</h3>
+                            <p className="text-gray-600 text-sm mb-3">Guía completa sobre políticas y procedimientos</p>
+                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
+                                Descargar PDF →
+                            </button>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
+                            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
+                                🌱
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Guía de Sostenibilidad</h3>
+                            <p className="text-gray-600 text-sm mb-3">Mejores prácticas para un trabajo sostenible</p>
+                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
+                                Ver guía →
+                            </button>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
+                            <div className="bg-gradient-to-br from-purple-500 to-pink-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
+                                🎯
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Objetivos 2024</h3>
+                            <p className="text-gray-600 text-sm mb-3">Metas y objetivos del Green Hub</p>
+                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
+                                Ver objetivos →
+                            </button>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
+                            <div className="bg-gradient-to-br from-orange-500 to-red-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
+                                📞
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Directorio</h3>
+                            <p className="text-gray-600 text-sm mb-3">Contactos importantes del equipo</p>
+                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
+                                Ver directorio →
+                            </button>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
+                            <div className="bg-gradient-to-br from-teal-500 to-cyan-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
+                                🔧
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Herramientas</h3>
+                            <p className="text-gray-600 text-sm mb-3">Software y herramientas de trabajo</p>
+                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
+                                Ver herramientas →
+                            </button>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-6 shadow-md border border-green-100 hover:shadow-lg transition-shadow">
+                            <div className="bg-gradient-to-br from-yellow-500 to-amber-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-xl">
+                                📚
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Biblioteca</h3>
+                            <p className="text-gray-600 text-sm mb-3">Recursos de aprendizaje y desarrollo</p>
+                            <button className="text-green-600 hover:text-green-700 text-sm font-medium">
+                                Explorar →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+
             return (
                 <div className="min-h-screen pattern-bg">
                     {/* Header */}
@@ -640,6 +691,7 @@
                         {activeSection === 'news' && <NewsSection />}
                         {activeSection === 'purpose' && <PurposeWall />}
                         {activeSection === 'booking' && <RoomBooking />}
+                        {activeSection === 'resources' && <ResourcesSection />}
                     </main>
 
                     {/* Footer */}
