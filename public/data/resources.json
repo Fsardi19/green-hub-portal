@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "title": "Manual del Empleado 2024",
+    "type": "PDF",
+    "url": "/documents/manual-empleado-2024.pdf",
+    "description": "Guía completa para nuevos empleados"
+  },
+  {
+    "id": 2,
+    "title": "Guía de Sostenibilidad",
+    "type": "PDF",
+    "url": "/documents/guia-sostenibilidad.pdf",
+    "description": "Prácticas eco-amigables en la oficina"
+  },
+  {
+    "id": 3,
+    "title": "Objetivos Green Hub 2024",
+    "type": "Presentación",
+    "url": "/documents/objetivos-2024.pptx",
+    "description": "Metas y proyectos para este año"
+  },
+  {
+    "id": 4,
+    "title": "Directorio de Contactos",
+    "type": "Excel",
+    "url": "/documents/directorio-contactos.xlsx",
+    "description": "Lista completa de empleados y departamentos"
+  },
+  {
+    "id": 5,
+    "title": "Herramientas Digitales",
+    "type": "Web",
+    "url": "https://tools.greenhub.com",
+    "description": "Acceso a plataformas internas"
+  },
+  {
+    "id": 6,
+    "title": "Biblioteca Digital",
+    "type": "Web",
+    "url": "https://library.greenhub.com",
+    "description": "Recursos de aprendizaje y desarrollo"
+  }
+]

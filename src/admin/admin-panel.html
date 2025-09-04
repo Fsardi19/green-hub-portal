@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Green Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .admin-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="admin-section text-white p-6">
+            <div class="max-w-6xl mx-auto">
+                <h1 class="text-3xl font-bold">🌱 Panel de Administración Green Hub</h1>
+                <p class="text-green-100 mt-2">Gestiona el contenido del portal de empleados</p>
+            </div>
+        </header>
+
+        <div class="max-w-6xl mx-auto p-6">
+            <!-- Navegación -->
+            <nav class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <div class="flex space-x-4">
+                    <button onclick="showSection('news')" class="nav-btn bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                        📰 Noticias
+                    </button>
+                    <button onclick="showSection('resources')" class="nav-btn bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                        📚 Recursos
+                    </button>
+                    <button onclick="showSection('rooms')" class="nav-btn bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                        🏢 Salas
+                    </button>
+                    <button onclick="showSection('purposes')" class="nav-btn bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
+                        🎯 Propósitos
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Sección Noticias -->
+            <div id="news-section" class="admin-content bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📰 Gestión de Noticias</h2>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">Agregar Nueva Noticia</h3>
+                    <form id="news-form" class="space-y-4">
+                        <input type="text" id="news-title" placeholder="Título de la noticia" class="w-full p-3 border border-gray-300 rounded-lg">
+                        <textarea id="news-content" placeholder="Contenido de la noticia" rows="4" class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="news-new" class="mr-2">
+                                <span>Marcar como nueva</span>
+                            </label>
+                            <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                                Agregar Noticia
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Noticias Existentes</h3>
+                    <div id="news-list" class="space-y-3">
+                        <!-- Las noticias se cargarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Recursos -->
+            <div id="resources-section" class="admin-content bg-white rounded-lg shadow-md p-6 hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📚 Gestión de Recursos</h2>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">Agregar Nuevo Recurso</h3>
+                    <form id="resources-form" class="space-y-4">
+                        <input type="text" id="resource-title" placeholder="Título del recurso" class="w-full p-3 border border-gray-300 rounded-lg">
+                        <input type="text" id="resource-url" placeholder="URL o ruta del archivo" class="w-full p-3 border border-gray-300 rounded-lg">
+                        <select id="resource-type" class="w-full p-3 border border-gray-300 rounded-lg">
+                            <option value="PDF">PDF</option>
+                            <option value="Excel">Excel</option>
+                            <option value="Presentación">Presentación</option>
+                            <option value="Web">Web</option>
+                            <option value="Documento">Documento</option>
+                        </select>
+                        <textarea id="resource-description" placeholder="Descripción del recurso" rows="3" class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
+                        <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                            Agregar Recurso
+                        </button>
+                    </form>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Recursos Existentes</h3>
+                    <div id="resources-list" class="space-y-3">
+                        <!-- Los recursos se cargarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instrucciones -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-6">
+                <h3 class="text-lg font-semibold text-blue-800 mb-3">📋 Instrucciones de Uso</h3>
+                <div class="text-blue-700 space-y-2">
+                    <p><strong>Para subir archivos:</strong></p>
+                    <ol class="list-decimal list-inside space-y-1 ml-4">
+                        <li>Coloca tus archivos (PDFs, Excel, etc.) en la carpeta <code class="bg-blue-100 px-2 py-1 rounded">/public/documents/</code></li>
+                        <li>En el campo URL, usa la ruta: <code class="bg-blue-100 px-2 py-1 rounded">/documents/nombre-archivo.pdf</code></li>
+                        <li>Para enlaces externos, usa la URL completa: <code class="bg-blue-100 px-2 py-1 rounded">https://ejemplo.com</code></li>
+                    </ol>
+                    
+                    <p class="mt-4"><strong>Los cambios se guardan automáticamente</strong> y se reflejan inmediatamente en el portal de empleados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos locales (se pueden reemplazar con llamadas a API)
+        let newsData = [];
+        let resourcesData = [];
+
+        // Cargar datos iniciales
+        async function loadInitialData() {
+            try {
+                const newsResponse = await fetch('/data/news.json');
+                newsData = await newsResponse.json();
+                
+                const resourcesResponse = await fetch('/data/resources.json');
+                resourcesData = await resourcesResponse.json();
+                
+                renderNews();
+                renderResources();
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+            }
+        }
+
+        // Navegación entre secciones
+        function showSection(section) {
+            document.querySelectorAll('.admin-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-offset-2');
+            });
+            event.target.classList.add('ring-2', 'ring-offset-2');
+        }
+
+        // Gestión de Noticias
+        document.getElementById('news-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('news-title').value;
+            const content = document.getElementById('news-content').value;
+            const isNew = document.getElementById('news-new').checked;
+            
+            if (title && content) {
+                const newNews = {
+                    id: Date.now(),
+                    title: title,
+                    content: content,
+                    date: new Date().toISOString().split('T')[0],
+                    isNew: isNew
+                };
+                
+                newsData.unshift(newNews);
+                renderNews();
+                saveData('news', newsData);
+                
+                // Limpiar formulario
+                this.reset();
+                
+                alert('Noticia agregada exitosamente!');
+            }
+        });
+
+        function renderNews() {
+            const newsList = document.getElementById('news-list');
+            newsList.innerHTML = newsData.map(news => `
+                <div class="border border-gray-200 rounded-lg p-4 flex justify-between items-start">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800">${news.title}</h4>
+                        <p class="text-gray-600 text-sm mt-1">${news.content}</p>
+                        <div class="flex items-center mt-2 space-x-3">
+                            <span class="text-xs text-gray-500">${news.date}</span>
+                            ${news.isNew ? '<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Nueva</span>' : ''}
+                        </div>
+                    </div>
+                    <button onclick="deleteNews(${news.id})" class="text-red-500 hover:text-red-700 ml-4">
+                        🗑️
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteNews(id) {
+            if (confirm('¿Estás seguro de eliminar esta noticia?')) {
+                newsData = newsData.filter(news => news.id !== id);
+                renderNews();
+                saveData('news', newsData);
+            }
+        }
+
+        // Gestión de Recursos
+        document.getElementById('resources-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('resource-title').value;
+            const url = document.getElementById('resource-url').value;
+            const type = document.getElementById('resource-type').value;
+            const description = document.getElementById('resource-description').value;
+            
+            if (title && url && description) {
+                const newResource = {
+                    id: Date.now(),
+                    title: title,
+                    url: url,
+                    type: type,
+                    description: description
+                };
+                
+                resourcesData.push(newResource);
+                renderResources();
+                saveData('resources', resourcesData);
+                
+                // Limpiar formulario
+                this.reset();
+                
+                alert('Recurso agregado exitosamente!');
+            }
+        });
+
+        function renderResources() {
+            const resourcesList = document.getElementById('resources-list');
+            resourcesList.innerHTML = resourcesData.map(resource => `
+                <div class="border border-gray-200 rounded-lg p-4 flex justify-between items-start">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800">${resource.title}</h4>
+                        <p class="text-gray-600 text-sm mt-1">${resource.description}</p>
+                        <div class="flex items-center mt-2 space-x-3">
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">${resource.type}</span>
+                            <a href="${resource.url}" target="_blank" class="text-blue-500 hover:text-blue-700 text-sm">Ver recurso →</a>
+                        </div>
+                    </div>
+                    <button onclick="deleteResource(${resource.id})" class="text-red-500 hover:text-red-700 ml-4">
+                        🗑️
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteResource(id) {
+            if (confirm('¿Estás seguro de eliminar este recurso?')) {
+                resourcesData = resourcesData.filter(resource => resource.id !== id);
+                renderResources();
+                saveData('resources', resourcesData);
+            }
+        }
+
+        // Función para guardar datos (simulada - en producción usarías una API real)
+        function saveData(type, data) {
+            // En un entorno real, esto haría una llamada POST a tu API
+            localStorage.setItem(`greenhub_${type}`, JSON.stringify(data));
+            console.log(`Datos de ${type} guardados:`, data);
+        }
+
+        // Cargar datos al iniciar
+        loadInitialData();
+    </script>
+</body>
+</html>

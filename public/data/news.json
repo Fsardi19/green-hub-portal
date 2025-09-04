@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Nueva política de reciclaje implementada",
+    "content": "A partir del próximo lunes, implementaremos contenedores de reciclaje especializados en todas las áreas comunes.",
+    "date": "2024-01-15",
+    "isNew": true
+  },
+  {
+    "id": 2,
+    "title": "Taller de sostenibilidad - Viernes 2 PM",
+    "content": "Únete a nuestro taller sobre prácticas sostenibles en el hogar. Sala El Tucán.",
+    "date": "2024-01-14",
+    "isNew": true
+  },
+  {
+    "id": 3,
+    "title": "Certificación Green Office obtenida",
+    "content": "¡Celebramos haber obtenido la certificación Green Office nivel Gold!",
+    "date": "2024-01-10",
+    "isNew": false
+  }
+]
