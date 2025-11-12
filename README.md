@@ -9,31 +9,18 @@ Para gestionar el contenido de la aplicación, abre el archivo:
 src/admin/admin-panel.html
 ```
 
-**Nuevas funcionalidades:**
-- 📰 Gestión de Noticias
-- 📚 Gestión de Recursos
-- 🏢 Gestión de Salas
-- 🎯 Gestión de Propósitos
-- 📡 **Gestión de RSS Feeds** (Nuevo!)
+### 📡 LinkedIn API Integration
 
-### 📡 RSS Feed Integration
+**Integración con LinkedIn:**
+- Importa publicaciones de tu página de empresa automáticamente
+- Workflow para n8n listo para usar
+- Ver guía completa: [LINKEDIN_API.md](LINKEDIN_API.md)
 
-Ahora puedes importar noticias automáticamente desde feeds RSS!
-
-**Inicio Rápido:**
-1. Abre el Panel de Administración
-2. Click en "📡 RSS Feeds"
-3. Agrega un feed RSS (ej: `https://techcrunch.com/feed/`)
-4. Click "🧪 Probar" para validar
-5. Click "🔄" para importar noticias
-
-**Documentación completa:**
-- [Quick Start Guide](docs/QUICK_START_RSS.md) - Guía rápida y solución de errores
-- [RSS Feed Integration](docs/RSS_FEED_INTEGRATION.md) - Documentación técnica completa
-- [n8n Workflows](workflows/README.md) - Automatización con n8n
-
-**⚠️ Nota importante sobre LinkedIn:**
-LinkedIn NO proporciona feeds RSS. Para integrar contenido de LinkedIn, ver opciones en [docs/RSS_FEED_INTEGRATION.md](docs/RSS_FEED_INTEGRATION.md).
+**Pasos rápidos:**
+1. Configura OAuth2 en n8n con tus credenciales de LinkedIn
+2. Importa workflow: `workflows/n8n-linkedin-api-official.json`
+3. Configura tu Organization ID
+4. Activa el workflow (se ejecuta cada 12 horas)
 
 ### 📁 Estructura de Archivos
 
