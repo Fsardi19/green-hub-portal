@@ -1,0 +1,4 @@
+id,source,sourceName,title,url,publishedAt,capturedAt,status,relevanceScore,tokensUsed,linkedInPostUrl,notes
+example-1,linkedin,Green Hub Portal,Post de ejemplo sobre sostenibilidad,https://linkedin.com/posts/example-1,2025-11-12T10:00:00Z,2025-11-12T12:00:00Z,publicado,85,100,https://linkedin.com/feed/update/urn:example,Post exitoso con alto engagement
+example-2,generated,Contenido Original IA,Tips de eficiencia energética,,2025-11-12T11:00:00Z,2025-11-12T11:00:00Z,publicado,90,300,,Contenido original generado
+example-3,rss,Blog Corporativo,Nuevas tendencias en tecnología verde,https://blog.ejemplo.com/post-123,2025-11-12T09:00:00Z,2025-11-12T12:00:00Z,pendiente,75,0,,Pendiente de publicación

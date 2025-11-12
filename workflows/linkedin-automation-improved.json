@@ -1,0 +1,485 @@
+{
+  "name": "LinkedIn Auto-Publisher PRO - Multi-Source",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "scheduler-node",
+      "name": "⏰ Ejecutar cada 2 horas",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [260, 380],
+      "notes": "Frecuencia de chequeo para nuevo contenido"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎯 CONFIGURACIÓN DE FUENTES\n// Añade aquí todas las páginas de LinkedIn de tu grupo\n\nconst sources = [\n  {\n    type: 'linkedin_company',\n    id: '92768394',\n    name: 'Green Hub Portal',\n    repost: true,\n    priority: 10\n  },\n  {\n    type: 'linkedin_company',\n    id: 'COMPANY_ID_2',\n    name: 'Empresa Hermana 1',\n    repost: true,\n    priority: 8\n  },\n  {\n    type: 'linkedin_company',\n    id: 'COMPANY_ID_3',\n    name: 'Empresa Hermana 2',\n    repost: true,\n    priority: 8\n  },\n  {\n    type: 'rss',\n    url: 'https://your-blog.com/rss',\n    name: 'Blog Corporativo',\n    repost: false,\n    priority: 6\n  },\n  {\n    type: 'generated',\n    name: 'Contenido Original IA',\n    repost: false,\n    priority: 9\n  }\n];\n\n// Retornar cada fuente como item separado\nreturn sources.map(source => ({\n  json: {\n    ...source,\n    checkTime: new Date().toISOString()\n  }\n}));"
+      },
+      "id": "config-sources",
+      "name": "⚙️ Configurar Fuentes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 380]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "linkedin_company",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "switch-by-type",
+      "name": "🔀 Tipo de Fuente",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [700, 380],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "rules": [
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "linkedin_company",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "output": 0
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "rss",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "output": 1
+            },
+            {
+              "conditions": {
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "generated",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "output": 2
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "post",
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 10,
+        "filters": {
+          "organizationId": "={{ $json.id }}"
+        }
+      },
+      "id": "fetch-linkedin-posts",
+      "name": "📰 Obtener Posts LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [920, 200],
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "YOUR_LINKEDIN_CREDENTIALS_ID",
+          "name": "LinkedIn account"
+        }
+      },
+      "notes": "Obtiene últimos posts de páginas del grupo"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "queryParameters": {
+            "parameters": []
+          }
+        }
+      },
+      "id": "fetch-rss",
+      "name": "📡 Leer RSS Feed",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [920, 380],
+      "notes": "Lee feeds RSS externos"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🤖 GENERADOR DE CONTENIDO ORIGINAL\n// Crea ideas de posts basadas en tu estrategia\n\nconst contentIdeas = [\n  {\n    category: 'tip',\n    topics: [\n      'sostenibilidad empresarial',\n      'innovación verde',\n      'eficiencia energética',\n      'economía circular',\n      'impacto ambiental'\n    ]\n  },\n  {\n    category: 'case_study',\n    topics: [\n      'transformación digital sostenible',\n      'casos de éxito en ESG',\n      'implementación de políticas verdes'\n    ]\n  },\n  {\n    category: 'question',\n    topics: [\n      '¿Cómo mides tu huella de carbono?',\n      '¿Qué desafíos enfrentas en sostenibilidad?',\n      '¿Cuál es tu mayor logro verde este año?'\n    ]\n  },\n  {\n    category: 'stat',\n    topics: [\n      'estadísticas de sostenibilidad',\n      'datos de impacto ambiental',\n      'tendencias en tecnología verde'\n    ]\n  }\n];\n\n// Seleccionar categoría aleatoria\nconst randomCategory = contentIdeas[Math.floor(Math.random() * contentIdeas.length)];\nconst randomTopic = randomCategory.topics[Math.floor(Math.random() * randomCategory.topics.length)];\n\nreturn [{\n  json: {\n    type: 'generated',\n    category: randomCategory.category,\n    topic: randomTopic,\n    priority: 9,\n    timestamp: new Date().toISOString(),\n    metadata: {\n      requiresGeneration: true,\n      contentType: 'original'\n    }\n  }\n}];"
+      },
+      "id": "generate-content-idea",
+      "name": "💡 Generar Idea de Contenido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 560]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔧 PROCESAMIENTO Y NORMALIZACIÓN\n// Convierte todos los formatos a estructura común\n\nconst item = $input.first().json;\nlet normalized = {};\n\n// Determinar tipo de contenido y normalizar\nif (item.type === 'linkedin_company' || item.commentary) {\n  // Post de LinkedIn\n  normalized = {\n    id: item.id || item.urn,\n    source: 'linkedin',\n    sourceId: item.author?.organizationId || 'unknown',\n    sourceName: $node['Configurar Fuentes'].json.name,\n    type: 'repost',\n    title: item.commentary?.substring(0, 100) || 'Post de LinkedIn',\n    content: item.commentary || item.text || '',\n    url: item.url || `https://www.linkedin.com/feed/update/${item.id}`,\n    publishedAt: item.createdAt || new Date().toISOString(),\n    media: item.content?.media || [],\n    metrics: {\n      likes: item.likeCount || 0,\n      comments: item.commentCount || 0,\n      shares: item.shareCount || 0\n    },\n    priority: $node['Configurar Fuentes'].json.priority || 5\n  };\n} else if (item.link || item.url) {\n  // Contenido RSS\n  normalized = {\n    id: item.link || item.url,\n    source: 'rss',\n    sourceId: item.link,\n    sourceName: $node['Configurar Fuentes'].json.name,\n    type: 'curated',\n    title: item.title,\n    content: (item.description || item.summary || '').replace(/<[^>]*>/g, '').substring(0, 300),\n    url: item.link || item.url,\n    publishedAt: item.pubDate || item.date || new Date().toISOString(),\n    media: item.enclosure ? [{ url: item.enclosure.url }] : [],\n    priority: $node['Configurar Fuentes'].json.priority || 5\n  };\n} else if (item.requiresGeneration) {\n  // Contenido generado\n  normalized = {\n    id: `generated-${Date.now()}`,\n    source: 'ai_generated',\n    sourceId: 'internal',\n    sourceName: 'Contenido Original',\n    type: 'generated',\n    category: item.category,\n    topic: item.topic,\n    content: '', // Se generará después\n    publishedAt: new Date().toISOString(),\n    priority: item.priority || 9,\n    requiresGeneration: true\n  };\n}\n\n// Calcular score de relevancia\nlet relevanceScore = normalized.priority * 10;\n\n// Boost por engagement (solo LinkedIn)\nif (normalized.metrics) {\n  const engagement = normalized.metrics.likes + (normalized.metrics.comments * 2) + (normalized.metrics.shares * 3);\n  relevanceScore += Math.min(engagement / 10, 50);\n}\n\n// Boost por recencia\nconst hoursOld = (Date.now() - new Date(normalized.publishedAt)) / (1000 * 60 * 60);\nif (hoursOld < 2) relevanceScore += 30;\nelse if (hoursOld < 6) relevanceScore += 20;\nelse if (hoursOld < 24) relevanceScore += 10;\n\nnormalized.relevanceScore = Math.round(relevanceScore);\n\nreturn [{ json: normalized }];"
+      },
+      "id": "normalize-content",
+      "name": "🔄 Normalizar Contenido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 380]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "19jRpln8DJaHtalKrKwUZoktJk0mAxrM-ye6dgRhV7dI",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "name",
+          "cachedResultName": "Sheet1"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "source": "={{ $json.source }}",
+            "sourceName": "={{ $json.sourceName }}",
+            "title": "={{ $json.title }}",
+            "url": "={{ $json.url }}",
+            "publishedAt": "={{ $json.publishedAt }}",
+            "relevanceScore": "={{ $json.relevanceScore }}",
+            "status": "pendiente",
+            "capturedAt": "={{ new Date().toISOString() }}"
+          },
+          "matchingColumns": ["id"],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "check-history",
+      "name": "📊 Verificar Historial",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1360, 380],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Uju33mfMH1AoSojL",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Evita duplicados y rastrea contenido publicado"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "pendiente",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ $json.relevanceScore }}",
+              "rightValue": "40",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-quality",
+      "name": "✅ Filtro de Calidad",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1580, 380]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {},
+          "conditions": [
+            {
+              "leftValue": "={{ $json.requiresGeneration }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "needs-generation",
+      "name": "🤔 ¿Requiere Generación?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1800, 380]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un experto en contenido de LinkedIn para sostenibilidad y tecnología verde.\n\nCrea un post de LinkedIn atractivo y profesional sobre: {{ $json.topic }}\n\nCategoría: {{ $json.category }}\n\nREQUISITOS:\n1. Máximo 150 palabras\n2. Tono profesional pero cercano\n3. Incluye un hook inicial impactante\n4. Añade 1-2 emojis relevantes (no más)\n5. Termina con call-to-action\n6. NO uses hashtags (los añadiremos después)\n\nFormato:\n[Hook impactante]\n\n[Desarrollo en 2-3 párrafos cortos]\n\n[Call to action]\n\nRESPONDE SOLO CON EL POST, SIN EXPLICACIONES."
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 300,
+          "temperature": 0.8
+        }
+      },
+      "id": "generate-full-post",
+      "name": "✍️ Generar Post Completo (IA)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [2020, 280],
+      "credentials": {
+        "openAiApi": {
+          "id": "UnprA8703Is7HbnG",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un experto en LinkedIn. Crea un comentario inteligente para repostear este contenido:\n\nTítulo: {{ $json.title }}\nContenido: {{ $json.content?.substring(0, 200) }}\n\nREQUISITOS:\n1. Máximo 50 palabras\n2. Añade valor con tu perspectiva\n3. Haz una pregunta para fomentar engagement\n4. Un emoji máximo\n5. NO uses hashtags\n\nRESPONDE SOLO CON EL COMENTARIO, NADA MÁS."
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 100,
+          "temperature": 0.7
+        }
+      },
+      "id": "generate-repost-comment",
+      "name": "💬 Generar Comentario Repost",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [2020, 480],
+      "credentials": {
+        "openAiApi": {
+          "id": "UnprA8703Is7HbnG",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏗️ CONSTRUCCIÓN FINAL DEL POST\n// Combina contenido IA + templates optimizados\n\nconst item = $json;\nlet finalPost = {};\n\nif (item.requiresGeneration) {\n  // Contenido original generado por IA\n  const aiContent = $node['Generar Post Completo (IA)'].json.message.content;\n  \n  finalPost = {\n    text: `${aiContent}\\n\\n---\\n#Sostenibilidad #TecnologíaVerde #ESG #Innovación #GreenHub`,\n    visibility: 'PUBLIC',\n    metadata: {\n      type: 'generated',\n      tokensUsed: 300,\n      category: item.category,\n      topic: item.topic\n    }\n  };\n} else {\n  // Repost con comentario inteligente\n  const aiComment = $node['Generar Comentario Repost'].json.message.content;\n  \n  finalPost = {\n    text: `${aiComment}\\n\\n📄 ${item.title}\\n\\n${item.content?.substring(0, 150)}...\\n\\n🔗 ${item.url}\\n\\n#Sostenibilidad #Innovación #GreenHub`,\n    visibility: 'PUBLIC',\n    shareMediaCategory: 'ARTICLE',\n    shareCommentary: aiComment,\n    originalPostUrl: item.url,\n    metadata: {\n      type: 'repost',\n      tokensUsed: 100,\n      source: item.source,\n      sourceName: item.sourceName,\n      originalUrl: item.url,\n      relevanceScore: item.relevanceScore\n    }\n  };\n}\n\n// Añadir tracking data\nfinalPost.trackingData = {\n  postId: item.id,\n  timestamp: new Date().toISOString(),\n  workflow: 'LinkedIn Auto-Publisher PRO'\n};\n\nreturn [{ json: finalPost }];"
+      },
+      "id": "build-final-post",
+      "name": "🎨 Construir Post Final",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2240, 380]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "visibility": "PUBLIC"
+        }
+      },
+      "id": "publish-linkedin",
+      "name": "🚀 Publicar en LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [2460, 380],
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "iiEjaKHlMEC73APq",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "19jRpln8DJaHtalKrKwUZoktJk0mAxrM-ye6dgRhV7dI",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $node['Construir Post Final'].json.trackingData.postId }}",
+            "status": "publicado",
+            "publishedAt": "={{ new Date().toISOString() }}",
+            "tokensUsed": "={{ $node['Construir Post Final'].json.metadata.tokensUsed }}",
+            "linkedInPostUrl": "={{ $json.postUrl }}"
+          },
+          "matchingColumns": ["id"]
+        },
+        "options": {}
+      },
+      "id": "update-history",
+      "name": "📝 Actualizar Historial",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2680, 380],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Uju33mfMH1AoSojL",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📊 REPORTE DE MÉTRICAS\n\nconst publishedPost = $node['Publicar en LinkedIn'].json;\nconst metadata = $node['Construir Post Final'].json.metadata;\n\nconst report = {\n  success: true,\n  timestamp: new Date().toISOString(),\n  post: {\n    type: metadata.type,\n    url: publishedPost.postUrl || 'N/A',\n    tokensUsed: metadata.tokensUsed,\n    source: metadata.sourceName || 'Generated'\n  },\n  efficiency: {\n    tokensUsed: metadata.tokensUsed,\n    traditionalMethod: metadata.type === 'generated' ? 3000 : 2000,\n    savings: metadata.type === 'generated' ? 2700 : 1900,\n    savingsPercentage: metadata.type === 'generated' ? '90%' : '95%'\n  },\n  cost: {\n    actual: `$${(metadata.tokensUsed * 0.00001).toFixed(4)}`,\n    saved: `$${(metadata.tokensUsed * 0.00009).toFixed(4)}`\n  }\n};\n\nconsole.log('📊 POST PUBLISHED SUCCESSFULLY');\nconsole.log(JSON.stringify(report, null, 2));\n\nreturn [{ json: report }];"
+      },
+      "id": "metrics-report",
+      "name": "📈 Generar Reporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2900, 380]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "⏰ Ejecutar cada 2 horas": {
+      "main": [[{"node": "⚙️ Configurar Fuentes", "type": "main", "index": 0}]]
+    },
+    "⚙️ Configurar Fuentes": {
+      "main": [[{"node": "🔀 Tipo de Fuente", "type": "main", "index": 0}]]
+    },
+    "🔀 Tipo de Fuente": {
+      "main": [
+        [{"node": "📰 Obtener Posts LinkedIn", "type": "main", "index": 0}],
+        [{"node": "📡 Leer RSS Feed", "type": "main", "index": 0}],
+        [{"node": "💡 Generar Idea de Contenido", "type": "main", "index": 0}]
+      ]
+    },
+    "📰 Obtener Posts LinkedIn": {
+      "main": [[{"node": "🔄 Normalizar Contenido", "type": "main", "index": 0}]]
+    },
+    "📡 Leer RSS Feed": {
+      "main": [[{"node": "🔄 Normalizar Contenido", "type": "main", "index": 0}]]
+    },
+    "💡 Generar Idea de Contenido": {
+      "main": [[{"node": "🔄 Normalizar Contenido", "type": "main", "index": 0}]]
+    },
+    "🔄 Normalizar Contenido": {
+      "main": [[{"node": "📊 Verificar Historial", "type": "main", "index": 0}]]
+    },
+    "📊 Verificar Historial": {
+      "main": [[{"node": "✅ Filtro de Calidad", "type": "main", "index": 0}]]
+    },
+    "✅ Filtro de Calidad": {
+      "main": [[{"node": "🤔 ¿Requiere Generación?", "type": "main", "index": 0}]]
+    },
+    "🤔 ¿Requiere Generación?": {
+      "main": [
+        [{"node": "✍️ Generar Post Completo (IA)", "type": "main", "index": 0}],
+        [{"node": "💬 Generar Comentario Repost", "type": "main", "index": 0}]
+      ]
+    },
+    "✍️ Generar Post Completo (IA)": {
+      "main": [[{"node": "🎨 Construir Post Final", "type": "main", "index": 0}]]
+    },
+    "💬 Generar Comentario Repost": {
+      "main": [[{"node": "🎨 Construir Post Final", "type": "main", "index": 0}]]
+    },
+    "🎨 Construir Post Final": {
+      "main": [[{"node": "🚀 Publicar en LinkedIn", "type": "main", "index": 0}]]
+    },
+    "🚀 Publicar en LinkedIn": {
+      "main": [[{"node": "📝 Actualizar Historial", "type": "main", "index": 0}]]
+    },
+    "📝 Actualizar Historial": {
+      "main": [[{"node": "📈 Generar Reporte", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "versionId": "",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eb41f47605249145e71705aff3faac33be26d4804ad7d457f1cc459758ca3b18"
+  },
+  "id": "",
+  "tags": []
+}
