@@ -1,360 +1,238 @@
-# 🚀 LinkedIn Auto-Publisher PRO
+# 🚀 LinkedIn Auto-Publisher
 
-Sistema de automatización inteligente para LinkedIn que repostea contenido de múltiples fuentes y genera contenido original, optimizado para **ahorrar 95% en costos de IA**.
-
----
-
-## ✨ Características Principales
-
-### 🎯 Multi-Fuente
-- ✅ **Repostea automáticamente** de páginas LinkedIn de tu grupo
-- ✅ **Integra RSS feeds** de blogs y sitios web
-- ✅ **Genera contenido original** con IA
-
-### 💰 Ultra Optimizado
-- ✅ **50-300 tokens por post** vs. 3000+ tradicional
-- ✅ **95% ahorro en costos** de IA
-- ✅ **~$0.001 por post** vs. $0.10 tradicional
-
-### 🤖 Inteligente
-- ✅ **Filtrado sin IA**: Relevancia calculada sin tokens
-- ✅ **Deduplicación automática**: Historial en Google Sheets
-- ✅ **Scoring inteligente**: Prioriza contenido de calidad
-
-### 🎨 Flexible
-- ✅ **Personalización total**: Temas, tono, hashtags
-- ✅ **Múltiples categorías**: Tips, casos de éxito, preguntas, estadísticas
-- ✅ **Horarios configurables**: Publica cuando tu audiencia está activa
+Sistema de automatización para publicar en LinkedIn desde múltiples fuentes.
 
 ---
 
-## 📁 Archivos Incluidos
+## ✨ Lo que hace
+
+- ✅ **Repostea** contenido de páginas LinkedIn de tu grupo
+- ✅ **Genera** contenido original con IA
+- ✅ **Ahorra** 95% en costos vs. métodos tradicionales
+- ✅ **Evita** duplicados automáticamente
+
+---
+
+## 📁 Archivos
 
 ```
 workflows/
-├── linkedin-automation-improved.json  ← Workflow completo para n8n
-├── linkedin-config.json               ← Configuración fácil de editar
-├── SETUP-INSTRUCTIONS.md              ← Guía paso a paso completa
-├── google-sheets-template.csv         ← Template para Google Sheets
-├── README.md                          ← Este archivo
-└── QUICK-START.md                     ← Inicio rápido (5 minutos)
+├── linkedin-automation-simple.json    ← Workflow para n8n
+├── MULTI-SOURCE-GUIDE.md              ← Cómo añadir más fuentes
+├── QUICK-START.md                     ← Setup en 5 minutos
+├── FIX-IMPORT-ERROR.md                ← Solución de problemas
+└── google-sheets-template.csv         ← Template para tracking
 ```
 
 ---
 
-## 🚀 Inicio Rápido (5 minutos)
+## 🚀 Inicio Rápido
 
-### Requisitos:
-- Cuenta de n8n
-- Cuenta de LinkedIn
-- Cuenta de OpenAI
-- Cuenta de Google
+### 1. Importa el workflow
 
-### Pasos:
+```
+n8n → Workflows → Import → linkedin-automation-simple.json
+```
 
-1. **Importa el workflow**
-   ```
-   Abre: linkedin-automation-improved.json
-   En n8n: Import from file
-   ```
+### 2. Configura credenciales
 
-2. **Configura credenciales**
-   - LinkedIn OAuth2
-   - OpenAI API
-   - Google Sheets OAuth2
+- LinkedIn OAuth2
+- OpenAI API Key
+- Google Sheets (opcional)
 
-3. **Edita configuración**
-   ```json
-   // En nodo "⚙️ Configurar Fuentes"
-   {
-     "id": "TU_LINKEDIN_COMPANY_ID",
-     "name": "Tu Empresa"
-   }
-   ```
+### 3. Edita el RSS Feed
 
-4. **Prueba manualmente**
-   ```
-   Click "Execute Workflow"
-   Verifica que cada nodo está en verde ✅
-   ```
+```
+Nodo "RSS Feed Read" → URL:
+https://www.linkedin.com/company/TU_ID_AQUI
+```
 
-5. **Activa**
-   ```
-   Toggle "Active" → ON
-   ```
+### 4. Prueba y activa
 
-**¡Listo!** El workflow se ejecutará automáticamente cada 2 horas.
+```
+Execute Workflow → Verifica resultados → Toggle Active
+```
+
+**¡Listo!** El workflow se ejecutará cada 3 horas.
 
 ---
 
-## 🎯 ¿Qué hace exactamente?
+## 🔗 Añadir Más Fuentes
 
-### Flujo completo:
+**Para repostear de múltiples páginas de tu grupo:**
+
+👉 **Ver:** [MULTI-SOURCE-GUIDE.md](MULTI-SOURCE-GUIDE.md)
+
+**Pasos rápidos:**
+1. Obtén el ID de cada página: `linkedin.com/company/[ID]`
+2. Duplica el nodo "RSS Feed Read"
+3. Cambia la URL al nuevo ID
+4. Conecta al workflow
+
+**Tiempo:** 2 minutos por fuente
+
+---
+
+## 📊 Cómo funciona
 
 ```
-⏰ Cada 2 horas
+⏰ Cada 3 horas
     ↓
-📰 Obtiene contenido de:
-   • Páginas LinkedIn del grupo
-   • Feeds RSS
-   • Generador de ideas IA
+📰 Lee contenido de todas tus fuentes
     ↓
-🔍 Filtra y analiza (SIN usar tokens)
-   • Calcula relevancia
-   • Deduplica por título
-   • Boost por engagement
+🔍 Filtra lo más relevante (sin IA)
     ↓
-📊 Verifica historial en Google Sheets
-   • Evita publicar duplicados
-   • Registra todo el contenido
+📊 Verifica duplicados en Google Sheets
     ↓
-✅ Filtra por calidad (score > 40)
-    ↓
-🤖 Genera contenido optimizado:
-   ├─ Repost: Comentario corto (100 tokens)
-   └─ Original: Post completo (300 tokens)
+🤖 Genera comentario con IA (100 tokens)
     ↓
 🚀 Publica en LinkedIn
-    ↓
-📝 Actualiza historial con métricas
-    ↓
-📊 Genera reporte de rendimiento
 ```
+
+**Costo:** ~$0.001 por post
+**Tiempo:** 0 minutos (automático)
 
 ---
 
-## 💡 Casos de Uso
+## 💰 Ahorro
 
-### 1. Empresa con múltiples marcas
+| Concepto | Tradicional | Con este sistema |
+|----------|-------------|------------------|
+| **Costo/mes** | $200-300 | $25 |
+| **Tiempo/mes** | 3-4 horas | 0 minutos |
+| **Posts/mes** | 10-20 | 60-90 |
+| **Tokens/post** | 3000+ | 100-150 |
+
+**Ahorro anual:** ~$3,300
+
+---
+
+## 🎯 Casos de Uso
+
+### Grupo de empresas
 ```
-Green Hub Portal (principal)
+Empresa Principal
 ├─ Empresa Hermana 1
 ├─ Empresa Hermana 2
 └─ Empresa Hermana 3
 
-→ Repostea contenido valioso de todas automáticamente
+→ Repostea lo mejor de todas
 ```
 
-### 2. Curación + Contenido Original
+### Curación de contenido
 ```
-50% Repost (de fuentes confiables)
-50% Contenido Original (generado por IA)
+50% Posts de LinkedIn
+25% RSS feeds
+25% Contenido original IA
 
-→ Balance perfecto de valor y autenticidad
+→ Presencia consistente
 ```
-
-### 3. Agencia de Marketing
-```
-Cliente 1 → Workflow 1
-Cliente 2 → Workflow 2
-Cliente 3 → Workflow 3
-
-→ Gestiona múltiples clientes desde un solo n8n
-```
-
----
-
-## 📊 Comparación de Métodos
-
-| Característica | Método Tradicional | Auto-Publisher PRO |
-|----------------|-------------------|-------------------|
-| **Tokens por post** | 3000-5000 | 50-300 |
-| **Costo por post** | $0.10 | $0.001 |
-| **Tiempo manual** | 15-30 min | 0 min |
-| **Posts/mes** | 10-20 | 90-180 |
-| **Costo mensual** | $200-300 | $25 |
-| **Consistencia** | Variable | 100% |
-| **Multi-fuente** | ❌ | ✅ |
-| **Deduplicación** | Manual | Automática |
-
-### 💰 Ahorro anual: **~$3,000**
-
----
-
-## 🎨 Personalización
-
-### Cambiar temas de contenido
-
-Edita `linkedin-config.json`:
-
-```json
-{
-  "contentTopics": {
-    "categories": [
-      {
-        "name": "tips",
-        "topics": [
-          "TU TEMA 1",
-          "TU TEMA 2",
-          "TU TEMA 3"
-        ]
-      }
-    ]
-  }
-}
-```
-
-### Ajustar frecuencia
-
-```json
-{
-  "schedule": {
-    "checkInterval": 2,      // Cada 2 horas
-    "postingHours": [9, 12, 15, 18]  // Solo en estos horarios
-  }
-}
-```
-
-### Cambiar hashtags
-
-En nodo "🎨 Construir Post Final":
-
-```javascript
-#TusHashtags #Aquí #Personalizados
-```
-
----
-
-## 📈 Métricas y Análisis
-
-### En Google Sheets verás:
-
-- **Total procesados**: Cuántos posts analizó
-- **Publicados**: Cuántos pasaron el filtro
-- **Tokens usados**: Costo real por post
-- **Fuente más activa**: Qué página genera más contenido
-- **Score promedio**: Calidad del contenido
-
-### Dashboard sugerido:
-
-```
-┌─────────────────────────────────┐
-│  Posts por Fuente (Gráfica)    │
-├─────────────────────────────────┤
-│  Green Hub: ████████ 45%       │
-│  Hermana 1: ████ 25%           │
-│  Hermana 2: ████ 20%           │
-│  Original: ██ 10%              │
-└─────────────────────────────────┘
-
-┌─────────────────────────────────┐
-│  Tokens Usados (Línea)         │
-├─────────────────────────────────┤
-│  Promedio: 120 tokens/post     │
-│  Ahorro: 95% vs tradicional    │
-└─────────────────────────────────┘
-```
-
----
-
-## 🔒 Seguridad y Privacidad
-
-### ✅ Buenas prácticas:
-
-- **API Keys**: Nunca las compartas ni las subas a GitHub
-- **OAuth**: Usa tokens con permisos mínimos necesarios
-- **Historial**: Mantén el Google Sheet privado
-- **Monitoring**: Revisa logs regularmente
-
-### ⚠️ Límites de API:
-
-- **LinkedIn**: ~100 requests/día (este workflow usa ~12/día)
-- **OpenAI**: Según tu plan (workflow usa ~$0.03/día)
-- **Google Sheets**: 500 requests/100 segundos
-
----
-
-## 🆘 Problemas Comunes
-
-### "No se publica nada"
-→ Verifica que las fuentes tienen contenido nuevo
-→ Reduce `minimumRelevanceScore` en config
-
-### "Error de LinkedIn"
-→ Re-autentica OAuth2
-→ Verifica permisos de la app
-
-### "Contenido duplicado"
-→ Limpia Google Sheets historial
-→ Verifica columna `id` es única
-
-### "Muy caro"
-→ Ya está optimizado al máximo con gpt-4o-mini
-→ Reduce frecuencia de contenido original
-
----
-
-## 🚀 Roadmap Futuro
-
-### Próximas mejoras:
-
-- [ ] **Análisis de engagement**: Auto-aprender qué contenido funciona mejor
-- [ ] **Imágenes IA**: Generar imágenes para posts con DALL-E
-- [ ] **Multi-idioma**: Posts en varios idiomas automáticamente
-- [ ] **Video clips**: Crear video shorts con IA
-- [ ] **A/B Testing**: Probar múltiples versiones
-- [ ] **Scheduling inteligente**: Publicar en horario óptimo según analytics
 
 ---
 
 ## 📚 Documentación
 
-- **Setup completo**: Ver `SETUP-INSTRUCTIONS.md`
-- **Inicio rápido**: Ver `QUICK-START.md`
-- **Configuración**: Ver `linkedin-config.json`
+- **Inicio rápido:** [QUICK-START.md](QUICK-START.md)
+- **Multi-fuente:** [MULTI-SOURCE-GUIDE.md](MULTI-SOURCE-GUIDE.md)
+- **Problemas:** [FIX-IMPORT-ERROR.md](FIX-IMPORT-ERROR.md)
 
 ---
 
-## 🤝 Contribuciones
+## 🔧 Requisitos
 
-¿Mejoras o ideas? ¡Compártelas!
-
-- Añade nuevas fuentes de contenido
-- Optimiza aún más el uso de tokens
-- Mejora los prompts de IA
-- Añade nuevas integraciones
+- Cuenta de n8n (cloud o self-hosted)
+- Cuenta de LinkedIn
+- OpenAI API Key (~$5/mes)
+- Google Sheet (opcional, gratis)
 
 ---
 
-## 📄 Licencia
+## ⚙️ Personalización
 
-MIT License - Usa libremente en tus proyectos comerciales o personales.
+### Cambiar frecuencia
 
----
+```
+Nodo "Schedule Trigger" → Hours Interval: 3
+```
 
-## ⭐ Resultados Reales
+### Cambiar hashtags
 
-### Antes del workflow:
-- ❌ 0-2 posts al mes
-- ❌ Tiempo invertido: 3-4 horas/mes
-- ❌ Inconsistencia
+```
+Nodo "Build Post" → Busca la línea:
+#Sostenibilidad #Innovación #GreenHub
+```
 
-### Después del workflow:
-- ✅ 60-90 posts al mes
-- ✅ Tiempo invertido: 15 min setup inicial
-- ✅ 100% consistente
-- ✅ 95% ahorro en costos
-- ✅ Mayor engagement
+### Ajustar filtros
 
----
-
-## 🎯 Siguientes Pasos
-
-1. **Lee**: `SETUP-INSTRUCTIONS.md` para instalación completa
-2. **Configura**: Tus credenciales y fuentes
-3. **Prueba**: Ejecuta manualmente primero
-4. **Activa**: Deja que trabaje por ti
-5. **Monitorea**: Revisa métricas semanalmente
-6. **Optimiza**: Ajusta según resultados
+```
+Nodo "Filter and Process" → Busca:
+minRelevanceScore: 40  // Aumenta para ser más selectivo
+```
 
 ---
 
-**¿Listo para automatizar tu LinkedIn?** 🚀
+## 📈 Métricas
 
-Empieza con: `SETUP-INSTRUCTIONS.md`
+Métricas disponibles en Google Sheets:
+- Posts procesados vs. publicados
+- Tokens usados por post
+- Fuente de cada post
+- Score de relevancia
+- Costo estimado
 
 ---
 
-_Desarrollado con ❤️ para optimizar tu presencia en LinkedIn_
+## 🆘 Problemas Comunes
 
-_Ahorra 95% en costos | Publica 10x más | 0 tiempo manual_
+### No se publica nada
+→ Verifica que la URL de LinkedIn es correcta
+→ Reduce `minRelevanceScore` en el filtro
+
+### Error al importar
+→ Usa `linkedin-automation-simple.json`
+→ Ver [FIX-IMPORT-ERROR.md](FIX-IMPORT-ERROR.md)
+
+### Muy caro
+→ Ya está optimizado con gpt-4o-mini
+→ Reduce frecuencia de ejecución
+
+---
+
+## ✅ Checklist
+
+Antes de activar:
+
+- [ ] Workflow importado
+- [ ] Credenciales configuradas
+- [ ] ID de LinkedIn correcto
+- [ ] Google Sheet creado (opcional)
+- [ ] Prueba manual exitosa
+- [ ] Hashtags personalizados
+
+---
+
+## 🎉 Resultado
+
+Con este sistema:
+- ✅ **0 tiempo manual** después del setup
+- ✅ **95% ahorro** en costos
+- ✅ **3x más posts** que antes
+- ✅ **100% consistente**
+
+---
+
+## 📞 Soporte
+
+¿Necesitas ayuda?
+
+1. Revisa [QUICK-START.md](QUICK-START.md)
+2. Consulta [FIX-IMPORT-ERROR.md](FIX-IMPORT-ERROR.md)
+3. Para multi-fuente: [MULTI-SOURCE-GUIDE.md](MULTI-SOURCE-GUIDE.md)
+
+---
+
+**⚡ Siguiente paso:** Lee [MULTI-SOURCE-GUIDE.md](MULTI-SOURCE-GUIDE.md) para añadir más fuentes
+
+---
+
+_Ahorra tiempo | Reduce costos | Publica consistentemente_
