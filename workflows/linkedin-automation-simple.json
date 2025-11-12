@@ -1,0 +1,271 @@
+{
+  "name": "LinkedIn Auto-Publisher - Simple",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://www.linkedin.com/company/92768394",
+        "options": {}
+      },
+      "id": "b2c3d4e5-f678-9012-bcde-f12345678901",
+      "name": "RSS Feed Read",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filtrar y procesar contenido\nconst items = $input.all();\nconst processedItems = [];\nconst seenTitles = new Set();\n\n// Timestamp de última ejecución (3 horas)\nconst lastRun = new Date(Date.now() - 3 * 60 * 60 * 1000);\n\nitems.forEach(item => {\n  const post = item.json;\n  \n  // Verificar si es contenido nuevo\n  const pubDate = new Date(post.pubDate || post.date || Date.now());\n  if (pubDate < lastRun) return;\n  \n  // Deduplicación\n  const titleHash = (post.title || '').toLowerCase().trim();\n  if (seenTitles.has(titleHash)) return;\n  seenTitles.add(titleHash);\n  \n  // Calcular relevancia\n  let relevanceScore = 0;\n  const keywords = ['innovación', 'tecnología', 'sostenibilidad', 'verde', 'impacto'];\n  const content = `${post.title} ${post.description}`.toLowerCase();\n  \n  keywords.forEach(keyword => {\n    if (content.includes(keyword)) relevanceScore += 10;\n  });\n  \n  // Boost por recencia\n  const hoursOld = (Date.now() - pubDate) / (1000 * 60 * 60);\n  if (hoursOld < 1) relevanceScore += 20;\n  else if (hoursOld < 6) relevanceScore += 10;\n  \n  // Limpiar descripción\n  const cleanDesc = (post.description || '')\n    .replace(/<[^>]*>/g, '')\n    .substring(0, 200)\n    .trim();\n  \n  processedItems.push({\n    title: post.title,\n    link: post.link || post.url,\n    description: cleanDesc,\n    pubDate: pubDate.toISOString(),\n    relevanceScore,\n    id: post.link || `post-${Date.now()}`\n  });\n});\n\n// Ordenar por relevancia y tomar top 3\nprocessedItems.sort((a, b) => b.relevanceScore - a.relevanceScore);\nconst topPosts = processedItems.slice(0, 3);\n\nconsole.log(`Procesados: ${items.length}, Filtrados: ${topPosts.length}`);\n\nreturn topPosts.map(post => ({ json: post }));"
+      },
+      "id": "c3d4e5f6-7890-1234-cdef-123456789012",
+      "name": "Filter and Process",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": ["id"],
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "d4e5f6g7-8901-2345-defg-234567890123",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "value2": "pendiente"
+            }
+          ]
+        }
+      },
+      "id": "e5f6g7h8-9012-3456-efgh-345678901234",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generar idea de contenido\nconst topics = [\n  'sostenibilidad empresarial',\n  'innovación verde',\n  'eficiencia energética',\n  'economía circular',\n  'tecnología limpia'\n];\n\nconst randomTopic = topics[Math.floor(Math.random() * topics.length)];\n\nreturn [{\n  json: {\n    topic: randomTopic,\n    needsGeneration: true,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "f6g7h8i9-0123-4567-fghi-456789012345",
+      "name": "Generate Topic",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-4o-mini"
+            },
+            {
+              "name": "messages",
+              "value": "={{ [{\"role\": \"user\", \"content\": \"Crea un post de LinkedIn de máximo 100 palabras sobre: \" + $json.topic + \". Tono profesional pero cercano. SOLO el post, sin explicaciones.\"}] }}"
+            },
+            {
+              "name": "max_tokens",
+              "value": "200"
+            },
+            {
+              "name": "temperature",
+              "value": "0.7"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "g7h8i9j0-1234-5678-ghij-567890123456",
+      "name": "OpenAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1450, 200],
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Construir post final\nconst input = $input.first().json;\n\nlet postText = '';\n\nif (input.needsGeneration && input.choices) {\n  // Contenido generado por IA\n  postText = input.choices[0].message.content;\n} else if (input.title) {\n  // Contenido de RSS\n  postText = `💡 ${input.title}\\n\\n${input.description}\\n\\n🔗 ${input.link}`;\n}\n\n// Añadir hashtags\npostText += '\\n\\n#Sostenibilidad #Innovación #GreenHub #TecnologíaVerde';\n\nreturn [{\n  json: {\n    text: postText,\n    originalUrl: input.link || '',\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "h8i9j0k1-2345-6789-hijk-678901234567",
+      "name": "Build Post",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "id": "i9j0k1l2-3456-7890-ijkl-789012345678",
+      "name": "LinkedIn",
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [1850, 300],
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "YOUR_LINKEDIN_CREDENTIAL_ID",
+          "name": "LinkedIn account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "RSS Feed Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed Read": {
+      "main": [
+        [
+          {
+            "node": "Filter and Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter and Process": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Build Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Topic": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Build Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Post": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "instanceId": "your-instance-id"
+  },
+  "id": "",
+  "tags": []
+}
