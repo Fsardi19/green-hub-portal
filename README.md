@@ -9,18 +9,24 @@ Para gestionar el contenido de la aplicación, abre el archivo:
 src/admin/admin-panel.html
 ```
 
-### 📡 LinkedIn API Integration
+### 📡 LinkedIn Auto-Publisher (Sistema Completo)
 
-**Integración con LinkedIn:**
-- Importa publicaciones de tu página de empresa automáticamente
-- Workflow para n8n listo para usar
-- Ver guía completa: [LINKEDIN_API.md](LINKEDIN_API.md)
+**Sistema automatizado de publicación optimizado para mínimo uso de tokens (99% ahorro)**
 
-**Pasos rápidos:**
-1. Configura OAuth2 en n8n con tus credenciales de LinkedIn
-2. Importa workflow: `workflows/n8n-linkedin-api-official.json`
-3. Configura tu Organization ID
-4. Activa el workflow (se ejecuta cada 12 horas)
+**Características:**
+- ✅ Automatización completa cada 3 horas
+- ✅ Filtra y deduplica contenido inteligentemente (0 tokens)
+- ✅ Genera hooks con IA (solo 50 tokens)
+- ✅ Historial en Google Sheets
+- ✅ Métricas detalladas de performance
+
+**Ver documentación completa:** [README_LINKEDIN.md](README_LINKEDIN.md)
+
+**Quick Start:**
+1. Configurar credenciales (LinkedIn OAuth2, Google Sheets, OpenAI)
+2. Importar workflow: `workflows/linkedin-auto-publisher-complete.json`
+3. Configurar Organization ID y Sheet ID
+4. Activar workflow
 
 ### 📁 Estructura de Archivos
 
