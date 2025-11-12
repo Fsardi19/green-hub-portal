@@ -37,6 +37,9 @@
                     <button onclick="showSection('purposes')" class="nav-btn bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">
                         🎯 Propósitos
                     </button>
+                    <button onclick="showSection('rss')" class="nav-btn bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors">
+                        📡 RSS Feeds
+                    </button>
                 </div>
             </nav>
 
@@ -100,6 +103,69 @@
                 </div>
             </div>
 
+            <!-- Sección RSS Feeds -->
+            <div id="rss-section" class="admin-content bg-white rounded-lg shadow-md p-6 hidden">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📡 Gestión de RSS Feeds</h2>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                    <h3 class="font-semibold text-yellow-800 mb-2">⚠️ Nota sobre LinkedIn</h3>
+                    <p class="text-yellow-700 text-sm">
+                        LinkedIn no proporciona feeds RSS nativos. Para integrar contenido de LinkedIn, usa
+                        <a href="../docs/RSS_FEED_INTEGRATION.md" class="underline font-semibold">RSS Bridge</a> o la API oficial de LinkedIn.
+                        Ver documentación completa en <code class="bg-yellow-100 px-2 py-1 rounded">/docs/RSS_FEED_INTEGRATION.md</code>
+                    </p>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-3">Agregar Nuevo Feed RSS</h3>
+                    <form id="rss-form" class="space-y-4">
+                        <input type="text" id="rss-name" placeholder="Nombre del feed (ej: TechCrunch)" class="w-full p-3 border border-gray-300 rounded-lg">
+                        <input type="url" id="rss-url" placeholder="URL del feed RSS (ej: https://techcrunch.com/feed/)" class="w-full p-3 border border-gray-300 rounded-lg">
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="rss-active" checked class="mr-2">
+                                <span>Activo</span>
+                            </label>
+                            <input type="number" id="rss-max-items" placeholder="Máx items" value="10" min="1" max="50" class="p-3 border border-gray-300 rounded-lg w-32">
+                            <button type="button" onclick="testRssFeed()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                                🧪 Probar
+                            </button>
+                            <button type="submit" class="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition-colors">
+                                Agregar Feed
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Resultado de prueba -->
+                    <div id="rss-test-result" class="mt-4 hidden"></div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Feeds RSS Configurados</h3>
+                    <div id="rss-list" class="space-y-3">
+                        <!-- Los feeds se cargarán aquí dinámicamente -->
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-gray-800 mb-2">📋 Feeds Recomendados para Pruebas</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span>TechCrunch</span>
+                            <button onclick="quickAddFeed('TechCrunch', 'https://techcrunch.com/feed/')" class="text-pink-500 hover:text-pink-700">➕ Agregar</button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>BBC News</span>
+                            <button onclick="quickAddFeed('BBC News', 'https://feeds.bbci.co.uk/news/rss.xml')" class="text-pink-500 hover:text-pink-700">➕ Agregar</button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Dev.to</span>
+                            <button onclick="quickAddFeed('Dev.to', 'https://dev.to/feed')" class="text-pink-500 hover:text-pink-700">➕ Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Instrucciones -->
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-6">
                 <h3 class="text-lg font-semibold text-blue-800 mb-3">📋 Instrucciones de Uso</h3>
@@ -121,6 +187,7 @@
         // Datos locales (se pueden reemplazar con llamadas a API)
         let newsData = [];
         let resourcesData = [];
+        let rssFeeds = [];
 
         // Cargar datos iniciales
         async function loadInitialData() {
@@ -130,9 +197,16 @@
                 
                 const resourcesResponse = await fetch('/data/resources.json');
                 resourcesData = await resourcesResponse.json();
-                
+
+                // Cargar feeds RSS desde localStorage
+                const savedFeeds = localStorage.getItem('greenhub_rss_feeds');
+                if (savedFeeds) {
+                    rssFeeds = JSON.parse(savedFeeds);
+                }
+
                 renderNews();
                 renderResources();
+                renderRssFeeds();
             } catch (error) {
                 console.error('Error cargando datos:', error);
             }
@@ -266,6 +340,219 @@
             // En un entorno real, esto haría una llamada POST a tu API
             localStorage.setItem(`greenhub_${type}`, JSON.stringify(data));
             console.log(`Datos de ${type} guardados:`, data);
+        }
+
+        // Gestión de RSS Feeds
+        document.getElementById('rss-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('rss-name').value;
+            const url = document.getElementById('rss-url').value;
+            const active = document.getElementById('rss-active').checked;
+            const maxItems = parseInt(document.getElementById('rss-max-items').value);
+
+            if (name && url) {
+                const newFeed = {
+                    id: Date.now(),
+                    name: name,
+                    url: url,
+                    active: active,
+                    maxItems: maxItems,
+                    lastFetched: null,
+                    status: 'pending'
+                };
+
+                rssFeeds.push(newFeed);
+                renderRssFeeds();
+                saveFeedsData();
+
+                // Limpiar formulario
+                this.reset();
+                document.getElementById('rss-active').checked = true;
+                document.getElementById('rss-max-items').value = 10;
+
+                alert('Feed RSS agregado exitosamente!');
+            }
+        });
+
+        function renderRssFeeds() {
+            const rssList = document.getElementById('rss-list');
+
+            if (rssFeeds.length === 0) {
+                rssList.innerHTML = '<p class="text-gray-500 text-center py-4">No hay feeds RSS configurados. Agrega uno para comenzar.</p>';
+                return;
+            }
+
+            rssList.innerHTML = rssFeeds.map(feed => {
+                const statusColor = feed.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
+                const statusText = feed.active ? '✓ Activo' : '✗ Inactivo';
+
+                return `
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <h4 class="font-semibold text-gray-800">${feed.name}</h4>
+                                    <span class="${statusColor} text-xs px-2 py-1 rounded-full">${statusText}</span>
+                                </div>
+                                <p class="text-gray-600 text-sm break-all">${feed.url}</p>
+                                <div class="flex items-center mt-2 space-x-3 text-xs text-gray-500">
+                                    <span>Máx items: ${feed.maxItems}</span>
+                                    ${feed.lastFetched ? `<span>Última actualización: ${new Date(feed.lastFetched).toLocaleString('es')}</span>` : '<span>Nunca actualizado</span>'}
+                                </div>
+                            </div>
+                            <div class="flex space-x-2 ml-4">
+                                <button onclick="fetchRssFeed(${feed.id})" class="text-blue-500 hover:text-blue-700" title="Actualizar">
+                                    🔄
+                                </button>
+                                <button onclick="toggleFeedActive(${feed.id})" class="text-yellow-500 hover:text-yellow-700" title="Activar/Desactivar">
+                                    ${feed.active ? '⏸️' : '▶️'}
+                                </button>
+                                <button onclick="deleteFeed(${feed.id})" class="text-red-500 hover:text-red-700" title="Eliminar">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function testRssFeed() {
+            const url = document.getElementById('rss-url').value;
+            const maxItems = parseInt(document.getElementById('rss-max-items').value) || 10;
+
+            if (!url) {
+                alert('Por favor ingresa una URL de feed RSS');
+                return;
+            }
+
+            const resultDiv = document.getElementById('rss-test-result');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = '<div class="bg-blue-50 border border-blue-200 rounded-lg p-4"><p class="text-blue-700">⏳ Probando feed RSS...</p></div>';
+
+            try {
+                // Importar el parser RSS
+                const { parseFeed } = await import('../utils/rssFeedParser.js');
+
+                const items = await parseFeed(url, {
+                    maxItems: maxItems,
+                    timeout: 15000,
+                    sanitize: true
+                });
+
+                resultDiv.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-green-800 mb-2">✅ Feed válido!</h4>
+                        <p class="text-green-700 text-sm">Se encontraron ${items.length} items.</p>
+                        <div class="mt-3 space-y-2 max-h-60 overflow-y-auto">
+                            ${items.slice(0, 3).map(item => `
+                                <div class="bg-white rounded p-2 text-xs">
+                                    <p class="font-semibold">${item.title}</p>
+                                    <p class="text-gray-600">${item.date}</p>
+                                </div>
+                            `).join('')}
+                            ${items.length > 3 ? `<p class="text-green-600 text-xs">... y ${items.length - 3} más</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-red-800 mb-2">❌ Error al probar el feed</h4>
+                        <p class="text-red-700 text-sm">${error.message}</p>
+                        ${error.message.includes('LinkedIn') ? `
+                            <div class="mt-3 bg-yellow-50 border border-yellow-200 rounded p-3">
+                                <p class="text-yellow-800 text-xs font-semibold">💡 Solución para LinkedIn:</p>
+                                <p class="text-yellow-700 text-xs mt-1">
+                                    Usa <strong>RSS Bridge</strong> o <strong>LinkedIn API</strong>.
+                                    Ver <a href="../docs/RSS_FEED_INTEGRATION.md" class="underline">documentación completa</a>.
+                                </p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        async function fetchRssFeed(feedId) {
+            const feed = rssFeeds.find(f => f.id === feedId);
+            if (!feed) return;
+
+            if (!feed.active) {
+                alert('Este feed está desactivado. Actívalo primero.');
+                return;
+            }
+
+            try {
+                const { parseFeed } = await import('../utils/rssFeedParser.js');
+
+                const items = await parseFeed(feed.url, {
+                    maxItems: feed.maxItems,
+                    timeout: 15000,
+                    sanitize: true
+                });
+
+                // Agregar items al array de noticias
+                items.forEach(item => {
+                    item.source = feed.name;
+                    item.category = 'RSS Feed';
+                    newsData.unshift(item);
+                });
+
+                // Actualizar última fecha de actualización
+                feed.lastFetched = Date.now();
+                feed.status = 'success';
+
+                renderNews();
+                renderRssFeeds();
+                saveFeedsData();
+                saveData('news', newsData);
+
+                alert(`✅ Se importaron ${items.length} noticias de ${feed.name}`);
+            } catch (error) {
+                feed.status = 'error';
+                renderRssFeeds();
+                saveFeedsData();
+                alert(`❌ Error al actualizar feed: ${error.message}`);
+            }
+        }
+
+        function toggleFeedActive(feedId) {
+            const feed = rssFeeds.find(f => f.id === feedId);
+            if (feed) {
+                feed.active = !feed.active;
+                renderRssFeeds();
+                saveFeedsData();
+            }
+        }
+
+        function deleteFeed(feedId) {
+            if (confirm('¿Estás seguro de eliminar este feed RSS?')) {
+                rssFeeds = rssFeeds.filter(f => f.id !== feedId);
+                renderRssFeeds();
+                saveFeedsData();
+            }
+        }
+
+        function quickAddFeed(name, url) {
+            document.getElementById('rss-name').value = name;
+            document.getElementById('rss-url').value = url;
+            document.getElementById('rss-active').checked = true;
+            document.getElementById('rss-max-items').value = 10;
+
+            // Scroll al formulario
+            document.getElementById('rss-form').scrollIntoView({ behavior: 'smooth' });
+
+            // Highlight del formulario
+            const form = document.getElementById('rss-form');
+            form.classList.add('ring-4', 'ring-pink-300');
+            setTimeout(() => form.classList.remove('ring-4', 'ring-pink-300'), 2000);
+        }
+
+        function saveFeedsData() {
+            localStorage.setItem('greenhub_rss_feeds', JSON.stringify(rssFeeds));
+            console.log('Feeds RSS guardados:', rssFeeds);
         }
 
         // Cargar datos al iniciar

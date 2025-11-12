@@ -9,6 +9,32 @@ Para gestionar el contenido de la aplicación, abre el archivo:
 src/admin/admin-panel.html
 ```
 
+**Nuevas funcionalidades:**
+- 📰 Gestión de Noticias
+- 📚 Gestión de Recursos
+- 🏢 Gestión de Salas
+- 🎯 Gestión de Propósitos
+- 📡 **Gestión de RSS Feeds** (Nuevo!)
+
+### 📡 RSS Feed Integration
+
+Ahora puedes importar noticias automáticamente desde feeds RSS!
+
+**Inicio Rápido:**
+1. Abre el Panel de Administración
+2. Click en "📡 RSS Feeds"
+3. Agrega un feed RSS (ej: `https://techcrunch.com/feed/`)
+4. Click "🧪 Probar" para validar
+5. Click "🔄" para importar noticias
+
+**Documentación completa:**
+- [Quick Start Guide](docs/QUICK_START_RSS.md) - Guía rápida y solución de errores
+- [RSS Feed Integration](docs/RSS_FEED_INTEGRATION.md) - Documentación técnica completa
+- [n8n Workflows](workflows/README.md) - Automatización con n8n
+
+**⚠️ Nota importante sobre LinkedIn:**
+LinkedIn NO proporciona feeds RSS. Para integrar contenido de LinkedIn, ver opciones en [docs/RSS_FEED_INTEGRATION.md](docs/RSS_FEED_INTEGRATION.md).
+
 ### 📁 Estructura de Archivos
 
 #### Datos dinámicos:
