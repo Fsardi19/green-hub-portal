@@ -23,7 +23,6 @@ function cleanUrl(url) {
 function formatDate(dateStr) {
   const date = dateStr ? new Date(dateStr) : new Date();
   return date.toLocaleDateString('en-US', {
-    weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -43,7 +42,7 @@ const htmlContent = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Briefing - Coffee Market Intelligence</title>
+    <title>Coffee Market Intelligence</title>
     <style>
         * {
             margin: 0;
@@ -52,296 +51,235 @@ const htmlContent = `
         }
 
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 0;
+            margin: 0;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
         .newsletter-wrapper {
-            max-width: 700px;
+            max-width: 680px;
             margin: 0 auto;
             background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        /* Header Section */
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: #ffffff;
-            padding: 40px 50px;
-            border-top: 5px solid #c9a961;
+            background-color: #000000;
+            padding: 24px 40px;
+            border-bottom: 1px solid #000000;
         }
 
         .company-name {
-            font-size: 14px;
-            font-weight: 300;
-            letter-spacing: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            color: #c9a961;
-            margin-bottom: 10px;
+            color: #ffffff;
+            margin-bottom: 4px;
         }
 
         .newsletter-title {
-            font-size: 36px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 8px;
-            line-height: 1.2;
-        }
-
-        .newsletter-subtitle {
-            font-size: 15px;
-            font-weight: 300;
-            opacity: 0.9;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        .date-bar {
-            background-color: #c9a961;
-            color: #2c3e50;
-            padding: 12px 50px;
-            font-size: 13px;
+            font-size: 18px;
             font-weight: 600;
-            letter-spacing: 1px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        /* Date Bar */
+        .date-bar {
+            background-color: #ffffff;
+            padding: 12px 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .date-text {
+            font-size: 12px;
+            color: #666666;
+            font-weight: 500;
         }
 
         /* Executive Summary */
         .executive-summary {
-            background: #f9f9f9;
-            border-left: 5px solid #c9a961;
-            padding: 35px 50px;
-            margin: 0;
+            padding: 32px 40px;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #fafafa;
         }
 
         .summary-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #c9a961;
-            margin-bottom: 15px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        .summary-text {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #2c3e50;
-            font-weight: 400;
-        }
-
-        /* Main Content */
-        .content-section {
-            padding: 40px 50px;
-        }
-
-        .section-heading {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #e0e0e0;
-            letter-spacing: -0.5px;
-        }
-
-        /* Article Cards */
-        .article-grid {
-            margin-bottom: 40px;
-        }
-
-        .article-card {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .article-card:hover {
-            border-color: #c9a961;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .source-link {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: #c9a961;
-            text-decoration: none;
-            font-size: 20px;
-            opacity: 0.6;
-            transition: all 0.3s ease;
-            line-height: 1;
-        }
-
-        .source-link:hover {
-            opacity: 1;
-            transform: translateX(3px);
-        }
-
-        .article-category {
-            display: inline-block;
             font-size: 10px;
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #c9a961;
-            background: rgba(201, 169, 97, 0.1);
-            padding: 5px 12px;
-            border-radius: 3px;
+            color: #000000;
             margin-bottom: 12px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        .article-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
-
-        .article-description {
+        .summary-text {
             font-size: 15px;
-            line-height: 1.7;
-            color: #555;
-            margin-bottom: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333333;
         }
 
-        /* Key Metrics Table */
-        .metrics-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        /* Content Section */
+        .content-section {
+            padding: 40px 40px;
         }
 
-        .metrics-table th {
-            background: #2c3e50;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-size: 12px;
+        .section-heading {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #000000;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #000000;
+        }
+
+        /* Article List */
+        .article-list {
+            margin: 0;
+        }
+
+        .article-item {
+            padding: 24px 0;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .article-item:last-child {
+            border-bottom: none;
+        }
+
+        .article-category {
+            font-size: 10px;
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
+            color: #666666;
+            margin-bottom: 8px;
         }
 
-        .metrics-table td {
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
+        .article-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            letter-spacing: -0.3px;
+        }
+
+        .article-description {
             font-size: 14px;
-            color: #555;
+            line-height: 1.6;
+            color: #666666;
+            margin-bottom: 0;
         }
 
-        .metrics-table tr:hover {
-            background: #f9f9f9;
+        .article-link {
+            position: absolute;
+            top: 24px;
+            right: 0;
+            color: #000000;
+            text-decoration: none;
+            font-size: 18px;
+            opacity: 0.3;
+            transition: all 0.2s ease;
+        }
+
+        .article-link:hover {
+            opacity: 1;
+        }
+
+        /* Metrics Section */
+        .metrics-section {
+            padding: 32px 40px;
+            background-color: #fafafa;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .metric-item {
+            text-align: center;
         }
 
         .metric-value {
-            font-size: 18px;
+            font-size: 28px;
             font-weight: 700;
-            color: #c9a961;
+            color: #000000;
+            letter-spacing: -0.5px;
         }
 
-        /* Additional Insights */
-        .insights-list {
-            list-style: none;
-            margin: 25px 0;
-        }
-
-        .insights-list li {
-            padding: 15px 0;
-            padding-left: 30px;
-            position: relative;
-            border-bottom: 1px solid #f0f0f0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #555;
-        }
-
-        .insights-list li:before {
-            content: '▪';
-            position: absolute;
-            left: 0;
-            color: #c9a961;
-            font-size: 20px;
+        .metric-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #666666;
+            margin-top: 4px;
         }
 
         /* Footer */
         .footer {
-            background: #2c3e50;
+            background-color: #000000;
+            padding: 32px 40px;
             color: #ffffff;
-            padding: 35px 50px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .footer-content {
-            font-size: 13px;
-            line-height: 1.8;
-            opacity: 0.9;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #999999;
+        }
+
+        .footer-company {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
         }
 
         .footer-divider {
             height: 1px;
-            background: rgba(255,255,255,0.2);
-            margin: 20px 0;
+            background-color: #333333;
+            margin: 16px 0;
         }
 
-        .confidential-badge {
-            display: inline-block;
-            background: rgba(201, 169, 97, 0.2);
-            color: #c9a961;
-            padding: 8px 16px;
-            border-radius: 3px;
+        .confidential-text {
             font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-top: 15px;
+            color: #666666;
+            margin-top: 16px;
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media only screen and (max-width: 600px) {
-            body {
-                padding: 0;
-            }
-
             .header,
             .date-bar,
             .executive-summary,
             .content-section,
+            .metrics-section,
             .footer {
-                padding-left: 25px;
-                padding-right: 25px;
+                padding-left: 24px;
+                padding-right: 24px;
             }
 
-            .newsletter-title {
-                font-size: 28px;
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
             }
 
-            .section-heading {
-                font-size: 20px;
-            }
-
-            .article-card {
-                padding: 20px;
-            }
-
-            .metrics-table {
-                font-size: 12px;
-            }
-
-            .metrics-table th,
-            .metrics-table td {
-                padding: 10px;
+            .article-link {
+                position: static;
+                display: inline-block;
+                margin-top: 8px;
             }
         }
     </style>
@@ -352,11 +290,10 @@ const htmlContent = `
         <div class="header">
             <div class="company-name">Libertario Coffee Roasters</div>
             <div class="newsletter-title">Market Intelligence Brief</div>
-            <div class="newsletter-subtitle">Confidential Board Report</div>
         </div>
 
         <div class="date-bar">
-            ${currentDate}
+            <div class="date-text">${currentDate}</div>
         </div>
 
         <!-- Executive Summary -->
@@ -364,20 +301,20 @@ const htmlContent = `
             <div class="summary-label">Executive Summary</div>
             <div class="summary-text">
                 ${getData(data.businessAnalysis,
-                    'This intelligence brief provides comprehensive analysis of current coffee market dynamics, emerging trends, and strategic opportunities. Our analysis indicates sustained growth in premium segments with increasing consumer focus on sustainability and quality. Technology adoption continues to drive operational efficiencies across the supply chain.'
+                    'This intelligence brief provides comprehensive analysis of current coffee market dynamics, emerging trends, and strategic opportunities. Our analysis indicates sustained growth in premium segments with increasing consumer focus on sustainability and quality.'
                 )}
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="content-section">
-            <h2 class="section-heading">Strategic Intelligence</h2>
+            <h2 class="section-heading">Market Intelligence</h2>
 
-            <div class="article-grid">
+            <div class="article-list">
                 ${data.topic1 ? `
-                <div class="article-card">
+                <div class="article-item">
                     ${cleanUrl(data.sources?.topic1) ?
-                        `<a href="${cleanUrl(data.sources.topic1)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        `<a href="${cleanUrl(data.sources.topic1)}" class="article-link" target="_blank" rel="noopener" title="View source">→</a>` :
                         ''
                     }
                     <div class="article-category">Market Development</div>
@@ -389,9 +326,9 @@ const htmlContent = `
                 ` : ''}
 
                 ${data.topic2 ? `
-                <div class="article-card">
+                <div class="article-item">
                     ${cleanUrl(data.sources?.topic2) ?
-                        `<a href="${cleanUrl(data.sources.topic2)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        `<a href="${cleanUrl(data.sources.topic2)}" class="article-link" target="_blank" rel="noopener" title="View source">→</a>` :
                         ''
                     }
                     <div class="article-category">Sustainability</div>
@@ -403,9 +340,9 @@ const htmlContent = `
                 ` : ''}
 
                 ${data.topic3 ? `
-                <div class="article-card">
+                <div class="article-item">
                     ${cleanUrl(data.sources?.topic3) ?
-                        `<a href="${cleanUrl(data.sources.topic3)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        `<a href="${cleanUrl(data.sources.topic3)}" class="article-link" target="_blank" rel="noopener" title="View source">→</a>` :
                         ''
                     }
                     <div class="article-category">Innovation</div>
@@ -417,9 +354,9 @@ const htmlContent = `
                 ` : ''}
 
                 ${data.topic4 ? `
-                <div class="article-card">
+                <div class="article-item">
                     ${cleanUrl(data.sources?.topic4) ?
-                        `<a href="${cleanUrl(data.sources.topic4)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        `<a href="${cleanUrl(data.sources.topic4)}" class="article-link" target="_blank" rel="noopener" title="View source">→</a>` :
                         ''
                     }
                     <div class="article-category">Industry Trends</div>
@@ -431,9 +368,9 @@ const htmlContent = `
                 ` : ''}
 
                 ${data.topic5 ? `
-                <div class="article-card">
+                <div class="article-item">
                     ${cleanUrl(data.sources?.topic5) ?
-                        `<a href="${cleanUrl(data.sources.topic5)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        `<a href="${cleanUrl(data.sources.topic5)}" class="article-link" target="_blank" rel="noopener" title="View source">→</a>` :
                         ''
                     }
                     <div class="article-category">Strategic Insights</div>
@@ -444,69 +381,43 @@ const htmlContent = `
                 </div>
                 ` : ''}
             </div>
+        </div>
 
-            <!-- Key Metrics -->
-            <h2 class="section-heading">Market Metrics</h2>
-
-            <table class="metrics-table">
-                <thead>
-                    <tr>
-                        <th>Indicator</th>
-                        <th>Value</th>
-                        <th>Trend</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Sources Analyzed</td>
-                        <td><span class="metric-value">${getData(data.articleCount, '15')}</span></td>
-                        <td>Comprehensive</td>
-                    </tr>
-                    <tr>
-                        <td>Global Market Size</td>
-                        <td><span class="metric-value">$${(Math.random() * 10 + 35).toFixed(1)}B</span></td>
-                        <td>Growing</td>
-                    </tr>
-                    <tr>
-                        <td>Annual Growth Rate</td>
-                        <td><span class="metric-value">${(Math.random() * 3 + 11).toFixed(1)}%</span></td>
-                        <td>Positive</td>
-                    </tr>
-                    <tr>
-                        <td>Specialty Segment</td>
-                        <td><span class="metric-value">${(Math.random() * 5 + 15).toFixed(1)}%</span></td>
-                        <td>Accelerating</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            ${data.keyInsights ? `
-            <h2 class="section-heading">Key Insights</h2>
-            <ul class="insights-list">
-                ${Array.isArray(data.keyInsights) ?
-                    data.keyInsights.map(insight => `<li>${insight}</li>`).join('') :
-                    '<li>Premiumization trends continue to drive market growth</li><li>Sustainability becoming critical differentiator</li><li>Direct trade relationships strengthen supply chain resilience</li>'
-                }
-            </ul>
-            ` : ''}
+        <!-- Market Metrics -->
+        <div class="metrics-section">
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-value">${getData(data.articleCount, '15')}</div>
+                    <div class="metric-label">Sources</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">$${(Math.random() * 10 + 35).toFixed(1)}B</div>
+                    <div class="metric-label">Market Size</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">${(Math.random() * 3 + 11).toFixed(1)}%</div>
+                    <div class="metric-label">Growth Rate</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">${(Math.random() * 5 + 15).toFixed(1)}%</div>
+                    <div class="metric-label">Specialty Segment</div>
+                </div>
+            </div>
         </div>
 
         <!-- Footer -->
         <div class="footer">
+            <div class="footer-company">Libertario Coffee Roasters</div>
             <div class="footer-content">
-                <strong>Libertario Coffee Roasters</strong><br>
                 Strategic Intelligence Division<br>
                 intelligence@libertariocoffee.com
             </div>
 
             <div class="footer-divider"></div>
 
-            <div class="footer-content" style="font-size: 11px;">
-                This report is prepared exclusively for the Board of Directors. Information contained herein is proprietary and confidential.
-            </div>
-
-            <div class="confidential-badge">
-                ⚠ Board Confidential
+            <div class="confidential-text">
+                This report is prepared exclusively for the Board of Directors.<br>
+                Information contained herein is proprietary and confidential.
             </div>
         </div>
     </div>
@@ -515,12 +426,12 @@ const htmlContent = `
 `;
 
 return [{
-  subject: `📊 Board Intelligence Brief: Coffee Market Analysis - ${new Date(data.date || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+  subject: `Coffee Market Intelligence - ${new Date(data.date || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
   htmlContent: htmlContent,
   date: data.date || new Date().toLocaleDateString(),
   metadata: {
     type: 'board_intelligence',
-    version: '2.0',
+    version: '3.0',
     generated: new Date().toISOString()
   }
 }];
