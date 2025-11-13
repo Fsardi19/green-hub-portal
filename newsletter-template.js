@@ -159,11 +159,29 @@ const htmlContent = `
             padding: 25px;
             margin-bottom: 20px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .article-card:hover {
             border-color: #c9a961;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .source-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #c9a961;
+            text-decoration: none;
+            font-size: 20px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .source-link:hover {
+            opacity: 1;
+            transform: translateX(3px);
         }
 
         .article-category {
@@ -192,28 +210,8 @@ const htmlContent = `
             font-size: 15px;
             line-height: 1.7;
             color: #555;
-            margin-bottom: 18px;
+            margin-bottom: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        .article-link {
-            display: inline-block;
-            color: #c9a961;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.3s ease;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        .article-link:hover {
-            border-bottom-color: #c9a961;
-        }
-
-        .article-link::after {
-            content: ' →';
-            font-weight: 400;
         }
 
         /* Key Metrics Table */
@@ -378,71 +376,71 @@ const htmlContent = `
             <div class="article-grid">
                 ${data.topic1 ? `
                 <div class="article-card">
+                    ${cleanUrl(data.sources?.topic1) ?
+                        `<a href="${cleanUrl(data.sources.topic1)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        ''
+                    }
                     <div class="article-category">Market Development</div>
                     <h3 class="article-title">${getData(data.topic1.title, 'Market Expansion Opportunities')}</h3>
                     <p class="article-description">
                         ${getData(data.topic1.description, 'Analysis of emerging markets and growth opportunities in the specialty coffee sector.')}
                     </p>
-                    ${cleanUrl(data.sources?.topic1) ?
-                        `<a href="${cleanUrl(data.sources.topic1)}" class="article-link" target="_blank" rel="noopener">Read Full Report</a>` :
-                        ''
-                    }
                 </div>
                 ` : ''}
 
                 ${data.topic2 ? `
                 <div class="article-card">
+                    ${cleanUrl(data.sources?.topic2) ?
+                        `<a href="${cleanUrl(data.sources.topic2)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        ''
+                    }
                     <div class="article-category">Sustainability</div>
                     <h3 class="article-title">${getData(data.topic2.title, 'ESG & Sustainability Initiatives')}</h3>
                     <p class="article-description">
                         ${getData(data.topic2.description, 'Environmental, social, and governance considerations driving market evolution and consumer preferences.')}
                     </p>
-                    ${cleanUrl(data.sources?.topic2) ?
-                        `<a href="${cleanUrl(data.sources.topic2)}" class="article-link" target="_blank" rel="noopener">Read Full Report</a>` :
-                        ''
-                    }
                 </div>
                 ` : ''}
 
                 ${data.topic3 ? `
                 <div class="article-card">
+                    ${cleanUrl(data.sources?.topic3) ?
+                        `<a href="${cleanUrl(data.sources.topic3)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        ''
+                    }
                     <div class="article-category">Innovation</div>
                     <h3 class="article-title">${getData(data.topic3.title, 'Technology & Innovation')}</h3>
                     <p class="article-description">
                         ${getData(data.topic3.description, 'Digital transformation and technological advances reshaping operations and customer experience.')}
                     </p>
-                    ${cleanUrl(data.sources?.topic3) ?
-                        `<a href="${cleanUrl(data.sources.topic3)}" class="article-link" target="_blank" rel="noopener">Read Full Report</a>` :
-                        ''
-                    }
                 </div>
                 ` : ''}
 
                 ${data.topic4 ? `
                 <div class="article-card">
+                    ${cleanUrl(data.sources?.topic4) ?
+                        `<a href="${cleanUrl(data.sources.topic4)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        ''
+                    }
                     <div class="article-category">Industry Trends</div>
                     <h3 class="article-title">${getData(data.topic4.title, 'Emerging Market Trends')}</h3>
                     <p class="article-description">
                         ${getData(data.topic4.description, 'Key trends and developments shaping the future of the coffee industry.')}
                     </p>
-                    ${cleanUrl(data.sources?.topic4) ?
-                        `<a href="${cleanUrl(data.sources.topic4)}" class="article-link" target="_blank" rel="noopener">Read Full Report</a>` :
-                        ''
-                    }
                 </div>
                 ` : ''}
 
                 ${data.topic5 ? `
                 <div class="article-card">
+                    ${cleanUrl(data.sources?.topic5) ?
+                        `<a href="${cleanUrl(data.sources.topic5)}" class="source-link" target="_blank" rel="noopener" title="View source article">→</a>` :
+                        ''
+                    }
                     <div class="article-category">Strategic Insights</div>
                     <h3 class="article-title">${getData(data.topic5.title, 'Strategic Opportunities')}</h3>
                     <p class="article-description">
                         ${getData(data.topic5.description, 'Strategic opportunities and considerations for business development and growth.')}
                     </p>
-                    ${cleanUrl(data.sources?.topic5) ?
-                        `<a href="${cleanUrl(data.sources.topic5)}" class="article-link" target="_blank" rel="noopener">Read Full Report</a>` :
-                        ''
-                    }
                 </div>
                 ` : ''}
             </div>
