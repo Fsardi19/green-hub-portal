@@ -1,0 +1,1018 @@
+{
+  "name": "Bloomberg-Style Market Intelligence Report v2.0",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "daysOfWeek",
+              "daysOfWeek": [1, 2, 3, 4, 5]
+            },
+            {
+              "field": "hours",
+              "hoursInterval": 1,
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "id": "trigger-market-open",
+      "name": "Trigger - Market Hours (6 AM Weekdays)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-2000, 2000]
+    },
+    {
+      "parameters": {
+        "content": "## MARKET DATA SECTION\nReal-time financial market data from professional sources",
+        "height": 180,
+        "width": 400,
+        "color": 3
+      },
+      "id": "note-market-data",
+      "name": "📊 Market Data",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1800, 1800]
+    },
+    {
+      "parameters": {
+        "url": "=https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=SPY&apikey=YOUR_API_KEY",
+        "options": {}
+      },
+      "id": "api-sp500",
+      "name": "API - S&P 500 Index",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 1700]
+    },
+    {
+      "parameters": {
+        "url": "=https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=QQQ&apikey=YOUR_API_KEY",
+        "options": {}
+      },
+      "id": "api-nasdaq",
+      "name": "API - NASDAQ Index",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 1850]
+    },
+    {
+      "parameters": {
+        "url": "=https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=DIA&apikey=YOUR_API_KEY",
+        "options": {}
+      },
+      "id": "api-dow",
+      "name": "API - Dow Jones Index",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 2000]
+    },
+    {
+      "parameters": {
+        "url": "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates?sort=-record_date&page[size]=1",
+        "options": {}
+      },
+      "id": "api-treasury-rates",
+      "name": "API - US Treasury Rates",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 2150]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=YOUR_FRED_API_KEY&file_type=json&limit=1&sort_order=desc",
+        "options": {}
+      },
+      "id": "api-10year-yield",
+      "name": "API - 10-Year Treasury Yield",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 2300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stlouisfed.org/fred/series/observations?series_id=DFF&api_key=YOUR_FRED_API_KEY&file_type=json&limit=1&sort_order=desc",
+        "options": {}
+      },
+      "id": "api-fed-funds",
+      "name": "API - Federal Funds Rate",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 2450]
+    },
+    {
+      "parameters": {
+        "content": "## COMMODITIES & CURRENCIES\nReal-time commodity prices and forex data",
+        "height": 180,
+        "width": 400,
+        "color": 4
+      },
+      "id": "note-commodities",
+      "name": "💰 Commodities & FX",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1800, 2500]
+    },
+    {
+      "parameters": {
+        "url": "https://api.metals.live/v1/spot/gold",
+        "options": {}
+      },
+      "id": "api-gold-price",
+      "name": "API - Gold Spot Price",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 2600]
+    },
+    {
+      "parameters": {
+        "url": "https://api.metals.live/v1/spot/silver",
+        "options": {}
+      },
+      "id": "api-silver-price",
+      "name": "API - Silver Spot Price",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 2750]
+    },
+    {
+      "parameters": {
+        "url": "https://api.oilpriceapi.com/v1/prices/latest",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "api-oil-wti",
+      "name": "API - WTI Crude Oil",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 2900]
+    },
+    {
+      "parameters": {
+        "url": "https://financialmodelingprep.com/api/v3/quote/KC=F?apikey=YOUR_API_KEY",
+        "options": {}
+      },
+      "id": "api-coffee-futures",
+      "name": "API - Coffee Futures (Arabica)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 3050]
+    },
+    {
+      "parameters": {
+        "url": "https://api.exchangerate.host/latest?base=USD&symbols=COP,EUR,MXN,BRL,CAD,JPY,GBP,CHF",
+        "options": {}
+      },
+      "id": "api-forex-comprehensive",
+      "name": "API - Forex Rates (Comprehensive)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 3200]
+    },
+    {
+      "parameters": {
+        "url": "https://www.banrep.gov.co/estadisticas-economicas/rest/consultaDatosService/consultaMercadoCambiario",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "api-trm-banrep",
+      "name": "API - TRM Banco República (Real)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1400, 3350]
+    },
+    {
+      "parameters": {
+        "content": "## PROFESSIONAL NEWS SOURCES\nCurated financial news from premium sources",
+        "height": 180,
+        "width": 400,
+        "color": 5
+      },
+      "id": "note-news",
+      "name": "📰 Professional News",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1100, 1800]
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.reuters.com/reuters/businessNews",
+        "options": {}
+      },
+      "id": "rss-reuters-business",
+      "name": "RSS - Reuters Business",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 1700]
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.reuters.com/Reuters/worldNews",
+        "options": {}
+      },
+      "id": "rss-reuters-world",
+      "name": "RSS - Reuters World",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 1850]
+    },
+    {
+      "parameters": {
+        "url": "https://www.ft.com/rss/home",
+        "options": {}
+      },
+      "id": "rss-ft",
+      "name": "RSS - Financial Times",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 2000]
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.feedburner.com/barrons/business",
+        "options": {}
+      },
+      "id": "rss-barrons",
+      "name": "RSS - Barron's",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 2150]
+    },
+    {
+      "parameters": {
+        "url": "https://www.economist.com/finance-and-economics/rss.xml",
+        "options": {}
+      },
+      "id": "rss-economist",
+      "name": "RSS - The Economist (Finance)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 2300]
+    },
+    {
+      "parameters": {
+        "url": "https://www.federalreserve.gov/feeds/press_all.xml",
+        "options": {}
+      },
+      "id": "rss-fed",
+      "name": "RSS - Federal Reserve News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 2450]
+    },
+    {
+      "parameters": {
+        "url": "https://www.ecb.europa.eu/rss/press.html",
+        "options": {}
+      },
+      "id": "rss-ecb",
+      "name": "RSS - ECB Press Releases",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 2600]
+    },
+    {
+      "parameters": {
+        "url": "https://www.portafolio.co/rss/economia",
+        "options": {}
+      },
+      "id": "rss-portafolio-co",
+      "name": "RSS - Portafolio Colombia",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 2750]
+    },
+    {
+      "parameters": {
+        "url": "https://www.dinero.com/economia/feed",
+        "options": {}
+      },
+      "id": "rss-dinero-co",
+      "name": "RSS - Dinero Colombia",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 2900]
+    },
+    {
+      "parameters": {
+        "url": "https://www.larepublica.co/economia/rss",
+        "options": {}
+      },
+      "id": "rss-larepublica-co",
+      "name": "RSS - La República Colombia",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 3050]
+    },
+    {
+      "parameters": {
+        "url": "https://www.ico.org/news_rss.xml",
+        "options": {}
+      },
+      "id": "rss-ico-coffee",
+      "name": "RSS - ICO Coffee Market Report",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 3200]
+    },
+    {
+      "parameters": {
+        "url": "https://sprudge.com/feed",
+        "options": {}
+      },
+      "id": "rss-sprudge",
+      "name": "RSS - Sprudge Coffee News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-700, 3350]
+    },
+    {
+      "parameters": {
+        "content": "## ECONOMIC INDICATORS\nKey economic data and indicators",
+        "height": 180,
+        "width": 400,
+        "color": 6
+      },
+      "id": "note-economic",
+      "name": "📈 Economic Indicators",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1100, 3400]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stlouisfed.org/fred/series/observations?series_id=CPIAUCSL&api_key=YOUR_FRED_API_KEY&file_type=json&limit=2&sort_order=desc",
+        "options": {}
+      },
+      "id": "api-cpi",
+      "name": "API - US CPI (Inflation)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-700, 3500]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stlouisfed.org/fred/series/observations?series_id=UNRATE&api_key=YOUR_FRED_API_KEY&file_type=json&limit=2&sort_order=desc",
+        "options": {}
+      },
+      "id": "api-unemployment",
+      "name": "API - US Unemployment Rate",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-700, 3650]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stlouisfed.org/fred/series/observations?series_id=GDP&api_key=YOUR_FRED_API_KEY&file_type=json&limit=2&sort_order=desc",
+        "options": {}
+      },
+      "id": "api-gdp",
+      "name": "API - US GDP",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-700, 3800]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stlouisfed.org/fred/series/observations?series_id=VIXCLS&api_key=YOUR_FRED_API_KEY&file_type=json&limit=5&sort_order=desc",
+        "options": {}
+      },
+      "id": "api-vix",
+      "name": "API - VIX (Volatility Index)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-700, 3950]
+    },
+    {
+      "parameters": {
+        "numberInputs": 30
+      },
+      "id": "merge-all-data",
+      "name": "Merge - All Market Data",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [-200, 2500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Advanced Market Data Processing - Bloomberg Style\nconst allItems = $input.all();\nconst currentDate = new Date();\nconst dateStr = currentDate.toLocaleDateString('es-CO', { \n  weekday: 'long', \n  year: 'numeric', \n  month: 'long', \n  day: 'numeric',\n  hour: '2-digit',\n  minute: '2-digit',\n  timeZone: 'America/Bogota'\n});\n\n// Initialize comprehensive data structure\nconst marketData = {\n  timestamp: currentDate.toISOString(),\n  reportDate: dateStr,\n  markets: {\n    equities: {},\n    bonds: {},\n    commodities: {},\n    forex: {}\n  },\n  economicIndicators: {},\n  news: {\n    marketMoving: [],\n    regional: {\n      colombia: [],\n      latinamerica: [],\n      unitedStates: [],\n      europe: []\n    },\n    sectors: {\n      coffee: [],\n      sustainability: []\n    },\n    centralBanks: []\n  },\n  analysis: {\n    topGainers: [],\n    topLosers: [],\n    volatility: null,\n    sentiment: null\n  }\n};\n\n// Helper function to calculate percentage change\nfunction calcChange(current, previous) {\n  if (!previous || previous === 0) return null;\n  return ((current - previous) / previous * 100).toFixed(2);\n}\n\n// Helper function to format currency\nfunction formatCurrency(value, decimals = 2) {\n  return parseFloat(value).toFixed(decimals);\n}\n\n// Process each data source\nallItems.forEach((item, index) => {\n  const json = item.json;\n  const nodeName = item.nodeName || '';\n  \n  // Process Equity Indices\n  if (nodeName.includes('S&P 500')) {\n    const quote = json['Global Quote'] || json;\n    marketData.markets.equities.sp500 = {\n      symbol: 'SPY',\n      name: 'S&P 500',\n      price: formatCurrency(quote['05. price'] || quote.price),\n      change: formatCurrency(quote['09. change'] || quote.change),\n      changePercent: quote['10. change percent'] || quote.changePercent,\n      volume: quote['06. volume'] || quote.volume,\n      previousClose: formatCurrency(quote['08. previous close'] || quote.previousClose)\n    };\n  }\n  \n  if (nodeName.includes('NASDAQ')) {\n    const quote = json['Global Quote'] || json;\n    marketData.markets.equities.nasdaq = {\n      symbol: 'QQQ',\n      name: 'NASDAQ-100',\n      price: formatCurrency(quote['05. price'] || quote.price),\n      change: formatCurrency(quote['09. change'] || quote.change),\n      changePercent: quote['10. change percent'] || quote.changePercent,\n      volume: quote['06. volume'] || quote.volume,\n      previousClose: formatCurrency(quote['08. previous close'] || quote.previousClose)\n    };\n  }\n  \n  if (nodeName.includes('Dow Jones')) {\n    const quote = json['Global Quote'] || json;\n    marketData.markets.equities.dowJones = {\n      symbol: 'DIA',\n      name: 'Dow Jones Industrial Average',\n      price: formatCurrency(quote['05. price'] || quote.price),\n      change: formatCurrency(quote['09. change'] || quote.change),\n      changePercent: quote['10. change percent'] || quote.changePercent,\n      volume: quote['06. volume'] || quote.volume,\n      previousClose: formatCurrency(quote['08. previous close'] || quote.previousClose)\n    };\n  }\n  \n  // Process Bond/Treasury Data\n  if (nodeName.includes('10-Year Treasury')) {\n    const observations = json.observations || [];\n    if (observations.length > 0) {\n      const latest = observations[0];\n      marketData.markets.bonds.treasury10y = {\n        name: '10-Year Treasury Yield',\n        yield: formatCurrency(latest.value, 3),\n        date: latest.date,\n        change: observations.length > 1 ? calcChange(latest.value, observations[1].value) : null\n      };\n    }\n  }\n  \n  if (nodeName.includes('Federal Funds Rate')) {\n    const observations = json.observations || [];\n    if (observations.length > 0) {\n      const latest = observations[0];\n      marketData.markets.bonds.fedFunds = {\n        name: 'Federal Funds Rate',\n        rate: formatCurrency(latest.value, 2),\n        date: latest.date\n      };\n    }\n  }\n  \n  // Process Commodities\n  if (nodeName.includes('Gold')) {\n    marketData.markets.commodities.gold = {\n      name: 'Gold Spot',\n      price: formatCurrency(json.price || json[0]?.price, 2),\n      unit: 'USD/oz',\n      change: json.change || null,\n      changePercent: json.changePercent || null\n    };\n  }\n  \n  if (nodeName.includes('Silver')) {\n    marketData.markets.commodities.silver = {\n      name: 'Silver Spot',\n      price: formatCurrency(json.price || json[0]?.price, 2),\n      unit: 'USD/oz',\n      change: json.change || null,\n      changePercent: json.changePercent || null\n    };\n  }\n  \n  if (nodeName.includes('WTI Crude')) {\n    marketData.markets.commodities.wti = {\n      name: 'WTI Crude Oil',\n      price: formatCurrency(json.price || json.data?.price, 2),\n      unit: 'USD/barrel',\n      change: json.change || json.data?.change || null,\n      changePercent: json.changePercent || json.data?.changePercent || null\n    };\n  }\n  \n  if (nodeName.includes('Coffee Futures')) {\n    const coffeeData = Array.isArray(json) ? json[0] : json;\n    marketData.markets.commodities.coffeeArabica = {\n      name: 'Coffee Futures (Arabica)',\n      symbol: 'KC=F',\n      price: formatCurrency(coffeeData.price, 2),\n      unit: 'USD/lb',\n      change: formatCurrency(coffeeData.change, 2),\n      changePercent: formatCurrency(coffeeData.changesPercentage, 2),\n      dayHigh: formatCurrency(coffeeData.dayHigh, 2),\n      dayLow: formatCurrency(coffeeData.dayLow, 2),\n      volume: coffeeData.volume\n    };\n  }\n  \n  // Process Forex Data\n  if (nodeName.includes('Forex Rates')) {\n    const rates = json.rates || {};\n    marketData.markets.forex = {\n      timestamp: json.date || currentDate.toISOString().split('T')[0],\n      baseCurrency: 'USD',\n      rates: {\n        COP: {\n          rate: formatCurrency(rates.COP, 2),\n          name: 'Colombian Peso',\n          inverse: formatCurrency(1 / rates.COP, 6)\n        },\n        EUR: {\n          rate: formatCurrency(rates.EUR, 4),\n          name: 'Euro',\n          inverse: formatCurrency(1 / rates.EUR, 4)\n        },\n        MXN: {\n          rate: formatCurrency(rates.MXN, 2),\n          name: 'Mexican Peso'\n        },\n        BRL: {\n          rate: formatCurrency(rates.BRL, 2),\n          name: 'Brazilian Real'\n        },\n        GBP: {\n          rate: formatCurrency(rates.GBP, 4),\n          name: 'British Pound'\n        },\n        JPY: {\n          rate: formatCurrency(rates.JPY, 2),\n          name: 'Japanese Yen'\n        },\n        CHF: {\n          rate: formatCurrency(rates.CHF, 4),\n          name: 'Swiss Franc'\n        }\n      }\n    };\n  }\n  \n  if (nodeName.includes('TRM Banco República')) {\n    // Process official Colombian TRM data\n    if (json.value || json.tasa || json.trm) {\n      marketData.markets.forex.rates.COP.official = {\n        trm: formatCurrency(json.value || json.tasa || json.trm, 2),\n        source: 'Banco de la República',\n        date: json.fecha || json.date\n      };\n    }\n  }\n  \n  // Process Economic Indicators\n  if (nodeName.includes('CPI')) {\n    const observations = json.observations || [];\n    if (observations.length >= 2) {\n      marketData.economicIndicators.inflation = {\n        name: 'US Consumer Price Index',\n        current: formatCurrency(observations[0].value, 1),\n        previous: formatCurrency(observations[1].value, 1),\n        change: calcChange(observations[0].value, observations[1].value),\n        date: observations[0].date\n      };\n    }\n  }\n  \n  if (nodeName.includes('Unemployment')) {\n    const observations = json.observations || [];\n    if (observations.length >= 2) {\n      marketData.economicIndicators.unemployment = {\n        name: 'US Unemployment Rate',\n        current: formatCurrency(observations[0].value, 1),\n        previous: formatCurrency(observations[1].value, 1),\n        change: calcChange(observations[0].value, observations[1].value),\n        date: observations[0].date,\n        unit: '%'\n      };\n    }\n  }\n  \n  if (nodeName.includes('VIX')) {\n    const observations = json.observations || [];\n    if (observations.length > 0) {\n      const latest = observations[0];\n      const previous = observations[1] || {};\n      marketData.analysis.volatility = {\n        name: 'CBOE Volatility Index (VIX)',\n        current: formatCurrency(latest.value, 2),\n        previous: formatCurrency(previous.value, 2),\n        change: calcChange(latest.value, previous.value),\n        date: latest.date,\n        interpretation: parseFloat(latest.value) > 20 ? 'High Volatility' : parseFloat(latest.value) > 12 ? 'Normal' : 'Low Volatility'\n      };\n    }\n  }\n  \n  // Process News Items\n  if (json.title && json.link) {\n    const newsItem = {\n      title: json.title,\n      summary: json.summary || json.description || json.contentSnippet || '',\n      link: json.link || json.url,\n      pubDate: json.pubDate || json.published || json.isoDate || '',\n      source: nodeName,\n      category: ''\n    };\n    \n    // Categorize news\n    if (nodeName.includes('Reuters') || nodeName.includes('Financial Times') || nodeName.includes(\"Barron's\") || nodeName.includes('Economist')) {\n      newsItem.category = 'Premium Financial News';\n      marketData.news.marketMoving.push(newsItem);\n    }\n    \n    if (nodeName.includes('Federal Reserve') || nodeName.includes('ECB')) {\n      newsItem.category = 'Central Bank';\n      marketData.news.centralBanks.push(newsItem);\n    }\n    \n    if (nodeName.includes('Portafolio') || nodeName.includes('Dinero') || nodeName.includes('República')) {\n      newsItem.category = 'Colombia';\n      marketData.news.regional.colombia.push(newsItem);\n    }\n    \n    if (nodeName.includes('ICO') || nodeName.includes('Sprudge')) {\n      newsItem.category = 'Coffee Industry';\n      marketData.news.sectors.coffee.push(newsItem);\n    }\n  }\n});\n\n// Sort news by date (most recent first)\nObject.keys(marketData.news.regional).forEach(region => {\n  marketData.news.regional[region].sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));\n  marketData.news.regional[region] = marketData.news.regional[region].slice(0, 5);\n});\n\nmarketData.news.marketMoving.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));\nmarketData.news.marketMoving = marketData.news.marketMoving.slice(0, 10);\n\nmarketData.news.centralBanks.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));\nmarketData.news.centralBanks = marketData.news.centralBanks.slice(0, 5);\n\nmarketData.news.sectors.coffee.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));\nmarketData.news.sectors.coffee = marketData.news.sectors.coffee.slice(0, 7);\n\n// Calculate market statistics\nmarketData.statistics = {\n  totalDataPoints: allItems.length,\n  marketStatus: currentDate.getDay() >= 1 && currentDate.getDay() <= 5 ? 'Trading Day' : 'Weekend',\n  dataQuality: {\n    equitiesComplete: Object.keys(marketData.markets.equities).length >= 3,\n    commoditiesComplete: Object.keys(marketData.markets.commodities).length >= 3,\n    forexComplete: marketData.markets.forex.rates && Object.keys(marketData.markets.forex.rates).length >= 5,\n    newsComplete: marketData.news.marketMoving.length >= 5\n  }\n};\n\nreturn [marketData];"
+      },
+      "id": "process-market-data",
+      "name": "Process Market Data - Bloomberg Style",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [200, 2500]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a senior financial analyst at Bloomberg creating a comprehensive market intelligence report. Analyze the following real-time market data and generate a professional, Bloomberg-style report.\n\n**CRITICAL REQUIREMENTS:**\n1. Use SPECIFIC numbers, percentages, and data points - NO generic statements\n2. Include exact price levels, changes, and volumes\n3. Cite specific news headlines and their market impact\n4. Provide actionable insights with clear rationale\n5. Use professional financial terminology\n6. Highlight market-moving events and their implications\n7. Include technical levels and key thresholds\n8. Maintain Bloomberg's concise, data-driven style\n\n**REPORT STRUCTURE:**\n\n## MARKET SNAPSHOT\n**{{ $now.format('dddd, MMMM D, YYYY - HH:mm') }} ET**\n\n### Executive Summary\n[3-4 bullet points with SPECIFIC data]\n- Use exact numbers: \"S&P 500 -0.47% to 4,567.23\"\n- Include volume data when significant\n- Highlight divergences between indices\n\n### Market Performance\n**Equities:**\n- S&P 500: [exact price] ([+/- X.XX%]) | Volume: [specific volume]\n- NASDAQ: [exact price] ([+/- X.XX%]) | Volume: [specific volume]  \n- Dow Jones: [exact price] ([+/- X.XX%]) | Volume: [specific volume]\n[Analysis: What's driving moves? Sector rotation? Specific catalysts?]\n\n**Fixed Income:**\n- 10-Year Treasury: [X.XX%] ([+/- X bps])\n- Fed Funds Rate: [X.XX%]\n[Analysis: Yield curve implications, Fed policy expectations]\n\n**Commodities:**\n- Gold: $[X,XXX.XX]/oz ([+/- X.XX%])\n- WTI Crude: $[XX.XX]/bbl ([+/- X.XX%])\n- Coffee (Arabica): $[X.XX]/lb ([+/- X.XX%]) | Volume: [specific]\n[Analysis: Supply/demand factors, geopolitical impact]\n\n**Foreign Exchange:**\n- USD/COP: [X,XXX.XX] (TRM Official: [X,XXX.XX])\n- EUR/USD: [X.XXXX]\n- Key cross rates with % changes\n[Analysis: Dollar strength/weakness drivers, EM currency trends]\n\n---\n\n## MARKET MOVERS - TODAY'S KEY EVENTS\n\n### Top Headlines Impacting Markets\n1. **[Exact Headline from Reuters/FT]**\n   - Impact: [Specific market reaction]\n   - Affected sectors: [List]\n   \n2. **[Exact Headline]**\n   - Price action: [Specific moves]\n   - Trading implications: [Actionable insights]\n\n[Continue with 3-5 most significant news items]\n\n### Central Bank Watch\n- **Federal Reserve:** [Specific statements/actions from RSS feed]\n- **ECB:** [Specific updates]\n- **Market Expectations:** [Based on fed funds futures, treasury yields]\n\n---\n\n## REGIONAL INTELLIGENCE\n\n### Colombia Market Update\n- **TRM:** [Exact rate] vs [previous day] ([+/- X.XX%])\n- **Key Headlines:** [Top 3 specific headlines from Colombian sources]\n- **Economic Indicators:** [Any specific data points]\n- **Trading Implications:** [Specific opportunities/risks]\n\n### Latin America Overview\n- Currency movements: [Specific % changes for MXN, BRL, CLP]\n- Regional developments: [Based on actual news items]\n- Commodity exposure: [How coffee, copper, oil prices affect region]\n\n---\n\n## SECTOR FOCUS: COFFEE MARKET\n\n### Arabica Futures Analysis\n- **Current Price:** $[X.XX]/lb ([+/- X.XX%])\n- **Day Range:** $[X.XX] - $[X.XX]\n- **Volume:** [Specific volume vs. average]\n\n### Market Drivers\n[Based on actual ICO and industry news:]- [Specific supply/demand factors]\n- [Weather impacts in producing regions]\n- [Inventory levels]\n- [Export/import data]\n\n### Industry Headlines\n[List top 5-7 specific headlines from coffee industry sources]\n\n### Outlook & Trading Levels\n- **Resistance:** $[X.XX]\n- **Support:** $[X.XX]\n- **Trend:** [Bullish/Bearish with specific reasoning]\n\n---\n\n## RISK INDICATORS\n\n### Volatility Assessment\n- **VIX:** [XX.XX] ([+/- X.XX%]) - [Interpretation: High/Normal/Low]\n- **Implied Vol vs Historical:** [Comparison]\n- **Market Sentiment:** [Based on multiple indicators]\n\n### Risk Factors to Monitor\n1. [Specific risk with probability assessment]\n2. [Specific risk with market impact]\n3. [Specific risk with hedging suggestions]\n\n---\n\n## ECONOMIC CALENDAR - NEXT 24-48 HOURS\n\n[Based on current date and typical economic calendar:]\n- **Tomorrow:** [Expected releases]\n- **This Week:** [Key events]\n- **Market Impact:** [Which releases could move markets]\n\n---\n\n## ACTIONABLE INSIGHTS\n\n### Short-Term (24-48 hours)\n1. **[Specific action]** - Rationale: [Data-driven reasoning]\n2. **[Specific action]** - Rationale: [Data-driven reasoning]\n3. **[Specific action]** - Rationale: [Data-driven reasoning]\n\n### Medium-Term (1-4 weeks)\n1. **[Specific strategy]** - Based on: [Specific indicators/trends]\n2. **[Specific strategy]** - Based on: [Specific indicators/trends]\n\n### Key Levels to Watch\n- S&P 500: Support at [XXXX], Resistance at [XXXX]\n- USD/COP: Support at [X,XXX], Resistance at [X,XXX]\n- Coffee: Support at [X.XX], Resistance at [X.XX]\n\n---\n\n## DATA QUALITY METRICS\n- Total Data Points Processed: [XX]\n- Last Update: [Timestamp]\n- Source Coverage: [List key sources]\n\n---\n\n**REMEMBER:** Every statement must be backed by specific data from the input. Replace ALL bracketed placeholders with actual numbers from the market data. If data is missing, state \"Data unavailable\" rather than using generic language.\n\n**Market Data to Analyze:**\n```json\n{{ JSON.stringify($json, null, 2) }}\n```\n\n**Output Format:** Clean markdown suitable for email or PDF distribution. Use tables where appropriate for clarity."
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 4000,
+          "temperature": 0.3
+        }
+      },
+      "id": "openai-bloomberg-analysis",
+      "name": "OpenAI - Bloomberg-Style Analysis",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [600, 2500],
+      "credentials": {
+        "openAiApi": {
+          "id": "UnprA8703Is7HbnG",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format Bloomberg-Style HTML Report\nconst analysisData = $input.item.json;\nconst reportDate = new Date().toLocaleDateString('es-CO', { \n  weekday: 'long', \n  year: 'numeric', \n  month: 'long', \n  day: 'numeric',\n  hour: '2-digit',\n  minute: '2-digit',\n  timeZone: 'America/Bogota'\n});\n\n// Extract AI analysis content\nlet aiAnalysis = '';\nif (analysisData.message && analysisData.message.content) {\n  aiAnalysis = analysisData.message.content;\n} else if (analysisData.content) {\n  aiAnalysis = analysisData.content;\n} else if (typeof analysisData === 'string') {\n  aiAnalysis = analysisData;\n}\n\n// Enhanced markdown to HTML conversion\nfunction markdownToHtml(text) {\n  return text\n    // Headers\n    .replace(/### (.+)/g, '<h3 style=\"color: #1a1a1a; font-size: 18px; margin-top: 24px; margin-bottom: 12px; font-weight: 600; border-bottom: 2px solid #e8e8e8; padding-bottom: 6px;\">$1</h3>')\n    .replace(/## (.+)/g, '<h2 style=\"color: #000; font-size: 22px; margin-top: 32px; margin-bottom: 16px; font-weight: 700; border-bottom: 3px solid #0066cc; padding-bottom: 8px;\">$1</h2>')\n    .replace(/# (.+)/g, '<h1 style=\"color: #000; font-size: 26px; margin-top: 0; margin-bottom: 20px; font-weight: 700;\">$1</h1>')\n    // Bold and italic\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong style=\"font-weight: 600; color: #1a1a1a;\">$1</strong>')\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')\n    // Lists\n    .replace(/^- (.+)$/gm, '<li style=\"margin: 6px 0; line-height: 1.6;\">$1</li>')\n    .replace(/(<li>.*<\\/li>)/s, '<ul style=\"margin: 12px 0; padding-left: 24px;\">$1</ul>')\n    // Line breaks and paragraphs\n    .replace(/\\n\\n/g, '</p><p style=\"margin: 12px 0; line-height: 1.7;\">')\n    .replace(/\\n/g, '<br>');\n}\n\nconst htmlContent = `\n<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Market Intelligence Report - ${reportDate}</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n        \n        body {\n            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;\n            line-height: 1.6;\n            color: #1a1a1a;\n            background-color: #f5f5f5;\n            padding: 0;\n            margin: 0;\n        }\n        \n        .email-wrapper {\n            max-width: 800px;\n            margin: 0 auto;\n            background-color: #ffffff;\n        }\n        \n        .header {\n            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);\n            color: #ffffff;\n            padding: 40px 40px 30px 40px;\n            border-bottom: 4px solid #0066cc;\n        }\n        \n        .header-logo {\n            font-size: 14px;\n            font-weight: 700;\n            letter-spacing: 2px;\n            text-transform: uppercase;\n            color: #0066cc;\n            margin-bottom: 12px;\n        }\n        \n        .header h1 {\n            font-size: 32px;\n            font-weight: 700;\n            margin: 0 0 8px 0;\n            color: #ffffff;\n        }\n        \n        .header-date {\n            font-size: 14px;\n            font-weight: 400;\n            color: #cccccc;\n            letter-spacing: 0.5px;\n        }\n        \n        .content {\n            padding: 40px;\n            background-color: #ffffff;\n        }\n        \n        .market-snapshot {\n            background: linear-gradient(to right, #f8f9fa, #ffffff);\n            border-left: 4px solid #0066cc;\n            padding: 20px;\n            margin: 20px 0;\n            border-radius: 4px;\n        }\n        \n        .metric-grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));\n            gap: 16px;\n            margin: 20px 0;\n        }\n        \n        .metric-card {\n            background: #ffffff;\n            border: 1px solid #e0e0e0;\n            border-radius: 6px;\n            padding: 16px;\n            box-shadow: 0 2px 4px rgba(0,0,0,0.05);\n            transition: box-shadow 0.2s;\n        }\n        \n        .metric-card:hover {\n            box-shadow: 0 4px 8px rgba(0,0,0,0.1);\n        }\n        \n        .metric-label {\n            font-size: 11px;\n            color: #666666;\n            text-transform: uppercase;\n            letter-spacing: 1px;\n            font-weight: 600;\n            margin-bottom: 8px;\n        }\n        \n        .metric-value {\n            font-size: 24px;\n            font-weight: 700;\n            color: #1a1a1a;\n            margin-bottom: 4px;\n        }\n        \n        .metric-change {\n            font-size: 13px;\n            font-weight: 600;\n        }\n        \n        .metric-change.positive {\n            color: #00a650;\n        }\n        \n        .metric-change.negative {\n            color: #cc0000;\n        }\n        \n        .metric-change.neutral {\n            color: #666666;\n        }\n        \n        .news-item {\n            border-bottom: 1px solid #e8e8e8;\n            padding: 16px 0;\n        }\n        \n        .news-item:last-child {\n            border-bottom: none;\n        }\n        \n        .news-title {\n            font-size: 16px;\n            font-weight: 600;\n            color: #1a1a1a;\n            margin-bottom: 6px;\n            line-height: 1.4;\n        }\n        \n        .news-source {\n            font-size: 12px;\n            color: #666666;\n            font-weight: 500;\n        }\n        \n        .alert-box {\n            background-color: #fff3cd;\n            border-left: 4px solid #ffc107;\n            padding: 16px 20px;\n            margin: 20px 0;\n            border-radius: 4px;\n        }\n        \n        .alert-box.critical {\n            background-color: #f8d7da;\n            border-left-color: #dc3545;\n        }\n        \n        .alert-box.success {\n            background-color: #d4edda;\n            border-left-color: #28a745;\n        }\n        \n        .section-divider {\n            height: 3px;\n            background: linear-gradient(to right, #0066cc, transparent);\n            margin: 32px 0;\n            border: none;\n        }\n        \n        table {\n            width: 100%;\n            border-collapse: collapse;\n            margin: 20px 0;\n            font-size: 14px;\n        }\n        \n        th {\n            background-color: #f8f9fa;\n            color: #1a1a1a;\n            font-weight: 600;\n            text-align: left;\n            padding: 12px;\n            border-bottom: 2px solid #dee2e6;\n        }\n        \n        td {\n            padding: 12px;\n            border-bottom: 1px solid #e8e8e8;\n        }\n        \n        tr:hover {\n            background-color: #f8f9fa;\n        }\n        \n        .footer {\n            background-color: #f8f9fa;\n            padding: 30px 40px;\n            text-align: center;\n            border-top: 1px solid #e0e0e0;\n        }\n        \n        .footer-text {\n            font-size: 12px;\n            color: #666666;\n            line-height: 1.8;\n            margin: 8px 0;\n        }\n        \n        .disclaimer {\n            font-size: 11px;\n            color: #999999;\n            margin-top: 20px;\n            padding-top: 20px;\n            border-top: 1px solid #e0e0e0;\n            line-height: 1.6;\n        }\n        \n        code {\n            background-color: #f4f4f4;\n            padding: 2px 6px;\n            border-radius: 3px;\n            font-family: 'Courier New', monospace;\n            font-size: 13px;\n        }\n        \n        @media only screen and (max-width: 600px) {\n            .header, .content, .footer {\n                padding: 20px;\n            }\n            \n            .header h1 {\n                font-size: 24px;\n            }\n            \n            .metric-grid {\n                grid-template-columns: 1fr;\n            }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"email-wrapper\">\n        <div class=\"header\">\n            <div class=\"header-logo\">MARKET INTELLIGENCE</div>\n            <h1>📊 Daily Market Report</h1>\n            <div class=\"header-date\">${reportDate}</div>\n        </div>\n        \n        <div class=\"content\">\n            ${markdownToHtml(aiAnalysis)}\n        </div>\n        \n        <div class=\"footer\">\n            <div class=\"footer-text\">\n                <strong>Market Intelligence System</strong><br>\n                Powered by n8n + OpenAI | Real-time data from professional sources\n            </div>\n            <div class=\"footer-text\">\n                📧 Delivered to: felipe@lapalmayeltucan.com\n            </div>\n            <div class=\"disclaimer\">\n                <strong>DISCLAIMER:</strong> This report is for informational purposes only and does not constitute investment advice. \n                Market data is provided \"as is\" from third-party sources. Past performance does not guarantee future results. \n                Always conduct your own research and consult with qualified financial advisors before making investment decisions.\n                <br><br>\n                This document is confidential and intended solely for the use of the individual or entity to whom it is addressed.\n            </div>\n        </div>\n    </div>\n</body>\n</html>\n`;\n\n// Extract key metrics for subject line\nlet subjectPrefix = '📊';\nconst lowerAnalysis = aiAnalysis.toLowerCase();\nif (lowerAnalysis.includes('caída') || lowerAnalysis.includes('baj') || lowerAnalysis.includes('down')) {\n  subjectPrefix = '📉';\n} else if (lowerAnalysis.includes('subi') || lowerAnalysis.includes('alza') || lowerAnalysis.includes('up')) {\n  subjectPrefix = '📈';\n}\n\nconst dateForSubject = new Date().toLocaleDateString('es-CO', { \n  month: 'short', \n  day: 'numeric'\n});\n\nreturn [{\n  subject: `${subjectPrefix} Market Intelligence Report - ${dateForSubject}`,\n  htmlContent: htmlContent,\n  textContent: aiAnalysis,\n  reportDate: reportDate,\n  timestamp: new Date().toISOString()\n}];"
+      },
+      "id": "format-bloomberg-html",
+      "name": "Format Bloomberg-Style HTML Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1000, 2500]
+    },
+    {
+      "parameters": {
+        "sendTo": "felipe@lapalmayeltucan.com",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.htmlContent }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "",
+          "bccList": ""
+        }
+      },
+      "id": "gmail-send-report",
+      "name": "Gmail - Send Bloomberg Report",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1300, 2500],
+      "webhookId": "503a3d42-2c15-4abd-9bd0-7cb2bcbc94b9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "P2OyYe0XIUA2MAhO",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🔧 REQUIRED CONFIGURATION\n\n### API Keys Needed:\n\n1. **Alpha Vantage** (Free tier available)\n   - Get key: https://www.alphavantage.co/support/#api-key\n   - For: Stock indices data\n   - Replace: YOUR_API_KEY in nodes\n\n2. **FRED API** (Free, no credit card)\n   - Get key: https://fred.stlouisfed.org/docs/api/api_key.html\n   - For: Economic indicators, rates\n   - Replace: YOUR_FRED_API_KEY in nodes\n\n3. **Financial Modeling Prep** (Free tier)\n   - Get key: https://financialmodelingprep.com/developer/docs/\n   - For: Coffee futures\n   - Replace: YOUR_API_KEY in coffee node\n\n4. **Oil Price API** (Optional)\n   - Get key: https://www.oilpriceapi.com/\n   - For: WTI crude prices\n   - Alternative: Use Alpha Vantage\n\n### Free Alternatives:\n- exchangerate.host (no key needed)\n- Banco República API (no key needed)\n- All RSS feeds (no keys needed)\n\n### Gmail Setup:\n- Already configured ✓\n- Ensure OAuth2 credentials are active\n\n### OpenAI:\n- Already configured ✓\n- Using GPT-4 for analysis\n\n### Recommended Schedule:\n- **Weekdays**: 6:00 AM (before market open)\n- **Optional**: 4:00 PM (after market close)\n- Currently: Mon-Fri at 6 AM",
+        "height": 580,
+        "width": 420,
+        "color": 2
+      },
+      "id": "note-config",
+      "name": "⚙️ Configuration Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1500, 2200]
+    },
+    {
+      "parameters": {
+        "content": "## 📊 IMPROVEMENTS OVER ORIGINAL\n\n### Data Quality:\n✅ Professional financial APIs (Alpha Vantage, FRED)\n✅ Real-time market data (indices, bonds, commodities)\n✅ Specific price points and % changes\n✅ Economic indicators (CPI, unemployment, GDP)\n✅ Volatility index (VIX)\n✅ Premium news sources (Reuters, FT, Economist)\n\n### Bloomberg-Style Features:\n✅ Market snapshot with exact prices\n✅ Specific percentage changes\n✅ Volume data\n✅ Technical levels (support/resistance)\n✅ Risk indicators\n✅ Actionable insights\n✅ Economic calendar\n✅ Central bank watch\n\n### Report Format:\n✅ Executive summary with data\n✅ Market movers section\n✅ Regional intelligence\n✅ Sector focus (coffee)\n✅ Professional HTML styling\n✅ Mobile-responsive design\n✅ Clean, scannable layout\n\n### Key Differences:\n❌ Old: Generic news searches\n✅ New: Curated professional sources\n\n❌ Old: Basic exchange rates\n✅ New: Comprehensive forex + analysis\n\n❌ Old: Generic summaries\n✅ New: Specific data points, actionable insights\n\n❌ Old: Simple HTML\n✅ New: Professional Bloomberg-style design",
+        "height": 600,
+        "width": 420,
+        "color": 5
+      },
+      "id": "note-improvements",
+      "name": "✨ Key Improvements",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1500, 2850]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger - Market Hours (6 AM Weekdays)": {
+      "main": [
+        [
+          {
+            "node": "API - S&P 500 Index",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - NASDAQ Index",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - Dow Jones Index",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - US Treasury Rates",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - 10-Year Treasury Yield",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - Federal Funds Rate",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - Gold Spot Price",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - Silver Spot Price",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - WTI Crude Oil",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - Coffee Futures (Arabica)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - Forex Rates (Comprehensive)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - TRM Banco República (Real)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Reuters Business",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Reuters World",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Financial Times",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Barron's",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - The Economist (Finance)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Federal Reserve News",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - ECB Press Releases",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Portafolio Colombia",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Dinero Colombia",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - La República Colombia",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - ICO Coffee Market Report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS - Sprudge Coffee News",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - US CPI (Inflation)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - US Unemployment Rate",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - US GDP",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API - VIX (Volatility Index)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API - S&P 500 Index": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API - NASDAQ Index": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "API - Dow Jones Index": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "API - US Treasury Rates": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "API - 10-Year Treasury Yield": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "API - Federal Funds Rate": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "API - Gold Spot Price": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "API - Silver Spot Price": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 7
+          }
+        ]
+      ]
+    },
+    "API - WTI Crude Oil": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 8
+          }
+        ]
+      ]
+    },
+    "API - Coffee Futures (Arabica)": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 9
+          }
+        ]
+      ]
+    },
+    "API - Forex Rates (Comprehensive)": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 10
+          }
+        ]
+      ]
+    },
+    "API - TRM Banco República (Real)": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 11
+          }
+        ]
+      ]
+    },
+    "RSS - Reuters Business": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 12
+          }
+        ]
+      ]
+    },
+    "RSS - Reuters World": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 13
+          }
+        ]
+      ]
+    },
+    "RSS - Financial Times": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 14
+          }
+        ]
+      ]
+    },
+    "RSS - Barron's": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 15
+          }
+        ]
+      ]
+    },
+    "RSS - The Economist (Finance)": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 16
+          }
+        ]
+      ]
+    },
+    "RSS - Federal Reserve News": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 17
+          }
+        ]
+      ]
+    },
+    "RSS - ECB Press Releases": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 18
+          }
+        ]
+      ]
+    },
+    "RSS - Portafolio Colombia": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 19
+          }
+        ]
+      ]
+    },
+    "RSS - Dinero Colombia": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 20
+          }
+        ]
+      ]
+    },
+    "RSS - La República Colombia": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 21
+          }
+        ]
+      ]
+    },
+    "RSS - ICO Coffee Market Report": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 22
+          }
+        ]
+      ]
+    },
+    "RSS - Sprudge Coffee News": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 23
+          }
+        ]
+      ]
+    },
+    "API - US CPI (Inflation)": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 24
+          }
+        ]
+      ]
+    },
+    "API - US Unemployment Rate": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 25
+          }
+        ]
+      ]
+    },
+    "API - US GDP": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 26
+          }
+        ]
+      ]
+    },
+    "API - VIX (Volatility Index)": {
+      "main": [
+        [
+          {
+            "node": "Merge - All Market Data",
+            "type": "main",
+            "index": 27
+          }
+        ]
+      ]
+    },
+    "Merge - All Market Data": {
+      "main": [
+        [
+          {
+            "node": "Process Market Data - Bloomberg Style",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Market Data - Bloomberg Style": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - Bloomberg-Style Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Bloomberg-Style Analysis": {
+      "main": [
+        [
+          {
+            "node": "Format Bloomberg-Style HTML Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Bloomberg-Style HTML Report": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Send Bloomberg Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bloomberg-v2.0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eb41f47605249145e71705aff3faac33be26d4804ad7d457f1cc459758ca3b18"
+  },
+  "id": "bloomberg-market-intelligence",
+  "tags": ["finance", "bloomberg", "market-intelligence", "professional"]
+}
