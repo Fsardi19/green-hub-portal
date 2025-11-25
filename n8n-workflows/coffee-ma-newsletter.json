@@ -1,0 +1,433 @@
+{
+  "name": "Coffee_MA_Newsletter_Weekly_v1.0",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [1],
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "id": "trigger-weekly-001",
+      "name": "Trigger - Weekly Monday 7AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-3584, 12592],
+      "notes": "Se ejecuta cada lunes a las 7 AM para el resumen semanal de M&A en café"
+    },
+    {
+      "parameters": {
+        "url": "https://dailycoffeenews.com/feed/",
+        "options": {}
+      },
+      "id": "rss-daily-coffee-news-001",
+      "name": "RSS - Daily Coffee News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 12000],
+      "notes": "Fuente principal de noticias de industria del café - cubre M&A, inversiones y compañías"
+    },
+    {
+      "parameters": {
+        "url": "https://sprudge.com/feed",
+        "options": {}
+      },
+      "id": "rss-sprudge-001",
+      "name": "RSS - Sprudge Coffee News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 12160],
+      "notes": "Noticias de café especial, incluye movimientos empresariales"
+    },
+    {
+      "parameters": {
+        "url": "https://perfectdailygrind.com/feed/",
+        "options": {}
+      },
+      "id": "rss-perfect-daily-grind-001",
+      "name": "RSS - Perfect Daily Grind",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 12320],
+      "notes": "Análisis profundo de la industria del café, tendencias y negocios"
+    },
+    {
+      "parameters": {
+        "url": "https://www.comunicaffe.com/feed/",
+        "options": {}
+      },
+      "id": "rss-comunicaffe-001",
+      "name": "RSS - ComuniCaffè International",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 12480],
+      "notes": "Noticias internacionales de café, enfocado en Europa e industria global"
+    },
+    {
+      "parameters": {
+        "url": "https://www.worldcoffeeportal.com/feed",
+        "options": {}
+      },
+      "id": "rss-world-coffee-portal-001",
+      "name": "RSS - World Coffee Portal",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 12640],
+      "notes": "Portal global de café con enfoque en cadenas, franquicias y expansiones"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=coffee+acquisition+merger+OR+acquires+OR+acquired&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "rss-google-coffee-ma-001",
+      "name": "RSS - Google News Coffee M&A",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 12800],
+      "notes": "Búsqueda específica de M&A en café vía Google News"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=specialty+coffee+investment+OR+funding+OR+%22series+A%22+OR+%22series+B%22&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "rss-google-coffee-investment-001",
+      "name": "RSS - Google News Coffee Investment",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 12960],
+      "notes": "Búsqueda de inversiones y rondas de financiamiento en café"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=coffee+roaster+expansion+OR+%22coffee+company%22+growth&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "rss-google-coffee-expansion-001",
+      "name": "RSS - Google News Coffee Expansion",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 13120],
+      "notes": "Noticias de expansión de tostadoras y empresas de café"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=Westrock+Coffee+OR+JAB+Holding+OR+Starbucks+acquisition+OR+Nestle+coffee&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "rss-google-major-players-001",
+      "name": "RSS - Google News Major Coffee Players",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 13280],
+      "notes": "Seguimiento de grandes jugadores: Westrock, JAB, Starbucks, Nestlé"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=coffee+private+equity+OR+venture+capital+coffee&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "rss-google-pe-vc-001",
+      "name": "RSS - Google News Coffee PE/VC",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 13440],
+      "notes": "Private Equity y Venture Capital en sector café"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=%22coffee+roasters%22+sale+OR+sold+OR+partnership&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "rss-google-roasters-deals-001",
+      "name": "RSS - Google News Roasters Deals",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 13600],
+      "notes": "Ventas y partnerships de tostadoras de café"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=cafe+especial+adquisicion+OR+fusion+OR+inversion+latinoamerica&hl=es&gl=CO&ceid=CO:es-419",
+        "options": {}
+      },
+      "id": "rss-google-latam-coffee-ma-001",
+      "name": "RSS - Google News LATAM Coffee M&A",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 13760],
+      "notes": "M&A de café en Latinoamérica en español"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=Colombia+coffee+export+OR+%22cafe+colombiano%22+empresas&hl=es&gl=CO&ceid=CO:es-419",
+        "options": {}
+      },
+      "id": "rss-google-colombia-coffee-001",
+      "name": "RSS - Google News Colombia Coffee Business",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 13920],
+      "notes": "Noticias de empresas de café en Colombia"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=Blue+Bottle+OR+Intelligentsia+OR+Stumptown+OR+Counter+Culture+coffee&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "rss-google-specialty-brands-001",
+      "name": "RSS - Google News Specialty Coffee Brands",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 14080],
+      "notes": "Marcas de café especial de referencia (Blue Bottle, Intelligentsia, etc.)"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=coffee+IPO+OR+%22coffee+company%22+public+OR+SPAC+coffee&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "rss-google-coffee-ipo-001",
+      "name": "RSS - Google News Coffee IPO/Public",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 14240],
+      "notes": "IPOs y salidas a bolsa de empresas de café"
+    },
+    {
+      "parameters": {
+        "url": "https://www.fooddive.com/feeds/news/",
+        "options": {}
+      },
+      "id": "rss-food-dive-001",
+      "name": "RSS - Food Dive",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 14400],
+      "notes": "M&A y noticias corporativas de la industria alimentaria (incluye café)"
+    },
+    {
+      "parameters": {
+        "url": "https://www.foodbusinessnews.net/rss/topic/4923-mergers-acquisitions",
+        "options": {}
+      },
+      "id": "rss-food-business-ma-001",
+      "name": "RSS - Food Business News M&A",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-2496, 14560],
+      "notes": "Sección específica de M&A en industria de alimentos y bebidas"
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/KC=F?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "api-coffee-futures-001",
+      "name": "API - Coffee Arabica Futures (Yahoo)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2496, 14720],
+      "notes": "Precio de futuros de café Arábica para contexto de mercado"
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/KCH25.NYB?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "api-coffee-robusta-001",
+      "name": "API - Coffee Robusta Futures (Yahoo)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2496, 14880],
+      "notes": "Precio de futuros de café Robusta"
+    },
+    {
+      "parameters": {
+        "url": "https://www.datos.gov.co/resource/32sa-8pi3.json?$order=vigenciadesde%20DESC&$limit=1",
+        "options": {}
+      },
+      "id": "api-trm-colombia-001",
+      "name": "API - TRM Colombia",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2496, 15040],
+      "notes": "TRM para contexto de exportadores colombianos"
+    },
+    {
+      "parameters": {
+        "numberInputs": 21
+      },
+      "id": "merge-all-sources-001",
+      "name": "Merge - All Coffee M&A Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [-1088, 13440]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Coffee M&A Newsletter Processor v1.0\n// Especializado en fusiones, adquisiciones e inversiones en café especial\n\nconst allItems = $input.all();\nconst currentDate = new Date();\nconst oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);\n\n// Helpers\nconst fmt = (n, d=2) => (n === null || n === undefined || isNaN(n)) ? 'N/A' : parseFloat(n).toFixed(d);\nconst pct = (c, p) => (!p || p === 0 || !c) ? null : ((c - p) / p * 100).toFixed(2);\nconst clean = (t) => t ? t.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').replace(/\\s+/g, ' ').trim().slice(0, 400) : '';\n\n// Palabras clave para M&A\nconst maKeywords = [\n  'acquisition', 'acquires', 'acquired', 'acquire',\n  'merger', 'merge', 'merged', 'merging',\n  'investment', 'invests', 'invested', 'investor',\n  'funding', 'funded', 'raises', 'raised',\n  'series a', 'series b', 'series c', 'seed round',\n  'private equity', 'venture capital', 'vc',\n  'buyout', 'buy out', 'bought',\n  'partnership', 'partners', 'joint venture',\n  'expansion', 'expands', 'expanding',\n  'sale', 'sells', 'sold', 'selling',\n  'ipo', 'public offering', 'spac',\n  'valuation', 'valued at',\n  'stake', 'shares', 'equity',\n  'deal', 'transaction', 'agreement',\n  'convertible', 'notes', 'debt', 'financing',\n  'adquisición', 'adquiere', 'fusión', 'inversión',\n  'financiamiento', 'expansión', 'compra', 'venta'\n];\n\n// Compañías relevantes para seguimiento\nconst relevantCompanies = [\n  'westrock', 'jab holding', 'jde peets', 'starbucks', 'nestle', 'nespresso',\n  'blue bottle', 'intelligentsia', 'stumptown', 'counter culture',\n  'la colombe', 'dunkin', 'peets', 'lavazza', 'illy', 'illycaffè',\n  'keurig', 'dr pepper', 'green mountain', 'caribou',\n  'tim hortons', 'costa coffee', 'luckin',\n  'libertario', 'la palma', 'tucan', 'devocion', 'onyx coffee',\n  'verve', 'ritual', 'sightglass', 'equator', 'klatch',\n  'george howell', 'bird rock', 'proud mary', 'sey',\n  'cafe imports', 'royal coffee', 'genuine origin', 'sucafina',\n  'olam', 'ecom', 'neumann kaffee', 'volcafe'\n];\n\n// Traducción de términos M&A\nconst translateMA = (text) => {\n  if (!text) return '';\n  return text\n    .replace(/\\bacquisition\\b/gi, 'adquisición')\n    .replace(/\\bacquires\\b/gi, 'adquiere')\n    .replace(/\\bacquired\\b/gi, 'adquirió')\n    .replace(/\\bmerger\\b/gi, 'fusión')\n    .replace(/\\bmerges\\b/gi, 'se fusiona')\n    .replace(/\\binvestment\\b/gi, 'inversión')\n    .replace(/\\binvests\\b/gi, 'invierte')\n    .replace(/\\bfunding\\b/gi, 'financiamiento')\n    .replace(/\\braises\\b/gi, 'recauda')\n    .replace(/\\braised\\b/gi, 'recaudó')\n    .replace(/\\bprivate equity\\b/gi, 'capital privado')\n    .replace(/\\bventure capital\\b/gi, 'capital de riesgo')\n    .replace(/\\bbuyout\\b/gi, 'compra')\n    .replace(/\\bpartnership\\b/gi, 'alianza')\n    .replace(/\\bjoint venture\\b/gi, 'empresa conjunta')\n    .replace(/\\bexpansion\\b/gi, 'expansión')\n    .replace(/\\bexpands\\b/gi, 'expande')\n    .replace(/\\bsale\\b/gi, 'venta')\n    .replace(/\\bsells\\b/gi, 'vende')\n    .replace(/\\bsold\\b/gi, 'vendió')\n    .replace(/\\bIPO\\b/gi, 'salida a bolsa')\n    .replace(/\\bpublic offering\\b/gi, 'oferta pública')\n    .replace(/\\bstake\\b/gi, 'participación')\n    .replace(/\\bshares\\b/gi, 'acciones')\n    .replace(/\\bequity\\b/gi, 'capital')\n    .replace(/\\bdeal\\b/gi, 'acuerdo')\n    .replace(/\\btransaction\\b/gi, 'transacción')\n    .replace(/\\bconvertible notes\\b/gi, 'notas convertibles')\n    .replace(/\\bfinancing\\b/gi, 'financiamiento')\n    .replace(/\\bcoffee roaster\\b/gi, 'tostadora de café')\n    .replace(/\\bspecialty coffee\\b/gi, 'café especial')\n    .replace(/\\bcoffee company\\b/gi, 'empresa de café')\n    .replace(/\\bcoffee chain\\b/gi, 'cadena de café')\n    .replace(/\\bmillion\\b/gi, 'millones')\n    .replace(/\\bbillion\\b/gi, 'mil millones')\n    .replace(/\\bvaluation\\b/gi, 'valoración')\n    .replace(/\\bvalued at\\b/gi, 'valorada en');\n};\n\n// Función para calcular relevancia de M&A\nconst calculateMARelevance = (text) => {\n  const lowerText = text.toLowerCase();\n  let score = 0;\n  \n  // Puntos por palabras clave de M&A\n  maKeywords.forEach(keyword => {\n    if (lowerText.includes(keyword)) score += 10;\n  });\n  \n  // Puntos extra por compañías relevantes\n  relevantCompanies.forEach(company => {\n    if (lowerText.includes(company)) score += 15;\n  });\n  \n  // Puntos por menciones de montos\n  if (lowerText.match(/\\$\\d+/)) score += 5;\n  if (lowerText.match(/million|billion|millones|mil millones/)) score += 5;\n  \n  return score;\n};\n\n// Categorización de noticias\nconst categorizeNews = (text) => {\n  const lower = text.toLowerCase();\n  \n  if (lower.match(/acquisition|acquires|acquired|buyout|bought|compra|adquiere/)) return 'acquisitions';\n  if (lower.match(/merger|merge|fusion|fusión/)) return 'mergers';\n  if (lower.match(/investment|invests|funding|raises|series|seed|venture|inversión|financiamiento/)) return 'investments';\n  if (lower.match(/expansion|expands|opens|launch|new location|expansión/)) return 'expansions';\n  if (lower.match(/partnership|partners|joint venture|alliance|alianza/)) return 'partnerships';\n  if (lower.match(/ipo|public|spac|stock|shares|bolsa/)) return 'public_markets';\n  if (lower.match(/sale|sells|sold|divest|venta|vende/)) return 'divestitures';\n  \n  return 'general';\n};\n\n// Data structure\nconst data = {\n  reportDate: currentDate.toLocaleDateString('es-CO', { \n    weekday: 'long', \n    year: 'numeric', \n    month: 'long', \n    day: 'numeric',\n    timeZone: 'America/Bogota' \n  }),\n  weekRange: {\n    start: oneWeekAgo.toLocaleDateString('es-CO', { month: 'short', day: 'numeric' }),\n    end: currentDate.toLocaleDateString('es-CO', { month: 'short', day: 'numeric' })\n  },\n  markets: {\n    coffeeArabica: null,\n    coffeeRobusta: null,\n    trm: null\n  },\n  news: {\n    acquisitions: [],\n    mergers: [],\n    investments: [],\n    expansions: [],\n    partnerships: [],\n    public_markets: [],\n    divestitures: [],\n    general: [],\n    all_ma: [],\n    top_stories: []\n  },\n  companies: {\n    mentioned: {},\n    deals_count: 0\n  },\n  summaries: {},\n  statistics: {\n    totalSources: allItems.length,\n    maNewsCount: 0,\n    totalDealsValue: 'Por determinar'\n  }\n};\n\n// Process items\nallItems.forEach(item => {\n  const j = item.json;\n  \n  // Yahoo Finance Coffee Futures\n  if (j?.chart?.result?.[0]) {\n    const c = j.chart.result[0], m = c.meta, q = c.indicators?.quote?.[0];\n    if (m && q) {\n      const i = (q.close?.length || 1) - 1;\n      const price = q.close?.[i], prev = m.chartPreviousClose || m.previousClose || q.close?.[i-1];\n      const chg = price && prev ? price - prev : null;\n      const chgPct = pct(price, prev);\n      const mk = {\n        price: fmt(price),\n        change: chg !== null ? fmt(chg) : 'N/A',\n        changePercent: chgPct ? chgPct + '%' : 'N/A',\n        isPositive: chg > 0,\n        isNegative: chg < 0\n      };\n      const s = m.symbol || '';\n      if (s === 'KC=F' || s.includes('KC')) {\n        data.markets.coffeeArabica = { ...mk, name: 'Café Arábica (ICE)' };\n      }\n    }\n  }\n  \n  // TRM Colombia\n  if (Array.isArray(j) && j[0]?.valor) {\n    const trmValue = parseFloat(j[0].valor);\n    data.markets.trm = {\n      rate: trmValue,\n      formatted: fmt(trmValue, 2),\n      date: j[0].vigenciadesde || ''\n    };\n  }\n  \n  // RSS News Processing\n  if (j?.title && (j?.link || j?.url)) {\n    const rawContent = (j.title || '') + ' ' + (j.summary || j.description || j.contentSnippet || j.content || '');\n    const maRelevance = calculateMARelevance(rawContent);\n    \n    // Solo procesar noticias con relevancia de M&A\n    if (maRelevance > 0) {\n      const summary = clean(j.summary || j.description || j.contentSnippet || j.content || '');\n      const pubDate = j.pubDate || j.isoDate || '';\n      const newsDate = new Date(pubDate);\n      \n      // Solo incluir noticias de la última semana\n      if (newsDate >= oneWeekAgo || !pubDate) {\n        const category = categorizeNews(rawContent);\n        \n        const news = {\n          title: j.title?.slice(0, 200),\n          titleEs: translateMA(j.title?.slice(0, 200)),\n          link: j.link || j.url,\n          source: j.source || j.creator || new URL(j.link || j.url).hostname.replace('www.', ''),\n          pubDate: pubDate,\n          summary: summary,\n          summaryEs: translateMA(summary),\n          relevance: maRelevance,\n          category: category\n        };\n        \n        // Agregar a categoría correspondiente\n        if (data.news[category]) {\n          data.news[category].push(news);\n        }\n        data.news.all_ma.push(news);\n        \n        // Rastrear compañías mencionadas\n        relevantCompanies.forEach(company => {\n          if (rawContent.toLowerCase().includes(company)) {\n            data.companies.mentioned[company] = (data.companies.mentioned[company] || 0) + 1;\n          }\n        });\n      }\n    }\n  }\n});\n\n// Sort by relevance and limit\nconst sortByRelevance = (arr, n) => arr\n  .filter(x => x.title)\n  .sort((a, b) => b.relevance - a.relevance || new Date(b.pubDate || 0) - new Date(a.pubDate || 0))\n  .slice(0, n);\n\ndata.news.acquisitions = sortByRelevance(data.news.acquisitions, 10);\ndata.news.mergers = sortByRelevance(data.news.mergers, 5);\ndata.news.investments = sortByRelevance(data.news.investments, 10);\ndata.news.expansions = sortByRelevance(data.news.expansions, 8);\ndata.news.partnerships = sortByRelevance(data.news.partnerships, 5);\ndata.news.public_markets = sortByRelevance(data.news.public_markets, 5);\ndata.news.divestitures = sortByRelevance(data.news.divestitures, 5);\ndata.news.general = sortByRelevance(data.news.general, 5);\ndata.news.top_stories = sortByRelevance(data.news.all_ma, 5);\n\n// Generate summaries\nconst genSummary = (newsArr, defaultMsg) => {\n  if (!newsArr || newsArr.length === 0) return defaultMsg;\n  \n  const topNews = newsArr.slice(0, 3);\n  let parts = topNews.map(n => {\n    let text = n.summaryEs && n.summaryEs.length > 30 ? n.summaryEs : n.titleEs || n.title;\n    return text.replace(/\\.+$/, '').trim();\n  }).filter(t => t.length > 0);\n  \n  let summary = parts.join('. ');\n  if (summary && !summary.endsWith('.')) summary += '.';\n  \n  if (summary.length > 500) {\n    summary = summary.substring(0, 500);\n    const lastSpace = summary.lastIndexOf(' ');\n    if (lastSpace > 400) summary = summary.substring(0, lastSpace) + '...';\n  }\n  \n  return summary || defaultMsg;\n};\n\n// Market summary\nconst coffee = data.markets.coffeeArabica;\nlet marketSummary = '';\nif (coffee) {\n  const dir = coffee.isPositive ? 'subió' : coffee.isNegative ? 'bajó' : 'se mantuvo estable';\n  marketSummary = `El precio del Café Arábica ${dir} ${coffee.changePercent} esta semana, cerrando en $${coffee.price}/lb.`;\n}\nif (data.markets.trm) {\n  marketSummary += ` TRM Colombia: $${data.markets.trm.formatted} COP/USD.`;\n}\ndata.summaries.markets = marketSummary || 'Datos de mercado no disponibles.';\n\n// News summaries by category\ndata.summaries.acquisitions = genSummary(data.news.acquisitions, 'No se reportaron adquisiciones significativas esta semana.');\ndata.summaries.investments = genSummary(data.news.investments, 'No se reportaron nuevas inversiones esta semana.');\ndata.summaries.expansions = genSummary(data.news.expansions, 'No se reportaron expansiones significativas esta semana.');\ndata.summaries.topStories = genSummary(data.news.top_stories, 'No hay noticias destacadas de M&A esta semana.');\n\n// Executive summary\nconst totalMANews = data.news.all_ma.length;\nconst topCompanies = Object.entries(data.companies.mentioned)\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 5)\n  .map(([name]) => name.charAt(0).toUpperCase() + name.slice(1));\n\ndata.summaries.executive = `Esta semana se identificaron ${totalMANews} noticias relacionadas con M&A en la industria del café especial. ` +\n  (data.news.acquisitions.length > 0 ? `Se reportaron ${data.news.acquisitions.length} adquisiciones. ` : '') +\n  (data.news.investments.length > 0 ? `Se identificaron ${data.news.investments.length} movimientos de inversión. ` : '') +\n  (topCompanies.length > 0 ? `Compañías más mencionadas: ${topCompanies.join(', ')}.` : '');\n\n// Stats\ndata.statistics.maNewsCount = totalMANews;\ndata.companies.deals_count = data.news.acquisitions.length + data.news.mergers.length;\n\nreturn [data];\n"
+      },
+      "id": "process-ma-data-001",
+      "name": "Process Coffee M&A Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-656, 13440],
+      "notes": "Procesa y filtra noticias de M&A en café, calcula relevancia y categoriza"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Coffee M&A Newsletter HTML Template v1.0\n// Diseño profesional enfocado en M&A de café especial\n\nconst data = $input.item.json;\nconst reportDate = data.reportDate || new Date().toLocaleDateString('es-CO', { \n  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Bogota' \n});\n\n// Category icons\nconst categoryIcons = {\n  acquisitions: '🏷️',\n  mergers: '🤝',\n  investments: '💰',\n  expansions: '📈',\n  partnerships: '🔗',\n  public_markets: '📊',\n  divestitures: '📤'\n};\n\nconst categoryNames = {\n  acquisitions: 'Adquisiciones',\n  mergers: 'Fusiones',\n  investments: 'Inversiones y Financiamiento',\n  expansions: 'Expansiones',\n  partnerships: 'Alianzas Estratégicas',\n  public_markets: 'Mercados Públicos',\n  divestitures: 'Desinversiones'\n};\n\n// Helper functions\nconst newsHtml = (items, msg, showSummary = true) => {\n  if (!items?.length) return `<p style=\"color:#6c757d;font-style:italic;padding:10px;\">${msg}</p>`;\n  \n  return '<div style=\"margin:0;\">' + items.map(n => `\n    <div style=\"padding:12px 0;border-bottom:1px solid #e9ecef;\">\n      <a href=\"${n.link}\" style=\"color:#1a5f2a;text-decoration:none;font-weight:600;font-size:14px;line-height:1.4;display:block;\" target=\"_blank\">\n        ${n.title}\n      </a>\n      ${n.titleEs && n.titleEs !== n.title ? `<p style=\"margin:4px 0 0;font-size:12px;color:#666;font-style:italic;\">📝 ${n.titleEs}</p>` : ''}\n      ${showSummary && n.summary ? `<p style=\"margin:6px 0 0;font-size:12px;color:#495057;line-height:1.5;\">${n.summary.slice(0, 200)}${n.summary.length > 200 ? '...' : ''}</p>` : ''}\n      <div style=\"margin-top:6px;font-size:11px;color:#888;\">\n        <span>${n.source || 'Fuente desconocida'}</span>\n        ${n.pubDate ? ` • ${new Date(n.pubDate).toLocaleDateString('es-CO', { month: 'short', day: 'numeric' })}` : ''}\n        ${n.relevance ? ` • Relevancia: ${'⭐'.repeat(Math.min(Math.floor(n.relevance/20), 5))}` : ''}\n      </div>\n    </div>\n  `).join('') + '</div>';\n};\n\nconst summaryBox = (text, bgColor = '#e8f5e9', borderColor = '#1a5f2a') => `\n<div style=\"background:${bgColor};border-radius:8px;padding:14px 16px;margin-bottom:15px;border-left:4px solid ${borderColor};\">\n  <p style=\"margin:0;font-size:13px;color:#1a1a1a;line-height:1.6;\"><strong>📌 Resumen:</strong> ${text}</p>\n</div>`;\n\nconst sectionHeader = (icon, title, borderColor = '#1a5f2a') => `\n<h2 style=\"color:#1a1a1a;font-size:16px;margin:25px 0 12px;padding-bottom:8px;border-bottom:3px solid ${borderColor};\">\n  ${icon} ${title}\n</h2>`;\n\nconst coffee = data.markets?.coffeeArabica || {};\nconst trm = data.markets?.trm || {};\nconst news = data.news || {};\nconst sum = data.summaries || {};\nconst stats = data.statistics || {};\nconst companies = data.companies || {};\n\n// Top mentioned companies\nconst topCompanies = Object.entries(companies.mentioned || {})\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 8)\n  .map(([name, count]) => `<span style=\"display:inline-block;background:#f8f9fa;padding:4px 10px;margin:3px;border-radius:15px;font-size:11px;color:#495057;\">${name.charAt(0).toUpperCase() + name.slice(1)} <strong>(${count})</strong></span>`)\n  .join('');\n\nconst html = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body style=\"margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#f5f5f5;\">\n<div style=\"max-width:700px;margin:0 auto;background:#fff;\">\n\n<!-- Header -->\n<div style=\"background:linear-gradient(135deg,#1a5f2a 0%,#2d8a3e 50%,#3da352 100%);padding:30px 25px;text-align:center;\">\n  <div style=\"color:#c8e6c9;font-size:10px;letter-spacing:3px;font-weight:700;text-transform:uppercase;\">SPECIALTY COFFEE INTELLIGENCE</div>\n  <h1 style=\"color:#fff;margin:10px 0 5px;font-size:24px;font-weight:700;\">☕ M&A Weekly Report</h1>\n  <p style=\"color:rgba(255,255,255,0.9);margin:5px 0;font-size:14px;\">Fusiones, Adquisiciones e Inversiones en Café Especial</p>\n  <p style=\"color:rgba(255,255,255,0.7);margin:8px 0 0;font-size:12px;\">${reportDate}</p>\n  <p style=\"color:rgba(255,255,255,0.6);margin:5px 0 0;font-size:11px;\">Semana del ${data.weekRange?.start || ''} al ${data.weekRange?.end || ''}</p>\n</div>\n\n<!-- Stats Banner -->\n<div style=\"background:#2d8a3e;padding:12px 20px;display:flex;justify-content:space-around;flex-wrap:wrap;\">\n  <div style=\"text-align:center;padding:5px 15px;\">\n    <div style=\"color:rgba(255,255,255,0.7);font-size:10px;text-transform:uppercase;\">Noticias M&A</div>\n    <div style=\"color:#fff;font-size:22px;font-weight:700;\">${stats.maNewsCount || 0}</div>\n  </div>\n  <div style=\"text-align:center;padding:5px 15px;\">\n    <div style=\"color:rgba(255,255,255,0.7);font-size:10px;text-transform:uppercase;\">Adquisiciones</div>\n    <div style=\"color:#fff;font-size:22px;font-weight:700;\">${news.acquisitions?.length || 0}</div>\n  </div>\n  <div style=\"text-align:center;padding:5px 15px;\">\n    <div style=\"color:rgba(255,255,255,0.7);font-size:10px;text-transform:uppercase;\">Inversiones</div>\n    <div style=\"color:#fff;font-size:22px;font-weight:700;\">${news.investments?.length || 0}</div>\n  </div>\n  <div style=\"text-align:center;padding:5px 15px;\">\n    <div style=\"color:rgba(255,255,255,0.7);font-size:10px;text-transform:uppercase;\">Fuentes</div>\n    <div style=\"color:#fff;font-size:22px;font-weight:700;\">${stats.totalSources || 0}</div>\n  </div>\n</div>\n\n<!-- Executive Summary -->\n<div style=\"background:linear-gradient(135deg,#fff8e1,#ffecb3);padding:20px 25px;border-bottom:3px solid #ffc107;\">\n  <h3 style=\"margin:0 0 10px;font-size:15px;color:#795548;\">⚡ RESUMEN EJECUTIVO</h3>\n  <p style=\"margin:0;font-size:14px;color:#5d4037;line-height:1.7;\">${sum.executive || 'Resumen no disponible.'}</p>\n</div>\n\n<!-- Market Context -->\n<div style=\"padding:15px 25px;background:#fafafa;border-bottom:1px solid #e0e0e0;\">\n  <h3 style=\"margin:0 0 10px;font-size:13px;color:#666;text-transform:uppercase;letter-spacing:1px;\">📊 Contexto de Mercado</h3>\n  <div style=\"display:flex;flex-wrap:wrap;gap:15px;\">\n    ${coffee.price ? `\n    <div style=\"background:#fff;padding:12px 15px;border-radius:8px;border-left:4px solid #1a5f2a;flex:1;min-width:150px;\">\n      <div style=\"font-size:11px;color:#666;\">Café Arábica (ICE)</div>\n      <div style=\"font-size:20px;font-weight:700;color:#1a5f2a;\">$${coffee.price}/lb</div>\n      <div style=\"font-size:12px;color:${coffee.isPositive ? '#28a745' : coffee.isNegative ? '#dc3545' : '#666'};\">\n        ${coffee.isPositive ? '▲' : coffee.isNegative ? '▼' : '—'} ${coffee.changePercent || 'N/A'}\n      </div>\n    </div>` : ''}\n    ${trm.formatted ? `\n    <div style=\"background:#fff;padding:12px 15px;border-radius:8px;border-left:4px solid #667eea;flex:1;min-width:150px;\">\n      <div style=\"font-size:11px;color:#666;\">TRM Colombia</div>\n      <div style=\"font-size:20px;font-weight:700;color:#667eea;\">$${trm.formatted}</div>\n      <div style=\"font-size:11px;color:#888;\">COP por USD</div>\n    </div>` : ''}\n  </div>\n</div>\n\n<div style=\"padding:20px 25px;\">\n\n<!-- Top Stories -->\n${sectionHeader('🔥', 'NOTICIAS DESTACADAS DE LA SEMANA', '#dc3545')}\n${summaryBox(sum.topStories || 'Sin resumen disponible.', '#ffebee', '#dc3545')}\n${newsHtml(news.top_stories, 'No hay noticias destacadas esta semana.', true)}\n\n<!-- Acquisitions -->\n${news.acquisitions?.length > 0 ? `\n${sectionHeader('🏷️', 'ADQUISICIONES', '#1a5f2a')}\n${summaryBox(sum.acquisitions || 'Sin resumen disponible.', '#e8f5e9', '#1a5f2a')}\n${newsHtml(news.acquisitions, 'No se reportaron adquisiciones.')}\n` : ''}\n\n<!-- Investments -->\n${news.investments?.length > 0 ? `\n${sectionHeader('💰', 'INVERSIONES Y FINANCIAMIENTO', '#ff9800')}\n${summaryBox(sum.investments || 'Sin resumen disponible.', '#fff3e0', '#ff9800')}\n${newsHtml(news.investments, 'No se reportaron inversiones.')}\n` : ''}\n\n<!-- Expansions -->\n${news.expansions?.length > 0 ? `\n${sectionHeader('📈', 'EXPANSIONES', '#2196f3')}\n${summaryBox(sum.expansions || 'Sin resumen disponible.', '#e3f2fd', '#2196f3')}\n${newsHtml(news.expansions, 'No se reportaron expansiones.')}\n` : ''}\n\n<!-- Partnerships -->\n${news.partnerships?.length > 0 ? `\n${sectionHeader('🔗', 'ALIANZAS ESTRATÉGICAS', '#9c27b0')}\n${newsHtml(news.partnerships, 'No se reportaron alianzas.')}\n` : ''}\n\n<!-- Mergers -->\n${news.mergers?.length > 0 ? `\n${sectionHeader('🤝', 'FUSIONES', '#00bcd4')}\n${newsHtml(news.mergers, 'No se reportaron fusiones.')}\n` : ''}\n\n<!-- Public Markets -->\n${news.public_markets?.length > 0 ? `\n${sectionHeader('📊', 'MERCADOS PÚBLICOS / IPOs', '#607d8b')}\n${newsHtml(news.public_markets, 'No hay noticias de mercados públicos.')}\n` : ''}\n\n<!-- Companies Radar -->\n${topCompanies ? `\n<div style=\"margin-top:25px;padding:15px;background:#f8f9fa;border-radius:8px;\">\n  <h3 style=\"margin:0 0 10px;font-size:13px;color:#666;\">🎯 EMPRESAS EN EL RADAR</h3>\n  <p style=\"font-size:11px;color:#888;margin:0 0 10px;\">Compañías más mencionadas esta semana:</p>\n  <div style=\"line-height:2;\">${topCompanies}</div>\n</div>` : ''}\n\n<!-- Libertario Reference -->\n<div style=\"margin-top:25px;padding:15px;background:linear-gradient(135deg,#1a5f2a,#2d8a3e);border-radius:8px;\">\n  <p style=\"margin:0;font-size:12px;color:rgba(255,255,255,0.9);text-align:center;\">\n    ☕ Este reporte está diseñado para dar seguimiento a movimientos de M&A relevantes para<br>\n    <strong style=\"color:#fff;\">Libertario Coffee Roasters</strong> y empresas similares en café especial.\n  </p>\n</div>\n\n</div>\n\n<!-- Footer -->\n<div style=\"background:#1a1a1a;padding:25px;text-align:center;\">\n  <p style=\"color:#1a5f2a;font-size:13px;margin:0;font-weight:600;\">Coffee M&A Intelligence v1.0</p>\n  <p style=\"color:#888;font-size:11px;margin:8px 0;\">📰 ${stats.maNewsCount || 0} noticias analizadas | 🔍 ${stats.totalSources || 0} fuentes monitoreadas</p>\n  <p style=\"color:#666;font-size:10px;margin:10px 0 0;\">\n    ⚠️ Este informe es solo informativo. No constituye asesoría de inversión.<br>\n    Las noticias son recopiladas automáticamente de fuentes públicas.\n  </p>\n</div>\n\n</div>\n</body>\n</html>`;\n\n// Generate email subject\nconst weekDate = new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });\nconst acquisitionCount = news.acquisitions?.length || 0;\nconst investmentCount = news.investments?.length || 0;\n\nlet subjectEmoji = '☕';\nif (acquisitionCount > 0) subjectEmoji = '🏷️';\nif (investmentCount > 2) subjectEmoji = '💰';\n\nconst subject = `${subjectEmoji} Coffee M&A Weekly - ${weekDate} | ${stats.maNewsCount || 0} noticias`;\n\nreturn [{\n  subject: subject,\n  htmlContent: html,\n  reportDate: reportDate,\n  stats: stats\n}];\n"
+      },
+      "id": "format-html-001",
+      "name": "Format Coffee M&A HTML Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-160, 13440],
+      "notes": "Genera el reporte HTML profesional de M&A en café"
+    },
+    {
+      "parameters": {
+        "sendTo": "felipe@lapalmayeltucan.com",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.htmlContent }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "gmail-send-001",
+      "name": "Gmail - Send Coffee M&A Report",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [288, 13440],
+      "webhookId": "coffee-ma-newsletter-001",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "P2OyYe0XIUA2MAhO",
+          "name": "Gmail account 2"
+        }
+      },
+      "notes": "Envía el reporte semanal de M&A en café"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger - Weekly Monday 7AM": {
+      "main": [
+        [
+          { "node": "RSS - Daily Coffee News", "type": "main", "index": 0 },
+          { "node": "RSS - Sprudge Coffee News", "type": "main", "index": 0 },
+          { "node": "RSS - Perfect Daily Grind", "type": "main", "index": 0 },
+          { "node": "RSS - ComuniCaffè International", "type": "main", "index": 0 },
+          { "node": "RSS - World Coffee Portal", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Coffee M&A", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Coffee Investment", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Coffee Expansion", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Major Coffee Players", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Coffee PE/VC", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Roasters Deals", "type": "main", "index": 0 },
+          { "node": "RSS - Google News LATAM Coffee M&A", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Colombia Coffee Business", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Specialty Coffee Brands", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Coffee IPO/Public", "type": "main", "index": 0 },
+          { "node": "RSS - Food Dive", "type": "main", "index": 0 },
+          { "node": "RSS - Food Business News M&A", "type": "main", "index": 0 },
+          { "node": "API - Coffee Arabica Futures (Yahoo)", "type": "main", "index": 0 },
+          { "node": "API - Coffee Robusta Futures (Yahoo)", "type": "main", "index": 0 },
+          { "node": "API - TRM Colombia", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "RSS - Daily Coffee News": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 0 } ]]
+    },
+    "RSS - Sprudge Coffee News": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 1 } ]]
+    },
+    "RSS - Perfect Daily Grind": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 2 } ]]
+    },
+    "RSS - ComuniCaffè International": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 3 } ]]
+    },
+    "RSS - World Coffee Portal": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 4 } ]]
+    },
+    "RSS - Google News Coffee M&A": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 5 } ]]
+    },
+    "RSS - Google News Coffee Investment": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 6 } ]]
+    },
+    "RSS - Google News Coffee Expansion": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 7 } ]]
+    },
+    "RSS - Google News Major Coffee Players": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 8 } ]]
+    },
+    "RSS - Google News Coffee PE/VC": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 9 } ]]
+    },
+    "RSS - Google News Roasters Deals": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 10 } ]]
+    },
+    "RSS - Google News LATAM Coffee M&A": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 11 } ]]
+    },
+    "RSS - Google News Colombia Coffee Business": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 12 } ]]
+    },
+    "RSS - Google News Specialty Coffee Brands": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 13 } ]]
+    },
+    "RSS - Google News Coffee IPO/Public": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 14 } ]]
+    },
+    "RSS - Food Dive": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 15 } ]]
+    },
+    "RSS - Food Business News M&A": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 16 } ]]
+    },
+    "API - Coffee Arabica Futures (Yahoo)": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 17 } ]]
+    },
+    "API - Coffee Robusta Futures (Yahoo)": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 18 } ]]
+    },
+    "API - TRM Colombia": {
+      "main": [[ { "node": "Merge - All Coffee M&A Sources", "type": "main", "index": 19 } ]]
+    },
+    "Merge - All Coffee M&A Sources": {
+      "main": [[ { "node": "Process Coffee M&A Data", "type": "main", "index": 0 } ]]
+    },
+    "Process Coffee M&A Data": {
+      "main": [[ { "node": "Format Coffee M&A HTML Report", "type": "main", "index": 0 } ]]
+    },
+    "Format Coffee M&A HTML Report": {
+      "main": [[ { "node": "Gmail - Send Coffee M&A Report", "type": "main", "index": 0 } ]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "coffee-ma-v1-001",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "coffee-ma-newsletter-instance"
+  },
+  "id": "coffee-ma-newsletter-001",
+  "tags": [
+    { "name": "coffee" },
+    { "name": "M&A" },
+    { "name": "newsletter" },
+    { "name": "weekly" }
+  ]
+}
