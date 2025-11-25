@@ -1,0 +1,681 @@
+{
+  "name": "Corrected_Nodes_Bloomberg_Report_v3.0_FIXED",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "daysOfWeek"
+            },
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "id": "157b46ee-ae5e-41f9-a848-e8e150cc917f",
+      "name": "Trigger - Market Hours (6 AM Weekdays)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-2320, 7680]
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/^GSPC?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "9cfa2e0b-9e73-4501-ae72-50f34f736b56",
+      "name": "API - S&P 500 (Yahoo Finance)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 7088]
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/^IXIC?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "e170ee41-5db0-41ea-9fd6-f0d1165c5fea",
+      "name": "API - NASDAQ (Yahoo Finance)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 7264]
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/^DJI?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "0305a70f-78f5-483e-bcac-f00d32bb680c",
+      "name": "API - Dow Jones (Yahoo Finance)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 7440]
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/GC=F?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "5fde0aae-704b-4b21-ac3c-7eeb32da88ae",
+      "name": "API - Gold Futures (Yahoo)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 7616]
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/CL=F?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "ea23101b-4d4e-43d9-ab2d-fa7ae878de4c",
+      "name": "API - Crude Oil WTI (Yahoo)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 7792]
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/KC=F?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "5c275726-b433-40eb-a099-8d78825c0e9e",
+      "name": "API - Coffee Arabica Futures (Yahoo)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 7968]
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/^VIX?interval=1d&range=5d",
+        "options": {}
+      },
+      "id": "d1ce946f-533a-4713-aca5-d24f34a79826",
+      "name": "API - VIX Volatility Index (Yahoo)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 8160]
+    },
+    {
+      "parameters": {
+        "url": "https://api.frankfurter.app/latest?from=USD&to=COP,EUR,MXN,BRL,CAD,JPY,GBP,CHF",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "a0846281-bfb7-4ccf-ac04-31556630d36a",
+      "name": "API - Forex Rates (Frankfurter - Free)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 8336]
+    },
+    {
+      "parameters": {
+        "url": "https://www.datos.gov.co/resource/32sa-8pi3.json?$order=vigenciadesde%20DESC&$limit=1",
+        "options": {}
+      },
+      "id": "18172508-929c-450b-9890-31c6636fbde7",
+      "name": "API - TRM Colombia (Datos Abiertos)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1232, 8528]
+    },
+    {
+      "parameters": {
+        "url": "https://finance.yahoo.com/news/rssindex",
+        "options": {}
+      },
+      "id": "0c5a7428-7bbe-45c4-82bb-b2a733cb4b7e",
+      "name": "RSS - Yahoo Finance",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 7920]
+    },
+    {
+      "parameters": {
+        "url": "https://www.investing.com/rss/news.rss",
+        "options": {}
+      },
+      "id": "8bde52cf-2ac4-43d6-9005-f2abc9581700",
+      "name": "RSS - Investing.com",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 8080]
+    },
+    {
+      "parameters": {
+        "url": "https://www.marketwatch.com/rss/topstories",
+        "options": {}
+      },
+      "id": "a5d244f5-800d-43d3-a37e-4bd9987a2ef6",
+      "name": "RSS - MarketWatch",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 8240]
+    },
+    {
+      "parameters": {
+        "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+        "options": {}
+      },
+      "id": "9959eea2-e2df-4f22-aa67-c887ff2b4c25",
+      "name": "RSS - CNBC Top News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 8400]
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=economia+latinoamerica&hl=es&gl=CO&ceid=CO:es-419",
+        "options": {}
+      },
+      "id": "dbb78088-2350-48e2-97cf-58c3d5bcc65d",
+      "name": "RSS - Google News LATAM Economy",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 8560]
+    },
+    {
+      "parameters": {
+        "url": "https://www.ecb.europa.eu/rss/fxref-usd.html",
+        "options": {}
+      },
+      "id": "ecb-fixed-01",
+      "name": "RSS - ECB USD Exchange Rates (FIXED)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 7760],
+      "notes": "CORREGIDO: URL oficial del BCE para tipos de cambio USD"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=economia+colombia+empresas&hl=es&gl=CO&ceid=CO:es-419",
+        "options": {}
+      },
+      "id": "portafolio-fixed-01",
+      "name": "RSS - Google News Colombia Economía (Reemplazo Portafolio)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 8720],
+      "notes": "CORREGIDO: Reemplaza Portafolio con Google News Colombia"
+    },
+    {
+      "parameters": {
+        "url": "https://www.larepublica.co/rss/economia.xml",
+        "options": {}
+      },
+      "id": "larepublica-new-01",
+      "name": "RSS - La República Economía (NUEVO)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 8820],
+      "notes": "NUEVO: La República - principal periódico económico de Colombia"
+    },
+    {
+      "parameters": {
+        "url": "https://www.eltiempo.com/rss/economia.xml",
+        "options": {}
+      },
+      "id": "eltiempo-economia-01",
+      "name": "RSS - El Tiempo Economía (NUEVO)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 8912],
+      "notes": "CORREGIDO: Reemplaza Semana Economía"
+    },
+    {
+      "parameters": {
+        "url": "https://www.eltiempo.com/rss/politica.xml",
+        "options": {}
+      },
+      "id": "347a396e-e566-4d40-9586-7e96b9ddaa55",
+      "name": "RSS - El Tiempo Política",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 9232]
+    },
+    {
+      "parameters": {
+        "url": "https://www.elcolombiano.com/rss/colombia.xml",
+        "options": {}
+      },
+      "id": "8ddc00b0-f77e-4624-aafa-753250d5cfbb",
+      "name": "RSS - El Colombiano Colombia",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 9376]
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=economia+negocios+latinoamerica&hl=es&gl=MX&ceid=MX:es-419",
+        "options": {}
+      },
+      "id": "bloomberg-linea-fixed-01",
+      "name": "RSS - Google News LATAM Negocios (Reemplazo Bloomberg Línea)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 9536],
+      "notes": "CORREGIDO: Reemplaza Bloomberg Línea LATAM"
+    },
+    {
+      "parameters": {
+        "url": "https://www.vozdeamerica.com/api/ziqovtpy$omq",
+        "options": {}
+      },
+      "id": "voa-latam-01",
+      "name": "RSS - Voz de América Latinoamérica (NUEVO)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 9636],
+      "notes": "NUEVO: Voz de América - cobertura gratuita de LATAM"
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.bbci.co.uk/mundo/rss.xml",
+        "options": {}
+      },
+      "id": "bbc-mundo-01",
+      "name": "RSS - BBC Mundo (NUEVO)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 9736],
+      "notes": "NUEVO: BBC Mundo - noticias internacionales en español"
+    },
+    {
+      "parameters": {
+        "url": "https://sprudge.com/feed",
+        "options": {}
+      },
+      "id": "854c5c54-36f4-475b-a3ef-938782d921eb",
+      "name": "RSS - Sprudge Coffee News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 9856]
+    },
+    {
+      "parameters": {
+        "url": "https://perfectdailygrind.com/feed/",
+        "options": {}
+      },
+      "id": "e9ca4acd-95f0-4213-a20e-aeade6349694",
+      "name": "RSS - Perfect Daily Grind",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 10032]
+    },
+    {
+      "parameters": {
+        "url": "https://dailycoffeenews.com/feed/",
+        "options": {}
+      },
+      "id": "289bb0f3-1a2f-41d4-98cd-ae2ce6763bde",
+      "name": "RSS - Daily Coffee News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 10208]
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=coffee+market+prices&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "5db48745-dfbb-40c1-9a80-4b612b64b135",
+      "name": "RSS - Google News Coffee Markets",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 10336]
+    },
+    {
+      "parameters": {
+        "url": "https://www.federalreserve.gov/feeds/press_all.xml",
+        "options": {}
+      },
+      "id": "58d05394-6dcb-495f-81bb-a17e4b82d961",
+      "name": "RSS - Federal Reserve News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 10496]
+    },
+    {
+      "parameters": {
+        "url": "https://www.ecb.europa.eu/rss/press.html",
+        "options": {}
+      },
+      "id": "ecb-press-fixed-01",
+      "name": "RSS - ECB Press Releases (FIXED)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 10672],
+      "notes": "CORREGIDO: URL oficial del BCE para comunicados de prensa"
+    },
+    {
+      "parameters": {
+        "url": "https://www.banrep.gov.co/es/rss.xml",
+        "options": {}
+      },
+      "id": "e0518b1a-cd28-4996-8925-a697a9922f80",
+      "name": "RSS - Banco República Colombia",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 10832]
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=plastic+pyrolysis+chemical+recycling&hl=en&gl=US&ceid=US:en",
+        "options": {}
+      },
+      "id": "e9e079d5-6d2f-4299-aff4-dc02ac5d0f9a",
+      "name": "RSS - Plastic Pyrolysis News",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 7168]
+    },
+    {
+      "parameters": {
+        "url": "https://www.recyclingproductnews.com/rss",
+        "options": {}
+      },
+      "id": "recycling-product-news-01",
+      "name": "RSS - Recycling Product News (NUEVO)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 7312],
+      "notes": "CORREGIDO: Reemplaza Plastics News Recycling"
+    },
+    {
+      "parameters": {
+        "url": "https://resource-recycling.com/recycling/feed/",
+        "options": {}
+      },
+      "id": "resource-recycling-01",
+      "name": "RSS - Resource Recycling (NUEVO)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 7412],
+      "notes": "NUEVO: Alternativa a Recycling Today"
+    },
+    {
+      "parameters": {
+        "url": "https://www.waste360.com/rss.xml",
+        "options": {}
+      },
+      "id": "b468bea6-8d50-4dcb-b2fe-a07da3601e3d",
+      "name": "RSS - Waste360",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 7600]
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/espana/portada",
+        "options": {}
+      },
+      "id": "457f5cf7-701b-42a3-a6b8-a72df77bbd75",
+      "name": "RSS - El País España",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 5920]
+    },
+    {
+      "parameters": {
+        "url": "https://www.elespanol.com/rss/",
+        "options": {}
+      },
+      "id": "2653c483-a418-432b-887b-d4007f850b63",
+      "name": "RSS - El Español",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 6064]
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.thelocal.com/rss/es",
+        "options": {}
+      },
+      "id": "ca0845dd-f8cd-4522-b108-7fdf71eb4bd2",
+      "name": "RSS - The Local Spain (English)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 6208]
+    },
+    {
+      "parameters": {
+        "url": "https://agroinformacion.com/feed/",
+        "options": {}
+      },
+      "id": "c490d8d7-a4cd-4d79-88b9-4bab68b68b9a",
+      "name": "RSS - Agroinformación España",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 6384]
+    },
+    {
+      "parameters": {
+        "url": "https://www.agroinvestspain.com/feed",
+        "options": {}
+      },
+      "id": "agroinvest-spain-01",
+      "name": "RSS - Agro Invest Spain (NUEVO)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 6544],
+      "notes": "CORREGIDO: Reemplaza Agrodigital"
+    },
+    {
+      "parameters": {
+        "url": "https://efeagro.com/feed/",
+        "options": {}
+      },
+      "id": "b29b8b67-6adc-4882-ac5c-711483e19b38",
+      "name": "RSS - EfeAgro",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 6672]
+    },
+    {
+      "parameters": {
+        "url": "https://www.fao.org/news/rss-feed/en/",
+        "options": {}
+      },
+      "id": "fao-news-01",
+      "name": "RSS - FAO News (NUEVO)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 6772],
+      "notes": "NUEVO: FAO - Organización de las Naciones Unidas para la Alimentación"
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=agricultura+España+PAC+subsidios&hl=es&gl=ES&ceid=ES:es",
+        "options": {}
+      },
+      "id": "6803e0df-c5b8-4915-b1c4-0b30e81fbe01",
+      "name": "RSS - Google News Agricultura España",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [-432, 7008]
+    },
+    {
+      "parameters": {
+        "numberInputs": 40
+      },
+      "id": "49cdc5c1-6f60-4785-940d-32a8760fd84a",
+      "name": "Merge - All Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [176, 7504]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Advanced Market Data Processing - Bloomberg Style v3.0\nconst allItems = $input.all();\nconst currentDate = new Date();\nconst dateStr = currentDate.toLocaleDateString('es-CO', { \n  weekday: 'long', \n  year: 'numeric', \n  month: 'long', \n  day: 'numeric',\n  hour: '2-digit',\n  minute: '2-digit',\n  timeZone: 'America/Bogota'\n});\n\n// Helper functions\nfunction formatNumber(num, decimals = 2) {\n  if (!num || isNaN(num)) return 'N/A';\n  return parseFloat(num).toFixed(decimals);\n}\n\nfunction calcChange(current, previous) {\n  if (!previous || previous === 0 || !current) return null;\n  return ((current - previous) / previous * 100).toFixed(2);\n}\n\nfunction formatLargeNumber(num) {\n  if (!num) return 'N/A';\n  if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';\n  if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';\n  if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';\n  return num.toFixed(0);\n}\n\nfunction cleanText(text) {\n  if (!text) return '';\n  return text.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').trim().substring(0, 300);\n}\n\n// Initialize data structure\nconst marketData = {\n  timestamp: currentDate.toISOString(),\n  reportDate: dateStr,\n  markets: {\n    equities: {},\n    commodities: {},\n    forex: {}\n  },\n  news: {\n    marketMoving: [],\n    regional: {\n      colombia: [],\n      latinamerica: [],\n      spain: [],\n      global: []\n    },\n    sectors: {\n      coffee: [],\n      recycling: [],\n      agriculture: []\n    },\n    centralBanks: []\n  },\n  analysis: {\n    volatility: null,\n    marketSentiment: null\n  }\n};\n\n// Process each item\nallItems.forEach((item) => {\n  const json = item.json;\n  const nodeName = item.nodeName || '';\n  \n  // Process Yahoo Finance data (chart format)\n  if (nodeName.includes('Yahoo') && nodeName.includes('API')) {\n    try {\n      const chart = json.chart?.result?.[0];\n      if (chart) {\n        const meta = chart.meta;\n        const quote = chart.indicators?.quote?.[0];\n        \n        if (meta && quote) {\n          const lastIndex = quote.close?.length - 1 || 0;\n          const currentPrice = quote.close?.[lastIndex];\n          const previousPrice = quote.close?.[lastIndex - 1] || meta.previousClose;\n          const volume = quote.volume?.[lastIndex];\n          const high = quote.high?.[lastIndex];\n          const low = quote.low?.[lastIndex];\n          \n          const change = currentPrice && previousPrice ? currentPrice - previousPrice : null;\n          const changePercent = calcChange(currentPrice, previousPrice);\n          \n          const marketItem = {\n            symbol: meta.symbol,\n            price: formatNumber(currentPrice, 2),\n            previousClose: formatNumber(meta.previousClose || previousPrice, 2),\n            change: change ? formatNumber(change, 2) : 'N/A',\n            changePercent: changePercent ? changePercent + '%' : 'N/A',\n            volume: formatLargeNumber(volume),\n            dayHigh: formatNumber(high, 2),\n            dayLow: formatNumber(low, 2),\n            currency: meta.currency || 'USD'\n          };\n          \n          // Categorize by symbol\n          if (nodeName.includes('S&P 500')) {\n            marketData.markets.equities.sp500 = { ...marketItem, name: 'S&P 500' };\n          } else if (nodeName.includes('NASDAQ')) {\n            marketData.markets.equities.nasdaq = { ...marketItem, name: 'NASDAQ Composite' };\n          } else if (nodeName.includes('Dow Jones')) {\n            marketData.markets.equities.dowJones = { ...marketItem, name: 'Dow Jones Industrial' };\n          } else if (nodeName.includes('Gold')) {\n            marketData.markets.commodities.gold = { ...marketItem, name: 'Gold Futures', unit: 'USD/oz' };\n          } else if (nodeName.includes('Crude Oil')) {\n            marketData.markets.commodities.wti = { ...marketItem, name: 'WTI Crude Oil', unit: 'USD/barrel' };\n          } else if (nodeName.includes('Coffee')) {\n            marketData.markets.commodities.coffeeArabica = { ...marketItem, name: 'Coffee Arabica Futures', unit: 'USD/lb' };\n          } else if (nodeName.includes('VIX')) {\n            const vixValue = parseFloat(currentPrice);\n            marketData.analysis.volatility = {\n              ...marketItem,\n              name: 'CBOE Volatility Index (VIX)',\n              interpretation: vixValue > 25 ? 'Alta Volatilidad' : vixValue > 15 ? 'Elevada' : vixValue > 12 ? 'Normal' : 'Baja Volatilidad',\n              signal: vixValue > 25 ? '⚠️ Miedo' : vixValue > 15 ? '⚡ Precaución' : '✅ Calma'\n            };\n          }\n        }\n      }\n    } catch (e) {\n      console.log('Error processing Yahoo Finance data:', e.message);\n    }\n  }\n  \n  // Process Frankfurter Forex data\n  if (nodeName.includes('Forex') || nodeName.includes('Frankfurter')) {\n    const rates = json.rates || {};\n    if (rates && Object.keys(rates).length > 0) {\n      marketData.markets.forex = {\n        timestamp: json.date || currentDate.toISOString().split('T')[0],\n        baseCurrency: json.base || 'USD',\n        rates: {\n          COP: { rate: formatNumber(rates.COP, 2), name: 'Peso Colombiano', symbol: 'USD/COP' },\n          EUR: { rate: formatNumber(rates.EUR, 4), name: 'Euro', inverse: formatNumber(1 / rates.EUR, 4), symbol: 'EUR/USD' },\n          MXN: { rate: formatNumber(rates.MXN, 2), name: 'Peso Mexicano', symbol: 'USD/MXN' },\n          BRL: { rate: formatNumber(rates.BRL, 2), name: 'Real Brasileño', symbol: 'USD/BRL' },\n          GBP: { rate: formatNumber(rates.GBP, 4), name: 'Libra Esterlina', inverse: formatNumber(1 / rates.GBP, 4), symbol: 'GBP/USD' },\n          JPY: { rate: formatNumber(rates.JPY, 2), name: 'Yen Japonés', symbol: 'USD/JPY' },\n          CHF: { rate: formatNumber(rates.CHF, 4), name: 'Franco Suizo', symbol: 'USD/CHF' },\n          CAD: { rate: formatNumber(rates.CAD, 4), name: 'Dólar Canadiense', symbol: 'USD/CAD' }\n        }\n      };\n    }\n  }\n  \n  // Process TRM Colombia (Datos Abiertos)\n  if (nodeName.includes('TRM Colombia')) {\n    if (Array.isArray(json) && json.length > 0) {\n      const trmData = json[0];\n      if (trmData.valor) {\n        marketData.markets.forex.rates = marketData.markets.forex.rates || {};\n        marketData.markets.forex.rates.COP = marketData.markets.forex.rates.COP || {};\n        marketData.markets.forex.rates.COP.official = {\n          trm: formatNumber(parseFloat(trmData.valor), 2),\n          source: 'Banco de la República',\n          date: trmData.vigenciadesde || trmData.fecha\n        };\n      }\n    }\n  }\n  \n  // Process RSS News Items\n  if (json.title && (json.link || json.url)) {\n    const newsItem = {\n      title: json.title,\n      summary: cleanText(json.summary || json.description || json.contentSnippet || ''),\n      link: json.link || json.url,\n      pubDate: json.pubDate || json.published || json.isoDate || '',\n      source: nodeName.replace('RSS - ', '').replace('API - ', '').replace(' (FIXED)', '').replace(' (NUEVO)', '')\n    };\n    \n    // Categorize news by source\n    const nodeNameLower = nodeName.toLowerCase();\n    \n    // Global Financial Markets\n    if (nodeNameLower.includes('yahoo finance') || nodeNameLower.includes('investing') || \n        nodeNameLower.includes('marketwatch') || nodeNameLower.includes('cnbc')) {\n      marketData.news.marketMoving.push(newsItem);\n    }\n    \n    // Central Banks\n    if (nodeNameLower.includes('federal reserve') || nodeNameLower.includes('ecb') || \n        nodeNameLower.includes('banco rep')) {\n      marketData.news.centralBanks.push(newsItem);\n    }\n    \n    // Colombia News\n    if (nodeNameLower.includes('colombia') || nodeNameLower.includes('tiempo') || \n        nodeNameLower.includes('colombiano') || nodeNameLower.includes('república economía') ||\n        nodeNameLower.includes('larepublica')) {\n      marketData.news.regional.colombia.push(newsItem);\n    }\n    \n    // LATAM News\n    if (nodeNameLower.includes('latam') || nodeNameLower.includes('latinoam') || \n        nodeNameLower.includes('bbc mundo') || nodeNameLower.includes('voz de américa')) {\n      marketData.news.regional.latinamerica.push(newsItem);\n    }\n    \n    // Spain News\n    if (nodeNameLower.includes('españa') || nodeNameLower.includes('país') || \n        nodeNameLower.includes('español') || nodeNameLower.includes('local spain')) {\n      marketData.news.regional.spain.push(newsItem);\n    }\n    \n    // Coffee Industry\n    if (nodeNameLower.includes('coffee') || nodeNameLower.includes('sprudge') || \n        nodeNameLower.includes('grind') || nodeNameLower.includes('café')) {\n      marketData.news.sectors.coffee.push(newsItem);\n    }\n    \n    // Recycling/Pyrolysis\n    if (nodeNameLower.includes('recycl') || nodeNameLower.includes('pyrolysis') || \n        nodeNameLower.includes('waste') || nodeNameLower.includes('plastic')) {\n      marketData.news.sectors.recycling.push(newsItem);\n    }\n    \n    // Agriculture\n    if (nodeNameLower.includes('agro') || nodeNameLower.includes('agri') || \n        nodeNameLower.includes('fao') || nodeNameLower.includes('efe')) {\n      marketData.news.sectors.agriculture.push(newsItem);\n    }\n  }\n});\n\n// Sort and limit news\nfunction sortAndLimit(newsArray, limit = 8) {\n  return newsArray\n    .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))\n    .slice(0, limit);\n}\n\nmarketData.news.marketMoving = sortAndLimit(marketData.news.marketMoving, 10);\nmarketData.news.centralBanks = sortAndLimit(marketData.news.centralBanks, 5);\nmarketData.news.regional.colombia = sortAndLimit(marketData.news.regional.colombia, 8);\nmarketData.news.regional.latinamerica = sortAndLimit(marketData.news.regional.latinamerica, 6);\nmarketData.news.regional.spain = sortAndLimit(marketData.news.regional.spain, 6);\nmarketData.news.sectors.coffee = sortAndLimit(marketData.news.sectors.coffee, 8);\nmarketData.news.sectors.recycling = sortAndLimit(marketData.news.sectors.recycling, 6);\nmarketData.news.sectors.agriculture = sortAndLimit(marketData.news.sectors.agriculture, 6);\n\n// Calculate market sentiment\nconst equities = marketData.markets.equities;\nlet positiveMoves = 0;\nlet negativeMoves = 0;\nlet totalMoves = 0;\n\nObject.values(equities).forEach(market => {\n  if (market.changePercent && market.changePercent !== 'N/A') {\n    totalMoves++;\n    const change = parseFloat(market.changePercent);\n    if (change > 0) positiveMoves++;\n    if (change < 0) negativeMoves++;\n  }\n});\n\nif (totalMoves > 0) {\n  const positiveRatio = positiveMoves / totalMoves;\n  marketData.analysis.marketSentiment = {\n    positive: positiveMoves,\n    negative: negativeMoves,\n    neutral: totalMoves - positiveMoves - negativeMoves,\n    overall: positiveRatio > 0.6 ? '📈 Alcista' : positiveRatio < 0.4 ? '📉 Bajista' : '➡️ Mixto',\n    strength: positiveRatio > 0.6 || positiveRatio < 0.4 ? 'Fuerte' : 'Moderado'\n  };\n}\n\n// Statistics\nmarketData.statistics = {\n  totalDataSources: allItems.length,\n  marketStatus: currentDate.getDay() >= 1 && currentDate.getDay() <= 5 ? 'Día de Trading' : 'Fin de Semana',\n  equitiesTracked: Object.keys(marketData.markets.equities).length,\n  commoditiesTracked: Object.keys(marketData.markets.commodities).length,\n  forexPairs: marketData.markets.forex.rates ? Object.keys(marketData.markets.forex.rates).length : 0,\n  newsArticles: {\n    total: marketData.news.marketMoving.length + \n           marketData.news.centralBanks.length + \n           marketData.news.regional.colombia.length + \n           marketData.news.regional.latinamerica.length + \n           marketData.news.regional.spain.length +\n           marketData.news.sectors.coffee.length +\n           marketData.news.sectors.recycling.length +\n           marketData.news.sectors.agriculture.length,\n    byCategory: {\n      marketMoving: marketData.news.marketMoving.length,\n      centralBanks: marketData.news.centralBanks.length,\n      colombia: marketData.news.regional.colombia.length,\n      latinamerica: marketData.news.regional.latinamerica.length,\n      spain: marketData.news.regional.spain.length,\n      coffee: marketData.news.sectors.coffee.length,\n      recycling: marketData.news.sectors.recycling.length,\n      agriculture: marketData.news.sectors.agriculture.length\n    }\n  }\n};\n\nreturn [marketData];"
+      },
+      "id": "220fff55-3295-4ee6-8a7e-bb6f80e92d1c",
+      "name": "Process Market Data - Bloomberg Style",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 8272]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un analista financiero senior generando un informe ejecutivo de inteligencia de mercados. Tu objetivo es transformar datos crudos en insights accionables.\n\n## INSTRUCCIONES CRÍTICAS:\n1. USA SOLO los datos proporcionados - NO inventes números\n2. Si un dato no está disponible, indica \"N/D\" (No Disponible)\n3. Sé CONCISO pero ESPECÍFICO con números exactos\n4. Prioriza información relevante para decisiones de inversión\n5. Usa formato Markdown limpio\n\n## ESTRUCTURA DEL REPORTE:\n\n# 📊 INTELIGENCIA DE MERCADOS\n**{{ $now.format('dddd, D [de] MMMM [de] YYYY') }} | {{ $now.format('HH:mm') }} COT**\n\n---\n\n## 🎯 RESUMEN EJECUTIVO\n[3-4 bullets con los datos MÁS IMPORTANTES del día - precios, cambios %, eventos clave]\n\n---\n\n## 📈 MERCADOS FINANCIEROS\n\n### Índices de EE.UU.\n| Índice | Precio | Cambio | % |\n|--------|--------|--------|---|\n| S&P 500 | [precio] | [cambio] | [%] |\n| NASDAQ | [precio] | [cambio] | [%] |\n| Dow Jones | [precio] | [cambio] | [%] |\n\n**Análisis:** [1-2 oraciones sobre qué impulsa el movimiento]\n\n### Commodities\n| Activo | Precio | Cambio % |\n|--------|--------|----------|\n| Oro | $[X]/oz | [%] |\n| Petróleo WTI | $[X]/bbl | [%] |\n| Café Arábica | $[X]/lb | [%] |\n\n### Divisas (Base USD)\n| Par | Tasa | Cambio |\n|-----|------|--------|\n| USD/COP | [tasa] | - |\n| EUR/USD | [tasa] | - |\n| USD/MXN | [tasa] | - |\n| USD/BRL | [tasa] | - |\n\n**TRM Colombia (Oficial):** $[valor] COP\n\n---\n\n## ⚠️ VOLATILIDAD Y RIESGO\n- **VIX:** [valor] ([interpretación: Calma/Precaución/Miedo])\n- **Sentimiento:** [Alcista/Bajista/Mixto]\n\n---\n\n## 📰 NOTICIAS CLAVE\n\n### Mercados Globales\n[Lista de 3-5 titulares más relevantes con fuente]\n\n### Colombia\n[Lista de 2-3 titulares relevantes]\n\n### Latinoamérica\n[Lista de 2-3 titulares relevantes]\n\n---\n\n## ☕ SECTOR CAFÉ\n- **Precio Arábica:** $[X]/lb ([cambio%])\n- **Tendencia:** [Alcista/Bajista/Lateral]\n\n**Titulares del Sector:**\n[2-3 noticias relevantes de la industria cafetera]\n\n---\n\n## ♻️ SECTOR RECICLAJE/PIRÓLISIS\n[2-3 noticias relevantes si hay datos disponibles]\n\n---\n\n## 🌾 SECTOR AGRÍCOLA (España)\n[2-3 noticias relevantes si hay datos disponibles]\n\n---\n\n## 🏦 BANCOS CENTRALES\n[Cualquier comunicado relevante de Fed, BCE, Banrep]\n\n---\n\n## 💡 CONCLUSIONES\n1. [Insight accionable #1]\n2. [Insight accionable #2]\n3. [Nivel/evento a monitorear]\n\n---\n\n**Fuentes:** {{ $json.statistics.totalDataSources }} feeds procesados\n**Disclaimer:** Este reporte es informativo. No constituye asesoría de inversión.\n\n---\n\n## DATOS DE ENTRADA:\n```json\n{{ JSON.stringify($json, null, 2) }}\n```"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 3000,
+          "temperature": 0.2
+        }
+      },
+      "id": "fdf89843-734f-4f4d-9e91-5653662d25ea",
+      "name": "OpenAI - Bloomberg Analysis",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [880, 8272],
+      "credentials": {
+        "openAiApi": {
+          "id": "UnprA8703Is7HbnG",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format Bloomberg-Style HTML Report v3.0\nconst analysisData = $input.item.json;\nconst reportDate = new Date().toLocaleDateString('es-CO', { \n  weekday: 'long', \n  year: 'numeric', \n  month: 'long', \n  day: 'numeric',\n  hour: '2-digit',\n  minute: '2-digit',\n  timeZone: 'America/Bogota'\n});\n\n// Extract AI analysis content\nlet aiAnalysis = '';\nif (analysisData.message && analysisData.message.content) {\n  aiAnalysis = analysisData.message.content;\n} else if (analysisData.content) {\n  aiAnalysis = analysisData.content;\n} else if (typeof analysisData === 'string') {\n  aiAnalysis = analysisData;\n}\n\n// Enhanced markdown to HTML conversion\nfunction markdownToHtml(text) {\n  return text\n    // Tables\n    .replace(/\\|(.+)\\|/gm, (match) => {\n      const cells = match.split('|').filter(c => c.trim());\n      const isHeader = match.includes('---');\n      if (isHeader) return '';\n      const cellType = match.includes('Índice') || match.includes('Activo') || match.includes('Par') ? 'th' : 'td';\n      return '<tr>' + cells.map(c => `<${cellType} style=\"padding: 10px; border-bottom: 1px solid #e0e0e0;\">${c.trim()}</${cellType}>`).join('') + '</tr>';\n    })\n    // Headers\n    .replace(/### (.+)/g, '<h3 style=\"color: #1a1a1a; font-size: 16px; margin-top: 20px; margin-bottom: 10px; font-weight: 600;\">$1</h3>')\n    .replace(/## (.+)/g, '<h2 style=\"color: #000; font-size: 20px; margin-top: 28px; margin-bottom: 14px; font-weight: 700; border-bottom: 2px solid #0066cc; padding-bottom: 6px;\">$1</h2>')\n    .replace(/# (.+)/g, '<h1 style=\"color: #000; font-size: 24px; margin-top: 0; margin-bottom: 16px; font-weight: 700;\">$1</h1>')\n    // Bold and italic\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong style=\"font-weight: 600;\">$1</strong>')\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')\n    // Lists\n    .replace(/^- (.+)$/gm, '<li style=\"margin: 4px 0; line-height: 1.5;\">$1</li>')\n    .replace(/^\\d+\\. (.+)$/gm, '<li style=\"margin: 4px 0; line-height: 1.5;\">$1</li>')\n    // Horizontal rules\n    .replace(/---/g, '<hr style=\"border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;\">')\n    // Line breaks\n    .replace(/\\n\\n/g, '</p><p style=\"margin: 10px 0; line-height: 1.6;\">')\n    .replace(/\\n/g, '<br>')\n    // Code blocks\n    .replace(/```[\\s\\S]*?```/g, '');\n}\n\nconst htmlContent = `\n<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Market Intelligence - ${reportDate}</title>\n    <style>\n        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.5; color: #1a1a1a; background: #f5f5f5; margin: 0; padding: 0; }\n        .wrapper { max-width: 750px; margin: 0 auto; background: #fff; }\n        .header { background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); color: #fff; padding: 30px; border-bottom: 4px solid #f7931a; }\n        .header-logo { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #f7931a; margin-bottom: 8px; }\n        .header h1 { font-size: 26px; margin: 0 0 6px 0; }\n        .header-date { font-size: 13px; color: #ccc; }\n        .content { padding: 30px; }\n        .footer { background: #f8f9fa; padding: 25px; text-align: center; border-top: 1px solid #e0e0e0; font-size: 11px; color: #666; }\n        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }\n        th { background: #f8f9fa; font-weight: 600; text-align: left; }\n        ul { margin: 10px 0; padding-left: 20px; }\n        @media (max-width: 600px) { .header, .content, .footer { padding: 20px; } .header h1 { font-size: 22px; } }\n    </style>\n</head>\n<body>\n    <div class=\"wrapper\">\n        <div class=\"header\">\n            <div class=\"header-logo\">MARKET INTELLIGENCE</div>\n            <h1>📊 Informe Diario de Mercados</h1>\n            <div class=\"header-date\">${reportDate}</div>\n        </div>\n        <div class=\"content\">\n            ${markdownToHtml(aiAnalysis)}\n        </div>\n        <div class=\"footer\">\n            <strong>Sistema de Inteligencia de Mercado v3.0</strong><br>\n            Powered by n8n + OpenAI | Fuentes públicas gratuitas<br><br>\n            <em>Este reporte es informativo y no constituye asesoría de inversión.</em>\n        </div>\n    </div>\n</body>\n</html>\n`;\n\n// Dynamic subject line\nlet subjectPrefix = '📊';\nconst lowerAnalysis = aiAnalysis.toLowerCase();\nif (lowerAnalysis.includes('bajista') || lowerAnalysis.includes('caída') || lowerAnalysis.includes('pérdida')) {\n  subjectPrefix = '📉';\n} else if (lowerAnalysis.includes('alcista') || lowerAnalysis.includes('subi') || lowerAnalysis.includes('ganancia')) {\n  subjectPrefix = '📈';\n}\n\nconst dateForSubject = new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });\n\nreturn [{\n  subject: `${subjectPrefix} Inteligencia de Mercado - ${dateForSubject}`,\n  htmlContent: htmlContent,\n  textContent: aiAnalysis,\n  reportDate: reportDate,\n  timestamp: new Date().toISOString()\n}];"
+      },
+      "id": "5c618336-8a25-4bb1-8f7d-626dac673bed",
+      "name": "Format Bloomberg HTML Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1280, 8272]
+    },
+    {
+      "parameters": {
+        "sendTo": "felipe@lapalmayeltucan.com",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.htmlContent }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "109b4c81-4d7d-4ba6-b35b-8eba4cdfb530",
+      "name": "Gmail - Send Report",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1568, 8272],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "P2OyYe0XIUA2MAhO",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Trigger - Market Hours (6 AM Weekdays)": {
+      "main": [
+        [
+          { "node": "API - S&P 500 (Yahoo Finance)", "type": "main", "index": 0 },
+          { "node": "API - NASDAQ (Yahoo Finance)", "type": "main", "index": 0 },
+          { "node": "API - Dow Jones (Yahoo Finance)", "type": "main", "index": 0 },
+          { "node": "API - Gold Futures (Yahoo)", "type": "main", "index": 0 },
+          { "node": "API - Crude Oil WTI (Yahoo)", "type": "main", "index": 0 },
+          { "node": "API - Coffee Arabica Futures (Yahoo)", "type": "main", "index": 0 },
+          { "node": "API - VIX Volatility Index (Yahoo)", "type": "main", "index": 0 },
+          { "node": "API - Forex Rates (Frankfurter - Free)", "type": "main", "index": 0 },
+          { "node": "API - TRM Colombia (Datos Abiertos)", "type": "main", "index": 0 },
+          { "node": "RSS - Yahoo Finance", "type": "main", "index": 0 },
+          { "node": "RSS - Investing.com", "type": "main", "index": 0 },
+          { "node": "RSS - MarketWatch", "type": "main", "index": 0 },
+          { "node": "RSS - CNBC Top News", "type": "main", "index": 0 },
+          { "node": "RSS - Google News LATAM Economy", "type": "main", "index": 0 },
+          { "node": "RSS - ECB USD Exchange Rates (FIXED)", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Colombia Economía (Reemplazo Portafolio)", "type": "main", "index": 0 },
+          { "node": "RSS - La República Economía (NUEVO)", "type": "main", "index": 0 },
+          { "node": "RSS - El Tiempo Economía (NUEVO)", "type": "main", "index": 0 },
+          { "node": "RSS - El Tiempo Política", "type": "main", "index": 0 },
+          { "node": "RSS - El Colombiano Colombia", "type": "main", "index": 0 },
+          { "node": "RSS - Google News LATAM Negocios (Reemplazo Bloomberg Línea)", "type": "main", "index": 0 },
+          { "node": "RSS - BBC Mundo (NUEVO)", "type": "main", "index": 0 },
+          { "node": "RSS - Sprudge Coffee News", "type": "main", "index": 0 },
+          { "node": "RSS - Perfect Daily Grind", "type": "main", "index": 0 },
+          { "node": "RSS - Daily Coffee News", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Coffee Markets", "type": "main", "index": 0 },
+          { "node": "RSS - Federal Reserve News", "type": "main", "index": 0 },
+          { "node": "RSS - ECB Press Releases (FIXED)", "type": "main", "index": 0 },
+          { "node": "RSS - Banco República Colombia", "type": "main", "index": 0 },
+          { "node": "RSS - Plastic Pyrolysis News", "type": "main", "index": 0 },
+          { "node": "RSS - Recycling Product News (NUEVO)", "type": "main", "index": 0 },
+          { "node": "RSS - Resource Recycling (NUEVO)", "type": "main", "index": 0 },
+          { "node": "RSS - Waste360", "type": "main", "index": 0 },
+          { "node": "RSS - El País España", "type": "main", "index": 0 },
+          { "node": "RSS - El Español", "type": "main", "index": 0 },
+          { "node": "RSS - The Local Spain (English)", "type": "main", "index": 0 },
+          { "node": "RSS - Agroinformación España", "type": "main", "index": 0 },
+          { "node": "RSS - Agro Invest Spain (NUEVO)", "type": "main", "index": 0 },
+          { "node": "RSS - EfeAgro", "type": "main", "index": 0 },
+          { "node": "RSS - FAO News (NUEVO)", "type": "main", "index": 0 },
+          { "node": "RSS - Google News Agricultura España", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "API - S&P 500 (Yahoo Finance)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 0 }]] },
+    "API - NASDAQ (Yahoo Finance)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 1 }]] },
+    "API - Dow Jones (Yahoo Finance)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 2 }]] },
+    "API - Gold Futures (Yahoo)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 3 }]] },
+    "API - Crude Oil WTI (Yahoo)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 4 }]] },
+    "API - Coffee Arabica Futures (Yahoo)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 5 }]] },
+    "API - VIX Volatility Index (Yahoo)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 6 }]] },
+    "API - Forex Rates (Frankfurter - Free)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 7 }]] },
+    "API - TRM Colombia (Datos Abiertos)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 8 }]] },
+    "RSS - Yahoo Finance": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 9 }]] },
+    "RSS - Investing.com": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 10 }]] },
+    "RSS - MarketWatch": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 11 }]] },
+    "RSS - CNBC Top News": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 12 }]] },
+    "RSS - Google News LATAM Economy": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 13 }]] },
+    "RSS - ECB USD Exchange Rates (FIXED)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 14 }]] },
+    "RSS - Google News Colombia Economía (Reemplazo Portafolio)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 15 }]] },
+    "RSS - La República Economía (NUEVO)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 16 }]] },
+    "RSS - El Tiempo Economía (NUEVO)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 17 }]] },
+    "RSS - El Tiempo Política": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 18 }]] },
+    "RSS - El Colombiano Colombia": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 19 }]] },
+    "RSS - Google News LATAM Negocios (Reemplazo Bloomberg Línea)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 20 }]] },
+    "RSS - BBC Mundo (NUEVO)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 21 }]] },
+    "RSS - Sprudge Coffee News": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 22 }]] },
+    "RSS - Perfect Daily Grind": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 23 }]] },
+    "RSS - Daily Coffee News": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 24 }]] },
+    "RSS - Google News Coffee Markets": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 25 }]] },
+    "RSS - Federal Reserve News": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 26 }]] },
+    "RSS - ECB Press Releases (FIXED)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 27 }]] },
+    "RSS - Banco República Colombia": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 28 }]] },
+    "RSS - Plastic Pyrolysis News": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 29 }]] },
+    "RSS - Recycling Product News (NUEVO)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 30 }]] },
+    "RSS - Resource Recycling (NUEVO)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 31 }]] },
+    "RSS - Waste360": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 32 }]] },
+    "RSS - El País España": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 33 }]] },
+    "RSS - El Español": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 34 }]] },
+    "RSS - The Local Spain (English)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 35 }]] },
+    "RSS - Agroinformación España": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 36 }]] },
+    "RSS - Agro Invest Spain (NUEVO)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 37 }]] },
+    "RSS - EfeAgro": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 38 }]] },
+    "RSS - FAO News (NUEVO)": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 39 }]] },
+    "RSS - Google News Agricultura España": { "main": [[{ "node": "Merge - All Sources", "type": "main", "index": 40 }]] },
+    "Merge - All Sources": { "main": [[{ "node": "Process Market Data - Bloomberg Style", "type": "main", "index": 0 }]] },
+    "Process Market Data - Bloomberg Style": { "main": [[{ "node": "OpenAI - Bloomberg Analysis", "type": "main", "index": 0 }]] },
+    "OpenAI - Bloomberg Analysis": { "main": [[{ "node": "Format Bloomberg HTML Report", "type": "main", "index": 0 }]] },
+    "Format Bloomberg HTML Report": { "main": [[{ "node": "Gmail - Send Report", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": true }
+}
